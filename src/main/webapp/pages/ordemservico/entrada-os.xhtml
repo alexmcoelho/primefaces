@@ -1,0 +1,1152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:adm="http://github.com/adminfaces"
+	template="/WEB-INF/templates/template.xhtml">
+
+	<div style="position: fixed; top: 0; left: 0;">
+		<ui:define name="title">
+			<br />
+			<p:separator />
+	        #{ordemDeServicoCadastroMB.titulo}
+	    </ui:define>
+
+		<ui:define name="head-end">
+			<ui:param name="renderBreadCrumb" value="true" />
+		</ui:define>
+
+		<ui:define name="body">
+
+			<f:metadata>
+				<f:viewParam name="id" value="#{ordemDeServicoCadastroMB.idOrdem}"
+					converter="javax.faces.Long" />
+				<f:event listener="#{ordemDeServicoCadastroMB.inicializar()}"
+					type="preRenderView"></f:event>
+			</f:metadata>
+
+			<adm:breadcrumb
+				title="#{ordemDeServicoCadastroMB.tituloBreadCrumbString}"
+				link="#{ordemDeServicoCadastroMB.linkBreadCrumb}" />
+
+			<!-- DIALOG DE EXCLUSÃO DE ORDEM DE ORDEM DE SERVICO -->
+			<p:dialog id="excluir-ordem-dialog" header="Excluir registro"
+				widgetVar="excluirOrdem" responsive="true" styleClass="box-success"
+				modal="true" closeOnEscape="true" width="300" height="120"
+				position="center center">
+				<h:form id="form-excluir-ordem">
+					<div class="ui-fluid" style="color: #555">
+						<p:panelGrid columns="1" layout="grid">
+							<p:column>
+								<h:outputText value="Tem certeza que deseja excluir o registro?" />
+							</p:column>
+							<h:outputText value="" />
+						</p:panelGrid>
+						<p:panelGrid columns="2" layout="grid">
+							<p:commandButton value="Sim" update="form-principal"
+								process="excluir-ordem-dialog"
+								action="#{ordemDeServicoCadastroMB.excluir()}"
+								icon="fa fa-check" styleClass="btn-primary"
+								oncomplete="PF('excluirOrdem').hide();" />
+							<p:commandButton value="Não" process="excluir-ordem-dialog"
+								icon="fa fa-close" styleClass="btn-default"
+								oncomplete="PF('excluirOrdem').hide()" />
+						</p:panelGrid>
+					</div>
+				</h:form>
+			</p:dialog>
+
+			<!-- DIALOG DE IMPRESSÃO -->
+			<p:dialog id="impressao-dialog" header="Impressão"
+				widgetVar="preparaImpressao" responsive="true"
+				styleClass="box-success" modal="true" closeOnEscape="true"
+				width="300" height="120" position="center center">
+
+				<p:ajax event="close"
+					listener="#{ordemDeServicoCadastroMB.fechaModalImpressao}" />
+
+				<h:form id="form-impressao">
+					<div class="ui-fluid" style="color: #555">
+						<p:panelGrid columns="1" layout="grid">
+							<p:column>
+								<h:outputText value="Deseja imprimir o recibo?" />
+								<br />
+								<br />
+							</p:column>
+							<h:outputText value="" />
+						</p:panelGrid>
+						<p:panelGrid columns="2" layout="grid">
+							<p:commandButton value="Sim" ajax="false"
+								action="#{ordemDeServicoCadastroMB.imprimirComprovante}"
+								icon="fa fa-check" styleClass="btn-primary"
+								oncomplete="PF('preparaImpressao').hide()"
+								onclick="this.form.target='_blank'" />
+							<p:commandButton value="Não" process="impressao-dialog"
+								icon="fa fa-close" styleClass="btn-default"
+								oncomplete="PF('preparaImpressao').hide()" />
+						</p:panelGrid>
+					</div>
+				</h:form>
+			</p:dialog>
+
+			<div class="box box-primary">
+				<div class="box-header with-border">
+
+					<h:form id="form-principal" prependId="false">
+
+						<p:defaultCommand target="botao-salvar" />
+
+						<div></div>
+						<div id="main-buttons" class="hidden-sm hidden-xs"
+							style="padding-left: 1%;"></div>
+
+						<div class="ui-fluid" style="color: #555">
+
+							<!--INICIO Linha 1 -->
+							<p:panelGrid columns="2" layout="grid">
+								<p:column>
+									<div class="ui-g-10" style="padding-left: 0px;">
+										<p:outputLabel value="Cliente:" for="autocomplete-cliente" />
+										<p:autoComplete 
+											value="#{ordemDeServicoCadastroMB.nomeCliente}"
+											appendTo="@this"
+											placeholder="#{ordemDeServicoCadastroMB.modelProduto.servicoAutocomplete.placeholder}"
+											maxResults="#{ordemDeServicoCadastroMB.modelProduto.servicoAutocomplete.maxResults}"
+											minQueryLength="#{ordemDeServicoCadastroMB.modelProduto.servicoAutocomplete.minQueryLength}"
+											cache="#{ordemDeServicoCadastroMB.modelProduto.servicoAutocomplete.cache}" 
+											cacheTimeout="#{ordemDeServicoCadastroMB.modelProduto.servicoAutocomplete.cacheTimeout}"
+											queryDelay="#{ordemDeServicoCadastroMB.modelProduto.servicoAutocomplete.queryDelay}"
+											forceSelection="#{ordemDeServicoCadastroMB.modelProduto.servicoAutocomplete.forceSelection}"
+											onkeypress="mascaraNumber(this, acrescentaZerosSeForNumero)"
+											required="#{ordemDeServicoCadastroMB.modelProduto.servicoAutocomplete.required}"
+											completeMethod="#{ordemDeServicoCadastroMB.filtroCliente}"
+											id="autocomplete-cliente"
+											requiredMessage="#{beanPadraoMensagensValidacao.retorno('javax.faces.validator.BeanValidator.MESSAGE', 'Cliente')}"
+										>
+											<p:ajax event="itemSelect" listener="#{ordemDeServicoCadastroMB.selecionarCliente}" />
+										</p:autoComplete>
+										<p:message for="autocomplete-cliente" />
+									</div>
+									<div class="ui-g-2">
+										<p:outputLabel value="Add" style="visibility:hidden" />
+										<p:commandButton title="Adicionar cliente"
+											onclick="PF('addCliente').show();"
+											actionListener="#{ordemDeServicoCadastroMB.abreModalCliente}"
+											process="@this" update="autocomplete-cliente form-cliente"
+											action="#{ordemDeServicoCadastroMB.adicionarCliente}"
+											icon="fa fa-plus" styleClass="btn-primary">
+											<p:resetInput target="autocomplete-cliente" />
+										</p:commandButton>
+									</div>
+								</p:column>
+
+								<p:column>
+									<p:outputLabel value="Responsável: " for="responsavel"
+										style="margin-top: 8px;" />
+									<p:selectOneMenu id="responsavel"
+										converter="omnifaces.SelectItemsConverter" style="color: #555"
+										value="#{ordemDeServicoCadastroMB.usuario}" required="true">
+										<f:selectItem itemLabel="Selecione" itemValue="" />
+										<f:selectItems value="#{ordemDeServicoCadastroMB.usuarios}"
+											var="u" itemLabel="#{u.nome}" itemValue="#{u}" />
+									</p:selectOneMenu>
+									<p:message for="responsavel" />
+								</p:column>
+
+							</p:panelGrid>
+
+							<!--INICIO Linha 2 -->
+							
+								<div class="ui-g-12 ui-md-6 ui-lg-3">
+									<p:outputLabel value="Garantia: " for="garantia" />
+									<p:selectOneMenu id="garantia" appendTo="@this"
+										value="#{ordemDeServicoCadastroMB.ordemDeServico.quantMesesGarantia}"
+										required="#{ordemDeServicoCadastroMB.ordemDeServico.estado == 'APROVADO' || 
+											ordemDeServicoCadastroMB.ordemDeServico.estado == 'FINALIZADO'}">
+										<f:selectItem itemLabel="Selecione" itemValue="" />
+										<f:selectItems
+											value="#{ordemDeServicoCadastroMB.listaEnumGarantia}" var="l"
+											itemLabel="#{l.descricao}" itemValue="#{l}" />
+									</p:selectOneMenu>
+									<p:message for="garantia" />
+								</div>
+								<div class="ui-g-12 ui-md-6 ui-lg-3">
+									<p:outputLabel value="Estado:" for="estado" />
+									<p:selectOneMenu id="estado" appendTo="@this"
+										style="color: #555"
+										value="#{ordemDeServicoCadastroMB.ordemDeServico.estado}"
+										required="true">
+										<f:selectItem itemLabel="Selecione" itemValue="" />
+										<f:selectItems
+											value="#{ordemDeServicoCadastroMB.listaEnumEstado}" var="l"
+											itemLabel="#{l.descricao}" itemValue="#{l}" />
+										<p:ajax event="change"
+											update="group-forma-pagamento, valor-ordem, laudo" />
+									</p:selectOneMenu>
+									<p:message for="estado" />
+								</div>
+
+								<div class="ui-g-12 ui-md-6 ui-lg-3">
+									<p:outputLabel value="Data de entrada:" for="data-entrada" />
+									<p:calendar id="data-entrada" style="color: #555"
+										value="#{ordemDeServicoCadastroMB.ordemDeServico.dataEntrada}"
+										required="true" pattern="dd/MM/yyyy" mask="true">
+									</p:calendar>
+									<p:message for="data-entrada" />
+								</div>
+
+								<div class="ui-g-12 ui-md-6 ui-lg-3">
+									<p:outputLabel value="Data de conclusão:" for="data-conclusao" />
+									<p:calendar id="data-conclusao"
+										required="#{ordemDeServicoCadastroMB.ordemDeServico.estado == 'FINALIZADO'}"
+										value="#{ordemDeServicoCadastroMB.ordemDeServico.dataConclusao}"
+										style="color: #555" pattern="dd/MM/yyyy" mask="true" />
+									<p:message for="data-conclusao" />
+								</div>
+							
+
+							<!--FIM Linha 2 -->
+
+
+							<!-- INICIO Linha 3 -->
+							<p:panelGrid columns="3" layout="grid">
+								<p:column>
+									<div class="ui-g-10" style="padding-left: 0px;">
+										<p:outputLabel value="Aparelho:" for="autocomplete-aparelho" />
+										<p:autoComplete 
+											value="#{ordemDeServicoCadastroMB.nomeAparelho}"
+											appendTo="@this"
+											placeholder="#{ordemDeServicoCadastroMB.modelAparelho.servicoAutocomplete.placeholder}"
+											maxResults="#{ordemDeServicoCadastroMB.modelAparelho.servicoAutocomplete.maxResults}"
+											minQueryLength="#{ordemDeServicoCadastroMB.modelAparelho.servicoAutocomplete.minQueryLength}"
+											cache="#{ordemDeServicoCadastroMB.modelAparelho.servicoAutocomplete.cache}" 
+											cacheTimeout="#{ordemDeServicoCadastroMB.modelAparelho.servicoAutocomplete.cacheTimeout}"
+											queryDelay="#{ordemDeServicoCadastroMB.modelAparelho.servicoAutocomplete.queryDelay}"
+											forceSelection="#{ordemDeServicoCadastroMB.modelAparelho.servicoAutocomplete.forceSelection}"
+											required="#{ordemDeServicoCadastroMB.modelAparelho.servicoAutocomplete.required}"
+											completeMethod="#{ordemDeServicoCadastroMB.filtroAparelho}"
+											id="autocomplete-aparelho"
+											requiredMessage="#{beanPadraoMensagensValidacao.retorno('javax.faces.validator.BeanValidator.MESSAGE', 'Aparelho')}"
+										>
+											<p:ajax event="itemSelect" listener="#{ordemDeServicoCadastroMB.selecionarAparelho}" update="autocomplete-modelo" />
+										</p:autoComplete>
+										<p:message for="autocomplete-aparelho" />
+									</div>
+									<div class="ui-g-2">
+										<p:outputLabel value="Add" style="visibility:hidden" />
+										<p:commandButton title="Adicionar aparelho"
+											onclick="PF('addAparelho').show();" process="@this"
+											action="#{ordemDeServicoCadastroMB.adicionarAparelho}"
+											update="form-aparelho autocomplete-aparelho autocomplete-modelo" icon="fa fa-plus"
+											styleClass="btn-primary">
+											<p:resetInput target="autocomplete-aparelho" />
+										</p:commandButton>
+									</div>
+								</p:column>
+
+								<p:column>
+									<div class="ui-g-10" style="padding-left: 0px;">
+										<p:outputLabel value="Modelo:" for="autocomplete-modelo" />
+										<p:autoComplete 
+											value="#{ordemDeServicoCadastroMB.nomeModelo}"
+											appendTo="@this"
+											placeholder="#{ordemDeServicoCadastroMB.modelAparelho.servicoAutocomplete.placeholder}"
+											maxResults="#{ordemDeServicoCadastroMB.modelAparelho.servicoAutocomplete.maxResults}"
+											minQueryLength="#{ordemDeServicoCadastroMB.modelAparelho.servicoAutocomplete.minQueryLength}"
+											cache="#{ordemDeServicoCadastroMB.modelAparelho.servicoAutocomplete.cache}" 
+											cacheTimeout="#{ordemDeServicoCadastroMB.modelAparelho.servicoAutocomplete.cacheTimeout}"
+											queryDelay="#{ordemDeServicoCadastroMB.modelAparelho.servicoAutocomplete.queryDelay}"
+											forceSelection="#{ordemDeServicoCadastroMB.modelAparelho.servicoAutocomplete.forceSelection}"
+											required="#{ordemDeServicoCadastroMB.modelAparelho.servicoAutocomplete.required}"
+											completeMethod="#{ordemDeServicoCadastroMB.filtroModelo}"
+											id="autocomplete-modelo"
+											requiredMessage="#{beanPadraoMensagensValidacao.retorno('javax.faces.validator.BeanValidator.MESSAGE', 'Modelo')}"
+										>
+											<p:ajax event="itemSelect" listener="#{ordemDeServicoCadastroMB.selecionarModelo}" />
+										</p:autoComplete>
+										<p:message for="autocomplete-modelo" />
+									</div>
+									<div class="ui-g-2">
+										<p:outputLabel value="Add" style="visibility:hidden" />
+										<p:commandButton title="Adicionar modelo"
+											onclick="PF('addModelo').show();" process="@this"
+											icon="fa fa-plus" update="autocomplete-modelo form-modelo"
+											action="#{ordemDeServicoCadastroMB.adicionarModelo}"
+											styleClass="btn-primary">
+											<p:resetInput target="autocomplete-modelo" />
+										</p:commandButton>
+									</div>
+								</p:column>
+								<p:column>
+									<p:outputLabel value="IMEI:" for="imei"
+										style="margin-top: 8px;" />
+									<p:inputMask id="imei"
+										value="#{ordemDeServicoCadastroMB.ordemDeServico.imei}"
+										required="true" mask="999999-99-999999-9"
+										validator="#{validatorJSF.validaImeiAndGarantia}">
+										<f:attribute name="idOrdem" value="#{ordemDeServicoCadastroMB.ordemDeServico.id}" />
+									</p:inputMask>
+									<p:message for="imei" />
+								</p:column>
+
+							</p:panelGrid>
+
+							<!-- INICIO Linha 4 -->
+							
+								<div class="ui-g-12 ui-md-6 ui-lg-4">
+									<p:outputLabel value="Estado aparelho e acessórios: "
+										for="estado-aparelho" />
+									<p:inputTextarea id="estado-aparelho"
+										value="#{ordemDeServicoCadastroMB.ordemDeServico.estadoAparelho}" />
+									<p:message for="estado-aparelho" />
+								</div>
+
+								<div class="ui-g-12 ui-md-6 ui-lg-4">
+									<div class="ui-g-6"
+										style="padding-left: 0px; padding-top: 0px;">
+										<p:outputLabel value="Bateria:" for="bateria" />
+										<p:selectOneMenu id="bateria" appendTo="@this"
+											style="color: #555"
+											value="#{ordemDeServicoCadastroMB.ordemDeServico.bateria}"
+											required="true">
+											<f:selectItem itemLabel="Selecione" itemValue="" />
+											<f:selectItems
+												value="#{ordemDeServicoCadastroMB.listaEnumSimNaoGenerico}"
+												var="l" itemLabel="#{l.descricao}" itemValue="#{l}" />
+										</p:selectOneMenu>
+										<p:message for="bateria" />
+									</div>
+
+									<div class="ui-g-6" style="padding-top: 0px;">
+										<p:outputLabel value="Carregador:" for="carregadores" />
+										<p:selectOneMenu id="carregadores" appendTo="@this"
+											style="color: #555"
+											value="#{ordemDeServicoCadastroMB.ordemDeServico.carregador}"
+											required="true">
+											<f:selectItem itemLabel="Selecione" itemValue="" />
+											<f:selectItems
+												value="#{ordemDeServicoCadastroMB.listaEnumSimNaoGenerico}"
+												var="l" itemLabel="#{l.descricao}" itemValue="#{l}" />
+										</p:selectOneMenu>
+										<p:message for="carregadores" />
+									</div>
+									
+								</div>
+								<div class="quebra-linha"></div>
+
+								<div class="ui-g-12 ui-md-6 ui-lg-4">
+									<p:outputLabel value="Defeito informado: "
+										for="defeito-informado" />
+									<p:inputTextarea id="defeito-informado"
+										value="#{ordemDeServicoCadastroMB.ordemDeServico.defeitoInformado}"
+										required="true" />
+									<p:message for="defeito-informado" />
+								</div>
+
+							
+							<!-- FIM Linha 4 -->
+
+						</div>
+						<div style="clear: both;"></div>
+
+						<div class="box-footer"
+							style="margin-top: 5px; margin-bottom: 0; padding-bottom: 0">
+							<h:panelGrid id="grid-botao-adicionar-servicos"
+								style="padding: 0px; margin:0px;">
+								<p:outputLabel value="Serviços realizados:" />
+								<p:commandButton title="Adicionar serviço" value="Adicionar"
+									actionListener="#{ordemDeServicoCadastroMB.preparaInclusaoServicos()}"
+									onclick="PF('addItemServico').show();" process="@this"
+									update="form-add-item-servico" icon="fa fa-plus">
+								</p:commandButton>
+							</h:panelGrid>
+						</div>
+						
+						<!--INICIA TABELA DE SERVICOS-->
+						<!-- INICIO Linha 5 -->
+						<p:panelGrid columns="1" layout="grid">
+
+							<p:dataTable id="tabela-servicos" var="s"
+								value="#{ordemDeServicoCadastroMB.modelItemServico}" rows="5"
+								paginator="true" lazy="true" reflow="true"
+								emptyMessage="Nenhuma serviço foi utilizado!">
+
+								<p:column styleClass="align-center" headerText="Código">
+									<h:outputText value="#{s.servico.id}" />
+								</p:column>
+								
+								<p:column styleClass="align-center" headerText="Descrição">
+									<h:outputText value="#{s.servico.descricao}" />
+								</p:column>
+								
+								<p:column styleClass="align-center" headerText="Mão de obra">
+									<h:outputText value="#{s.servico.maoDeObra.descricao}" />
+								</p:column>
+
+								<p:column style="width: 150px;">
+									<div class="ui-fluid">
+										<div class="ui-g-6" style="padding: 0 2% 0 2%;">
+											<p:commandButton styleClass="btn btn-success"
+												icon="fa fa-edit" title="Alterar"
+												actionListener="#{ordemDeServicoCadastroMB.alterarNaListaDeServicos(s)}"
+												onclick="PF('addItemServico').show();" update="form-add-item-servico"
+												process="@this" />
+										</div>
+										<div class="ui-g-6" style="padding: 0 2% 0 2%;">
+											<p:commandButton styleClass="btn btn-danger"
+												icon="fa fa-trash" title="Excluir"
+												actionListener="#{ordemDeServicoCadastroMB.removerNaListaDeServicos(s)}"
+												update="tabela-servicos" process="@this" />
+										</div>
+									</div>
+								</p:column>
+
+							</p:dataTable>
+							<!-- FIM Linha 5 -->
+						</p:panelGrid>
+						<!--FIM TABELA-->
+
+						<div class="ui-fluid" style="color: #555">
+
+							<!-- INICIO Linha 6 -->
+							<p:panelGrid columns="2" layout="grid">
+
+								<p:column>
+									<p:outputLabel value="Laudo técnico:" for="laudo" />
+									<p:inputTextarea id="laudo"
+										required="#{ordemDeServicoCadastroMB.ordemDeServico.estado == 'APROVADO' || 
+									ordemDeServicoCadastroMB.ordemDeServico.estado == 'FINALIZADO'}"
+										value="#{ordemDeServicoCadastroMB.ordemDeServico.laudoTecnico}" />
+									<p:message for="laudo" />
+								</p:column>
+
+								<p:column>
+									<p:outputLabel value="Observações:" for="observacoes" />
+									<p:inputTextarea id="observacoes"
+										value="#{ordemDeServicoCadastroMB.ordemDeServico.observacoes}" />
+								</p:column>
+							</p:panelGrid>
+							<!-- FIM Linha 6 -->
+
+							<!-- INICIO - linha 7 -->
+							<p:panelGrid columns="3" layout="grid">
+
+								<p:column>
+									<p:outputLabel value="Valor (R$):" for="valor-ordem" />
+									<p:inputNumber id="valor-ordem"
+										required="#{ordemDeServicoCadastroMB.ordemDeServico.estado == 'APROVADO' || 
+										ordemDeServicoCadastroMB.ordemDeServico.estado == 'FINALIZADO'}"
+										decimalSeparator="," thousandSeparator="." decimalPlaces="2"
+										onfocus="mascaraNumber(this, apaga)"
+										value="#{ordemDeServicoCadastroMB.ordemDeServico.valor}"
+										style="color: #555"
+										requiredMessage="#{beanPadraoMensagensValidacao.retorno('javax.faces.validator.BeanValidator.MESSAGE', 'Valor (R$)')}"
+										validator="#{ordemDeServicoCadastroMB.validaValorTotal}"
+										disabled="#{entradaDeProdutoCadastroMB.disabledCamposForm}">
+									</p:inputNumber>
+									<p:message id="msg-valor" for="valor-ordem" />
+								</p:column>
+
+								<p:column>
+									<h:panelGroup id="group-forma-pagamento">
+										<p:outputLabel id="label-forma-pagamento"
+											value="Forma pagamento:" for="forma-pagamento"
+											rendered="#{ordemDeServicoCadastroMB.ordemDeServico.estado == 'FINALIZADO'}" />
+										<p:selectOneMenu
+											rendered="#{ordemDeServicoCadastroMB.ordemDeServico.estado == 'FINALIZADO'}"
+											id="forma-pagamento" style="color: #555" required="true"
+											value="#{ordemDeServicoCadastroMB.ordemDeServico.formaPagamento}">
+											<f:selectItem itemLabel="Selecione" itemValue="" />
+											<f:selectItems
+												value="#{ordemDeServicoCadastroMB.listaEnumFormaPagamento}"
+												var="l" itemLabel="#{l.descricao}" itemValue="#{l}" />
+										</p:selectOneMenu>
+										<p:message for="forma-pagamento" />
+									</h:panelGroup>
+								</p:column>
+
+								<p:column>
+									<p:outputLabel for="envio-email" value="Enviar e-mail:" />
+									<p:selectOneRadio id="envio-email"
+										value="#{ordemDeServicoCadastroMB.enviaEmail}"
+										unselectable="true">
+										<f:selectItem itemLabel="Sim" itemValue="true" />
+										<f:selectItem itemLabel="Não" itemValue="false" />
+									</p:selectOneRadio>
+								</p:column>
+
+							</p:panelGrid>
+							<!-- FIM - linha 7 -->
+
+						</div>
+
+						<div class="box-footer"
+							style="margin-top: 10px; margin-bottom: 0; padding-bottom: 0">
+							<h:panelGrid id="grid-botao-adicionar-itens"
+								style="padding: 0px; margin:0px;">
+								<p:outputLabel value="Peças utilizadas na ordem de serviço:" />
+								<p:commandButton title="Adicionar item" value="Adicionar"
+									actionListener="#{ordemDeServicoCadastroMB.preparaInclusao()}"
+									onclick="PF('addProduto').show();" process="@this"
+									update="form-add-produto" icon="fa fa-plus" >
+								</p:commandButton>
+							</h:panelGrid>
+						</div>
+
+
+						<!--INICIA TABELA-->
+						<p:panelGrid columns="1" layout="grid">
+
+							<p:dataTable id="dataTable" var="i"
+								value="#{ordemDeServicoCadastroMB.modelItemProduto}" rows="5"
+								paginator="true" lazy="true" reflow="true"
+								emptyMessage="Nenhuma peça foi utilizada!">
+
+								<p:column styleClass="align-center" headerText="Descrição">
+									<h:outputText value="#{i.produto.descricao}" />
+								</p:column>
+
+								<p:column styleClass="align-center" headerText="Quantidade">
+									<h:outputText value="#{i.quant}" />
+								</p:column>
+
+								<p:column styleClass="align-center" headerText="Valor unitário">
+									<h:outputText value="#{i.valorUnit}">
+										<f:convertNumber type="currency" locale="pt_BR" />
+									</h:outputText>
+								</p:column>
+
+								<p:column styleClass="align-center" headerText="Sub total">
+									<h:outputText value="#{i.subTotal}">
+										<f:convertNumber type="currency" locale="pt_BR" />
+									</h:outputText>
+								</p:column>
+
+								<p:column style="width: 150px;">
+									<div class="ui-fluid">
+										<div class="ui-g-6" style="padding: 0 2% 0 2%;">
+											<p:commandButton styleClass="btn btn-success"
+												icon="fa fa-edit" title="Alterar"
+												actionListener="#{ordemDeServicoCadastroMB.alterarNaListaDeItens(i)}"
+												onclick="PF('addProduto').show();" update="form-add-produto"
+												process="@this" />
+										</div>
+										<div class="ui-g-6" style="padding: 0 2% 0 2%;">
+											<p:commandButton styleClass="btn btn-danger"
+												icon="fa fa-trash" title="Excluir"
+												actionListener="#{ordemDeServicoCadastroMB.removerNaListaDeItens(i)}"
+												update="dataTable" process="@this" />
+										</div>
+									</div>
+								</p:column>
+
+							</p:dataTable>
+						</p:panelGrid>
+						<!--FIM TABELA-->
+
+						<!-- SALVAR, EXCLUIR E CANCELAR ORDEM DE SERVIÇO -->
+						<div class="box-footer" style="border-top-width: 0;">
+							<p:commandButton value="Salvar"
+								update="form-principal, form-aparelho, form-modelo"
+								oncomplete="window.scrollTo(0, 0);"
+								action="#{ordemDeServicoCadastroMB.salvar()}" icon="fa fa-check"
+								styleClass="btn btn-primary" validateClient="true"
+								id="botao-salvar" />
+							<p:spacer width="5" />
+
+							<p:commandButton value="Excluir" process="@this"
+								onclick="PF('excluirOrdem').show();window.scrollTo(0, 0);"
+								rendered="#{ordemDeServicoCadastroMB.ordemDeServico.edicao}"
+								icon="fa fa-trash" styleClass="btn btn-danger">
+							</p:commandButton>
+							<p:spacer width="5" />
+
+							<p:commandButton value="Cancelar" immediate="true"
+								action="#{ordemDeServicoCadastroMB.caminhoCancelar}"
+								process="@this" icon="fa fa-close" />
+						</div>
+
+					</h:form>
+					<!-- FIM - formulario principal -->
+				</div>
+			</div>
+
+			<!-- ADICIONAR PRODUTO -->
+			<p:dialog id="produto-dialog" header="Adicionar item"
+				widgetVar="addProduto" 
+				modal="true" 
+				width="80%"
+				height="500"
+				responsive="true" styleClass="box-success"
+				position="center bottom" closeOnEscape="true"
+				>
+				<div class="box box-primary">
+					<div class="box-header with-border">
+						<h:form id="form-add-produto">
+							<div class="ui-fluid" style="color: #555">
+							
+								<p:defaultCommand target="btn-salvar-prod" />
+
+								<p:growl autoUpdate="false" id="mensagem" severity="warn"
+									showSummary="true" showDetail="true" />
+									
+								<p:panelGrid columns="2" layout="grid">
+									
+									<p:column>
+										<p:outputLabel value="Descrição:" for="autocomplete-produto" />
+										<p:autoComplete 
+											value="#{ordemDeServicoCadastroMB.descricaoProduto}"
+											appendTo="@this"
+											placeholder="#{ordemDeServicoCadastroMB.modelProduto.servicoAutocomplete.placeholder}"
+											maxResults="#{ordemDeServicoCadastroMB.modelProduto.servicoAutocomplete.maxResults}"
+											minQueryLength="#{ordemDeServicoCadastroMB.modelProduto.servicoAutocomplete.minQueryLength}"
+											cache="#{ordemDeServicoCadastroMB.modelProduto.servicoAutocomplete.cache}" 
+											cacheTimeout="#{ordemDeServicoCadastroMB.modelProduto.servicoAutocomplete.cacheTimeout}"
+											queryDelay="#{ordemDeServicoCadastroMB.modelProduto.servicoAutocomplete.queryDelay}"
+											forceSelection="#{ordemDeServicoCadastroMB.modelProduto.servicoAutocomplete.forceSelection}"
+											required="#{ordemDeServicoCadastroMB.modelProduto.servicoAutocomplete.required}"
+											onkeypress="mascaraNumber(this, acrescentaZerosSeForNumero)"
+											completeMethod="#{ordemDeServicoCadastroMB.filtroProduto}"
+											id="autocomplete-produto"
+											requiredMessage="#{beanPadraoMensagensValidacao.retorno('javax.faces.validator.BeanValidator.MESSAGE', 'Descrição')}"
+										>
+											<p:ajax event="itemSelect" listener="#{ordemDeServicoCadastroMB.setaValorUnitario}" update="valor" />
+										</p:autoComplete>
+										<p:message for="autocomplete-produto" />
+									</p:column>
+
+									<p:column>
+										<p:outputLabel value="Quantidade:" for="quant-prod" />
+										<p:inputText
+											value="#{ordemDeServicoCadastroMB.itemProduto.quant}"
+											id="quant-prod" required="true"
+											onkeypress="mascaraNumber(this, permiteApenasNumeros)"
+											onfocus="selecionar(this)"
+											disabled="#{ordemDeServicoCadastroMB.disabledCamposForm}">
+											<f:validateLongRange minimum="1" />
+										</p:inputText>
+										<p:message for="quant-prod" />
+									</p:column>
+
+									<p:column>
+										<p:outputLabel value="Valor unitário (R$):" for="valor" />
+										<p:inputNumber id="valor" decimalSeparator=","
+											thousandSeparator="." decimalPlaces="2"
+											onfocus="mascaraNumber(this, apaga)" required="true"
+											value="#{ordemDeServicoCadastroMB.itemProduto.valorUnit}"
+											style="color: #555"
+											requiredMessage="#{beanPadraoMensagensValidacao.retorno('javax.faces.validator.BeanValidator.MESSAGE', 'Valor unitário (R$)')}"
+											validator="#{ordemDeServicoCadastroMB.validaValorRecomendadoVenda}"
+											disabled="#{ordemDeServicoCadastroMB.disabledCamposForm}">
+										</p:inputNumber>
+										<p:message id="msg-valor" for="valor" />
+									</p:column>
+									</p:panelGrid>
+
+								</div>
+								<div class="box-footer" style="border-top-width: 0;">
+									<p:commandButton validateClient="true"
+										value="#{ordemDeServicoCadastroMB.txtBotaoInserir}"
+										update="form-add-produto, dataTable"
+										action="#{ordemDeServicoCadastroMB.salvarNaListaDeItens}"
+										icon="fa fa-check" styleClass="btn-primary"
+										title="Adicionar à lista de peças" id="btn-salvar-prod"
+										disabled="#{ordemDeServicoCadastroMB.disabledCamposForm}"
+										/>
+								</div>
+
+							</h:form>
+					</div>
+				</div>
+			</p:dialog>
+			
+			<!-- ADICIONAR SERVICO ITEM-->
+			<p:dialog id="servico-item-dialog" header="Adicionar item"
+				widgetVar="addItemServico" responsive="true" styleClass="box-success"
+				closeOnEscape="true" width="50%" height="500"
+				position="center bottom" modal="true">
+				<div class="box box-primary">
+					<div class="box-header with-border">
+						<h:form id="form-add-item-servico"  >
+							<div class="ui-fluid" style="color: #555">
+							
+								<p:defaultCommand target="btn-salvar-item-ser" />
+
+								<p:growl autoUpdate="false" id="mensagem" severity="warn"
+									showSummary="true" showDetail="true" />
+
+									<div class="ui-g-12" style="padding-top: 0px;">
+										<div class="ui-g-10" style="padding-top: 0px;">
+											<p:outputLabel value="Descrição:" for="autocomplete-servico" />
+											<p:autoComplete 
+												value="#{ordemDeServicoCadastroMB.nomeServico}"
+												appendTo="@this"
+												placeholder="#{ordemDeServicoCadastroMB.modelProduto.servicoAutocomplete.placeholder}"
+												maxResults="#{ordemDeServicoCadastroMB.modelProduto.servicoAutocomplete.maxResults}"
+												minQueryLength="#{ordemDeServicoCadastroMB.modelProduto.servicoAutocomplete.minQueryLength}"
+												cache="#{ordemDeServicoCadastroMB.modelProduto.servicoAutocomplete.cache}" 
+												cacheTimeout="#{ordemDeServicoCadastroMB.modelProduto.servicoAutocomplete.cacheTimeout}"
+												queryDelay="#{ordemDeServicoCadastroMB.modelProduto.servicoAutocomplete.queryDelay}"
+												forceSelection="#{ordemDeServicoCadastroMB.modelProduto.servicoAutocomplete.forceSelection}"
+												required="#{ordemDeServicoCadastroMB.modelProduto.servicoAutocomplete.required}"
+												onkeypress="mascaraNumber(this, acrescentaZerosSeForNumero)"
+												completeMethod="#{ordemDeServicoCadastroMB.filtroServico}"
+												id="autocomplete-servico"
+												requiredMessage="#{beanPadraoMensagensValidacao.retorno('javax.faces.validator.BeanValidator.MESSAGE', 'Descrição')}"
+												disabled="#{ordemDeServicoCadastroMB.disabledCamposForm}"
+											>
+											</p:autoComplete>
+											<p:message for="autocomplete-servico" />
+										</div>
+										
+										<div class="ui-g-2" style="padding-top: 0px;">
+											<p:outputLabel value="Pes" style="visibility:hidden" />
+											<p:commandButton title="Cadastrar serviço"
+												process="@this"
+												icon="fa fa-plus" styleClass="btn-primary"
+												action="#{ordemDeServicoCadastroMB.abreModalItemParaAdicionarServico}"
+												oncomplete="PF('addServico').show();"
+												update="form-add-item-servico, form-servico"
+												disabled="#{ordemDeServicoCadastroMB.disabledCamposForm}">
+												<p:resetInput target="autocomplete-servico" />
+											</p:commandButton>
+										</div>
+										
+									</div>
+
+								</div>
+								<div class="box-footer" style="border-top-width: 0;">
+									<p:commandButton validateClient="true"
+										value="#{ordemDeServicoCadastroMB.txtBotaoInserir}"
+										update="form-add-item-servico, tabela-servicos"
+										action="#{ordemDeServicoCadastroMB.salvarNaListaDeServicos}"
+										icon="fa fa-check" styleClass="btn-primary"
+										title="Adicionar à lista de serviços" id="btn-salvar-item-ser"
+										disabled="#{ordemDeServicoCadastroMB.disabledCamposForm}" />
+								</div>
+
+						</h:form>
+					</div>
+				</div>
+			</p:dialog>
+
+			<!-- ADICIONAR CLIENTE -->
+			<p:dialog id="cliente-dialog" header="Cadastro cliente"
+				widgetVar="addCliente" responsive="true" styleClass="box-success"
+				modal="true" position="center center" closeOnEscape="true"
+				width="90%" height="40%">
+
+				<div class="box box-primary">
+					<div class="box-header with-border">
+						<h:form id="form-cliente">
+
+							<p:defaultCommand target="botao-salvar" />
+
+							<p:growl autoUpdate="false" id="mensagem-cadastro-cliente"
+								severity="warn" showSummary="true" showDetail="false" />
+
+							<div class="ui-fluid">
+
+								<div class="ui-g-8">
+									<p:outputLabel value="Nome:" for="nome-cliente" />
+									<p:inputText id="nome-cliente" required="true"
+										value="#{ordemDeServicoCadastroMB.cliente.nome}"
+										disabled="#{ordemDeServicoCadastroMB.disabledCamposForm}" />
+									<p:message for="nome-cliente" />
+								</div>
+
+
+								<div class="ui-g-4">
+									<p:outputLabel value="Nome:" style="visibility:hidden" />
+									<p:selectOneRadio id="pessoa"
+										value="#{ordemDeServicoCadastroMB.pessoa}" required="true"
+										disabled="#{ordemDeServicoCadastroMB.disabledCamposForm}">
+										<f:selectItem itemLabel="Física" itemValue="Física" />
+										<f:selectItem itemLabel="Jurídica" itemValue="Jurídica" />
+										<p:ajax event="change" update="pnlPessoa, pnlDataNascimento"
+											process="pessoa" />
+									</p:selectOneRadio>
+									<p:message for="pessoa" />
+								</div>
+
+								<div class="ui-g-6">
+									<h:panelGroup id="pnlPessoa">
+										<p:outputLabel id="lbCpf" value="CPF:" for="cpf"
+											rendered="#{ordemDeServicoCadastroMB.pessoa=='Física'}" />
+										<p:inputMask mask="999.999.999-99" id="cpf"
+											rendered="#{ordemDeServicoCadastroMB.pessoa=='Física'}"
+											required="#{ordemDeServicoCadastroMB.pessoa=='Física'}"
+											value="#{ordemDeServicoCadastroMB.cliente.cpfCnpj}"
+											disabled="#{ordemDeServicoCadastroMB.disabledCamposForm}"
+											validator="#{validatorJSF.validateCpfCnpjCliente}" />
+										<p:message for="cpf"
+											rendered="#{ordemDeServicoCadastroMB.pessoa=='Física'}" />
+
+
+										<p:outputLabel id="lbCnpj" value="CNPJ:" for="cnpj"
+											rendered="#{ordemDeServicoCadastroMB.pessoa=='Jurídica'}" />
+										<p:inputMask mask="99.999.999/9999-99" id="cnpj"
+											rendered="#{ordemDeServicoCadastroMB.pessoa=='Jurídica'}"
+											required="#{ordemDeServicoCadastroMB.pessoa=='Jurídica'}"
+											value="#{ordemDeServicoCadastroMB.cliente.cpfCnpj}"
+											disabled="#{ordemDeServicoCadastroMB.disabledCamposForm}"
+											validator="#{validatorJSF.validateCpfCnpjCliente}" />
+										<p:message for="cnpj"
+											rendered="#{ordemDeServicoCadastroMB.pessoa=='Jurídica'}" />
+
+									</h:panelGroup>
+								</div>
+
+								<div class="ui-g-6">
+									<h:panelGroup id="pnlDataNascimento">
+										<p:outputLabel value="Data nascimento: " for="data-nascimento"
+											rendered="#{ordemDeServicoCadastroMB.pessoa=='Física'}" />
+										<p:calendar id="data-nascimento"
+											value="#{ordemDeServicoCadastroMB.cliente.dataNascimento}"
+											pattern="dd/MM/yyyy" mask="true"
+											rendered="#{ordemDeServicoCadastroMB.pessoa=='Física'}"
+											required="#{ordemDeServicoCadastroMB.pessoa=='Física'}"
+											disabled="#{ordemDeServicoCadastroMB.disabledCamposForm}">
+											<p:ajax name="blur" update="data-nascimento"
+												listener="#{ordemDeServicoCadastroMB.onblurData}" />
+											<p:ajax event="dateSelect" update="data-nascimento"
+												listener="#{ordemDeServicoCadastroMB.acaoDataSelecionada}" />
+										</p:calendar>
+										<p:message for="data-nascimento"
+											rendered="#{ordemDeServicoCadastroMB.pessoa=='Física'}" />
+									</h:panelGroup>
+								</div>
+
+							</div>
+
+							<div style="clear: both;"></div>
+
+							<div class="box-footer"
+								style="border-top-width: 0; margin-bottom: 0; margin-top: 0; padding-bottom: 0; padding-top: 0;">
+								<p:commandButton value="Telefone" icon="fa fa-plus"
+									onclick="PF('addTelefone').show();" process="@this"
+									title="Adicionar telefone" update="form-cliente"
+									action="#{ordemDeServicoCadastroMB.abreModalItemTelefone}"
+									disabled="#{ordemDeServicoCadastroMB.disabledCamposForm}" />
+								<p:spacer width="5" />
+							</div>
+
+							<div class="ui-fluid">
+
+								<div class="ui-g-12">
+									<p:dataTable id="dataTable" var="i"
+										style="padding: 0px; margin:0px;"
+										value="#{ordemDeServicoCadastroMB.telefones}" reflow="true"
+										emptyMessage="Nenhum telefone foi informado!">
+
+										<p:column styleClass="align-center" headerText="Tipo telefone">
+											<h:outputText value="#{i.tipoTelefone.descricao}" />
+										</p:column>
+
+										<p:column styleClass="align-center" headerText="DDD">
+											<h:outputText value="#{i.ddd}" />
+										</p:column>
+
+										<p:column styleClass="align-center" headerText="Número">
+											<h:outputText value="#{i.numero}" />
+										</p:column>
+
+										<p:column styleClass="align-center" headerText="Ramal">
+											<h:outputText value="#{i.ramal}" />
+										</p:column>
+
+										<p:column style="width: 150px;">
+											<div class="ui-fluid">
+												<div class="ui-g-6" style="padding: 0 2% 0 2%;">
+													<p:commandButton styleClass="btn btn-success"
+														icon="fa fa-edit" title="Alterar"
+														actionListener="#{ordemDeServicoCadastroMB.alterarNaListaDeTelefones(i)}"
+														onclick="PF('addTelefone').show();"
+														update=":form-add-telefone form-cliente" process="@this"
+														disabled="#{ordemDeServicoCadastroMB.disabledCamposForm}" />
+												</div>
+												<div class="ui-g-6" style="padding: 0 2% 0 2%;">
+													<p:commandButton styleClass="btn btn-danger"
+														icon="fa fa-trash" title="Excluir" update="dataTable"
+														actionListener="#{ordemDeServicoCadastroMB.removerNaListaDeTelefones(i)}"
+														process="@this"
+														disabled="#{ordemDeServicoCadastroMB.disabledCamposForm}" />
+												</div>
+											</div>
+										</p:column>
+
+									</p:dataTable>
+								</div>
+
+								<p:panelGrid columns="1" layout="grid">
+									<p:column>
+										<p:outputLabel value="Email:" for="email" />
+										<p:inputText id="email" label="email" 
+											value="#{ordemDeServicoCadastroMB.cliente.email}"
+											disabled="#{ordemDeServicoCadastroMB.disabledCamposForm}" />
+										<p:message for="email" />
+									</p:column>
+
+									<p:column>
+										<p:outputLabel value="Endereço:" for="endereco" />
+										<p:inputTextarea id="endereco"
+											value="#{ordemDeServicoCadastroMB.cliente.endereco}"
+											disabled="#{ordemDeServicoCadastroMB.disabledCamposForm}" />
+										<p:message for="endereco" />
+									</p:column>
+
+								</p:panelGrid>
+
+							</div>
+
+							<div class="box-footer" style="border-top-width: 0;">
+								<p:commandButton value="Salvar" id="botao-salvar"
+									update="form-cliente autocomplete-cliente mensagem-cadastro-cliente"
+									validateClient="true"
+									action="#{ordemDeServicoCadastroMB.salvarCliente()}"
+									icon="fa fa-check" styleClass="btn-primary"
+									oncomplete="if(args.sucesso == true) PF('addCliente').hide()"
+									disabled="#{ordemDeServicoCadastroMB.disabledCamposForm}" />
+								<p:spacer width="5" />
+							</div>
+
+						</h:form>
+					</div>
+				</div>
+			</p:dialog>
+
+			<!-- ADICIONAR TELEFONE -->
+			<p:dialog id="telefone-dialog" header="Adicionar telefone"
+				widgetVar="addTelefone" responsive="true" styleClass="box-success"
+				closeOnEscape="true" width="80%" height="250"
+				position="center center" modal="true">
+
+				<p:ajax event="close"
+					listener="#{ordemDeServicoCadastroMB.fechaModalPesquisaItemTelefone}" />
+
+				<div class="box box-primary">
+					<div class="box-header with-border">
+						<h:form id="form-add-telefone">
+
+							<p:defaultCommand target="btn-salvar-telefone" />
+
+							<div class="ui-fluid" style="color: #555">
+
+								<p:growl autoUpdate="false" id="mensagem-telefone-duplicado"
+									severity="warn" showSummary="true" showDetail="false" />
+
+								<p:panelGrid columns="4" layout="grid">
+									<p:column>
+										<p:outputLabel id="label-tipo-telefone" value="Tipo telefone"
+											for="tipo-telefone" />
+										<p:selectOneMenu id="tipo-telefone" 
+											required="true"
+											value="#{ordemDeServicoCadastroMB.telefone.tipoTelefone}"
+											appendTo="@this">
+											<f:selectItem itemLabel="Selecione" itemValue="" />
+											<f:selectItems
+												value="#{ordemDeServicoCadastroMB.listaEnumTipoTelefone}"
+												var="l" itemLabel="#{l.descricao}" itemValue="#{l}" />
+										</p:selectOneMenu>
+										<p:message for="tipo-telefone" />
+									</p:column>
+
+									<p:column>
+										<p:outputLabel value="DDD: " for="ddd" />
+										<p:inputText id="ddd"
+											value="#{ordemDeServicoCadastroMB.telefone.ddd}"
+											required="true"
+											onkeypress="mascaraNumber(this, permiteApenasNumeros)"
+											maxlength="3">
+											<f:validateLength minimum="3" />
+										</p:inputText>
+										<p:message for="ddd" />
+									</p:column>
+
+									<p:column>
+										<p:outputLabel value="Número" for="numero" />
+										<p:inputText id="numero"
+											value="#{ordemDeServicoCadastroMB.telefone.numero}"
+											required="true" onblur="mascara(this, true, telefone);"
+											onkeypress="mascara(this, false, telefone);">
+											<f:validateLength minimum="9" />
+										</p:inputText>
+										<p:message for="numero" />
+									</p:column>
+
+									<p:column>
+										<p:outputLabel value="Ramal" for="ramal" />
+										<p:inputText
+											value="#{ordemDeServicoCadastroMB.telefone.ramal}" id="ramal" />
+										<p:message for="ramal" />
+									</p:column>
+
+								</p:panelGrid>
+							</div>
+							<div class="box-footer" style="border-top-width: 0;">
+								<p:commandButton validateClient="true"
+									value="#{ordemDeServicoCadastroMB.txtBotaoInserir}"
+									update="form-add-telefone, form-cliente:dataTable"
+									action="#{ordemDeServicoCadastroMB.salvarNaListaDeTelefones}"
+									icon="fa fa-check" styleClass="btn-primary"
+									title="#{ordemDeServicoCadastroMB.txtBotaoInserir}"
+									id="btn-salvar-telefone" />
+							</div>
+						</h:form>
+					</div>
+				</div>
+			</p:dialog>
+
+			<!-- ADICIONAR SERVICO -->
+			<p:dialog id="servico-dialog" header="Cadastro serviço"
+				widgetVar="addServico" responsive="true" styleClass="box-success"
+				modal="true" closeOnEscape="true" width="50%" height="30%"
+				position="center center">
+				
+				<p:ajax event="close"
+					listener="#{ordemDeServicoCadastroMB.fechaModalItemServico}" />
+				
+				<div class="box box-primary">
+					<div class="box-header with-border">
+						<h:form id="form-servico">
+							<div class="ui-fluid">
+								<p:panelGrid columns="2" layout="grid">
+									<p:column>
+										<p:outputLabel value="Descrição:" for="descricao" />
+										<p:inputText id="descricao" required="true"
+											value="#{ordemDeServicoCadastroMB.servico.descricao}" />
+										<p:message for="descricao" />
+									</p:column>
+									<p:column>
+										<p:outputLabel value="Mão de obra:" for="mao-de-obra" />
+										<p:selectOneMenu id="mao-de-obra" appendTo="@this"
+											style="color: #555"
+											value="#{ordemDeServicoCadastroMB.servico.maoDeObra}"
+											required="true">
+											<f:selectItem itemLabel="Selecione" itemValue="" />
+											<f:selectItems
+												value="#{ordemDeServicoCadastroMB.listaMaoDeObra}"
+												var="obj" itemLabel="#{obj.descricao}" itemValue="#{obj}" />
+										</p:selectOneMenu>
+										<p:message for="mao-de-obra" />
+									</p:column>
+								</p:panelGrid>
+							</div>
+							<div class="box-footer" style="border-top-width: 0;">
+								<p:commandButton value="Salvar" update="form-servico"
+									style="margin-top:5px;" process="servico-dialog"
+									validateClient="true"
+									action="#{ordemDeServicoCadastroMB.salvarServico()}"
+									icon="fa fa-check" styleClass="btn btn-primary"
+									oncomplete="if (!args.validationFailed) PF('addServico').hide()" />
+							</div>
+						</h:form>
+					</div>
+				</div>
+			</p:dialog>
+
+			<!-- ADICIONAR APARELHO -->
+			<p:dialog id="aparelho-dialog" header="Cadastro aparelho"
+				widgetVar="addAparelho" responsive="true" styleClass="box-success"
+				modal="true" closeOnEscape="true" width="80%" height="40%">
+				<div class="box box-primary">
+					<div class="box-header with-border">
+						<h:form id="form-aparelho">
+							<div class="ui-fluid">
+								<p:panelGrid columns="1" layout="grid">
+									<p:column>
+										<p:outputLabel value="Marca: " for="marca" />
+										<p:inputText id="marca" required="true"
+											value="#{ordemDeServicoCadastroMB.aparelho.marca}" />
+										<p:message for="marca" />
+									</p:column>
+								</p:panelGrid>
+							</div>
+
+							<div class="box-footer" style="border-top-width: 0;">
+								<p:commandButton value="Salvar" validateClient="true"
+									process="aparelho-dialog"
+									update="form-aparelho autocomplete-aparelho form-modelo:mAparelho"
+									action="#{ordemDeServicoCadastroMB.salvarAparelho()}"
+									icon="fa fa-check" styleClass="btn-primary"
+									oncomplete="if (!args.validationFailed) PF('addAparelho').hide()" />
+							</div>
+						</h:form>
+					</div>
+				</div>
+			</p:dialog>
+
+			<!-- ADICIONAR MODELO -->
+			<p:dialog id="modelo-dialog" header="Cadastro modelo"
+				widgetVar="addModelo" responsive="true" styleClass="box-success"
+				modal="true" closeOnEscape="true" width="80%" height="40%">
+				<div class="box box-primary">
+					<div class="box-header with-border">
+						<h:form id="form-modelo">
+							<div class="ui-fluid">
+								<p:panelGrid columns="2" layout="grid">
+									<p:column>
+										<p:outputLabel value="Modelo " for="model" />
+										<p:inputText id="model" required="true"
+											value="#{ordemDeServicoCadastroMB.modelo.modelo}" />
+										<p:message for="model" />
+									</p:column>
+									<p:column>
+										<p:outputLabel value="Aparelho: " for="mAparelho" />
+										<p:inputText id="mAparelho" required="true" readonly="true"
+											requiredMessage="Antes de salvar o modelo, preencha o campo Aparelho"
+											value="#{ordemDeServicoCadastroMB.nomeAparelho}" />
+										<p:message for="mAparelho" />
+									</p:column>
+								</p:panelGrid>
+							</div>
+
+							<div class="box-footer" style="border-top-width: 0;">
+								<p:commandButton value="Salvar" validateClient="true"
+									update="form-modelo autocomplete-modelo" process="modelo-dialog"
+									action="#{ordemDeServicoCadastroMB.salvarModelo()}"
+									icon="fa fa-check" styleClass="btn-primary"
+									oncomplete="if (!args.validationFailed) PF('addModelo').hide()" />
+							</div>
+						</h:form>
+					</div>
+				</div>
+			</p:dialog>
+
+			<!-- DIALOG DE CONTINUA (SIM/NÃO) O.S. COM IMEI NA GARANTIA -->
+			<p:dialog id="continua-ordem-dialog" header="Continuar O.S."
+				widgetVar="continuaOrdem" responsive="true" styleClass="box-success"
+				modal="true" closeOnEscape="true" width="300" height="120"
+				position="center center">
+
+				<h:form id="form-continua-ordem">
+					<div class="ui-fluid" style="color: #555">
+						<p:panelGrid columns="1" layout="grid">
+							<p:column>
+								<h:outputText
+									value="#{ordemDeServicoCadastroMB.mensagemModalValidaIMEI} Tem certeza que deseja continuar?" />
+							</p:column>
+							<h:outputText value="" />
+						</p:panelGrid>
+						<p:panelGrid columns="2" layout="grid">
+							<p:commandButton value="Sim" process="continua-ordem-dialog"
+								update="form-principal, form-aparelho, form-modelo, form-servico"
+								action="#{ordemDeServicoCadastroMB.salvar()}"
+								oncomplete="PF('continuaOrdem').hide();" icon="fa fa-check"
+								styleClass="btn-primary" />
+							<p:commandButton value="Não" process="continua-ordem-dialog"
+								update="form-principal"
+								action="#{ordemDeServicoCadastroMB.naoContinuaOrdem()}"
+								icon="fa fa-close" styleClass="btn-default"
+								oncomplete="PF('continuaOrdem').hide();" />
+						</p:panelGrid>
+					</div>
+				</h:form>
+			</p:dialog>
+
+		</ui:define>
+	</div>
+
+</ui:composition>

@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:adm="http://github.com/adminfaces"
+	template="/WEB-INF/templates/template.xhtml">
+
+	<ui:define name="title">
+		<br />
+		<p:separator />
+         #{contasAReceberRelatorioMB.titulo}
+    </ui:define>
+
+	<ui:define name="description">
+        Escolha os filtros
+    </ui:define>
+
+	<ui:define name="head-end">
+		<ui:param name="renderBreadCrumb" value="true" />
+	</ui:define>
+
+	<ui:define name="body">
+
+		<adm:breadcrumb
+			title="#{contasAReceberRelatorioMB.tituloBreadCrumbString}"
+			link="#{contasAReceberRelatorioMB.linkBreadCrumb}" />
+
+		<h:form id="form" prependId="false">
+			<p:focus />
+
+			<div class="box box-primary">
+
+				<div class="box-header with-border">
+					<div></div>
+					<p:separator />
+
+					<div class="ui-fluid">
+							<div class="ui-g-6">
+								<p:outputLabel value="Contas pagas:" for="faturas" />
+								<p:selectOneMenu id="faturas"
+									value="#{contasAReceberRelatorioMB.faturasBaixadas}">
+									<f:selectItem itemLabel="Não" itemValue="false" />
+									<f:selectItem itemLabel="Sim" itemValue="true" />
+								</p:selectOneMenu>
+							</div>
+
+							<div class="ui-g-6">
+								<p:outputLabel value="Tipo de fatura:" for="pesquisa-f" />
+								<p:selectOneMenu id="pesquisa-f"
+									value="#{contasAReceberRelatorioMB.tipoFatura}">
+									<f:selectItem itemLabel="Ordem de serviço" itemValue="ordem" />
+									<f:selectItem itemLabel="Venda" itemValue="venda" />
+									<f:selectItem itemLabel="Todos" itemValue="todos" />
+									<p:ajax event="change" update="label-tipo-pesquisa" />
+								</p:selectOneMenu>
+							</div>
+							
+							<div class="ui-g-12 ui-md-4">
+								<p:outputLabel value="Tipo de relatório:" for="pesquisa" />
+								<p:selectOneMenu id="pesquisa"
+									value="#{contasAReceberRelatorioMB.tipoRelatorio}">
+									<f:selectItem itemLabel="Número (Cód.)" itemValue="numero" />
+									<f:selectItem itemLabel="Intervalo entre datas"
+										itemValue="data" />
+									<f:selectItem itemLabel="Todos" itemValue="todos" />
+									<p:ajax event="change" update="label-tipo-pesquisa" />
+								</p:selectOneMenu>
+							</div>
+
+							<div class="ui-g-12 ui-md-8">
+								<h:panelGroup id="label-tipo-pesquisa">
+								
+									<p:outputLabel value="Período:" for="data-inicio"
+										rendered="#{contasAReceberRelatorioMB.tipoRelatorio == 'data'}" />
+									
+									<p:outputLabel id="lb-numero-os" value="Número (Cód.): "
+										for="numero-entrada"
+										rendered="#{contasAReceberRelatorioMB.tipoRelatorio=='numero'}" />
+									
+									<p:outputLabel value="pes" style="visibility:hidden;"
+										rendered="#{contasAReceberRelatorioMB.tipoRelatorio=='todos'}" />
+									
+									<div class="input-group">
+										
+										<div class="ui-g-6" style="padding: 0px; padding-right: 3%;">
+											<p:calendar id="data-inicio" style="color: #555"
+												value="#{contasAReceberRelatorioMB.dataInicio}"
+												required="true" pattern="dd/MM/yyyy" mask="true"
+												rendered="#{contasAReceberRelatorioMB.tipoRelatorio == 'data'}">
+											</p:calendar>
+										</div>
+	
+										<div class="ui-g-6" style="padding: 0px;">
+											<p:calendar id="data-fim" style="color: #555;" 
+												value="#{contasAReceberRelatorioMB.dataFim}" required="true"
+												pattern="dd/MM/yyyy" mask="true"
+												rendered="#{contasAReceberRelatorioMB.tipoRelatorio == 'data'}">
+											</p:calendar>
+										</div>
+	
+										<p:inputText id="numero-entrada"
+											rendered="#{contasAReceberRelatorioMB.tipoRelatorio=='numero'}"
+											required="#{contasAReceberRelatorioMB.tipoRelatorio=='numero'}"
+											value="#{contasAReceberRelatorioMB.codigo}" />
+										
+										<span class="input-group-btn" style="padding-left: 2%;">
+											<p:commandButton value="Relatório" validateClient="true"
+												icon="fa fa-wpforms"
+												action="#{contasAReceberRelatorioMB.gerarRelatorio}"
+												ajax="false" styleClass="btn-primary"
+												onclick="this.form.target='_blank'" />
+										</span>
+									</div>
+									
+									<p:message for="data-inicio"
+										rendered="#{contasAReceberRelatorioMB.tipoRelatorio == 'data'}" />
+									
+									<p:message for="data-fim"
+											rendered="#{contasAReceberRelatorioMB.tipoRelatorio == 'data'}" />
+											
+									<p:message for="numero-entrada"
+										rendered="#{contasAReceberRelatorioMB.tipoRelatorio=='numero'}" />
+								</h:panelGroup>
+							</div>
+
+					</div>
+				</div>
+			</div>
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>

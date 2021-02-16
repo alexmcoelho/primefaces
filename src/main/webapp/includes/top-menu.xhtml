@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+
+	<ul class="nav navbar-nav">
+
+		<!--  
+		<li class="dropdown messages-menu">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
+                <i class="fa fa-envelope-o"></i>
+                <span class="label label-success">4</span>
+            </a>
+            <ul class="dropdown-menu">
+                <li class="header align-center">You have 4 messages</li>
+                <li>
+                    <ul class="menu">
+                        <li>
+                            Message 1
+                        </li>
+                        <li>
+                            Message 2
+                        </li>
+                        <li>
+                            Message 3
+                        </li>
+                        <li>
+                            Message 4
+                        </li>
+                    </ul>
+                </li>
+                <li class="footer"><a href="#">See all messages</a></li>
+            </ul>
+        </li>
+        
+        -->
+		<li class="dropdown notifications-menu" ><a href="#"
+			class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
+				<i class="fa fa-bell-o"></i> 
+				<span class="label label-warning">
+					<h:outputText value="#{notificacaoEstoqueMB.tamanho}" />
+				</span>
+		</a>
+			<ul class="dropdown-menu" style="max-height:500px; overflow-y:auto;">
+				<li class="align-center">
+					<h4><b>Quantidade em estoque menor ou igual a #{notificacaoEstoqueMB.quantAviso}.</b></h4>
+				</li>
+				<li>
+	                <table class="table table-striped">
+	                	<tr>
+	                		<td>Descrição</td>
+	                		<td style="width: 10%;">Quant.</td>
+	                	</tr>
+	                 <ui:repeat var="p" value="#{notificacaoEstoqueMB.lista}">
+	                 	<tr>
+	                  	<td><h:outputText value="#{p.descricao}" /> </td>
+	                  	<td><h:outputText value="#{p.quant}" /> </td>
+	                  </tr>
+	                 </ui:repeat>
+	                </table>
+				</li>
+				<li class="footer"><a href="#"></a></li>
+			</ul></li>
+		<li class="dropdown user user-menu"><a href="#"
+			class="dropdown-toggle" data-toggle="dropdown"> <pe:gravatar
+					id="userImage" value="nonexisting" /> <span class="hidden-xs">#{usuarioMB.mostrarUsuarioLogado().nome}</span>
+		</a>
+			<ul class="dropdown-menu">
+				<li class="user-header">
+					<div class="hidden-xs">
+						<h:graphicImage library="images" name="boneco.png" height="80" />
+					</div>
+					<p>
+						#{usuarioMB.mostrarUsuarioLogado().nome} <small> Usuário
+							conectado </small>
+					</p>
+				</li>
+				<li class="user-footer"><h:form prependId="false">
+						<div class="pull-left">
+							<p:commandLink styleClass="btn btn-default" value="Alterar senha"
+								actionListener="#{usuarioCadastroMB.selecionarUsuarioAlterarSenha}">
+								<f:param id="entidadeId" name="entidadeId"
+									value="#{usuarioMB.mostrarUsuarioLogado().id}" />
+							</p:commandLink>
+						</div>
+						<div class="pull-right">
+							<p:commandLink id="logout" action="#{usuarioMB.encerrarSessao()}"
+								title="Logoff">
+								<i class="fa fa-sign-out fa-2x"></i>
+							</p:commandLink>
+						</div>
+					</h:form></li>
+			</ul></li>
+
+	</ul>
+
+
+</ui:composition>

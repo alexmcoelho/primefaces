@@ -1,0 +1,386 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:adm="http://github.com/adminfaces"
+	template="/WEB-INF/templates/template.xhtml">
+
+	<ui:define name="title">
+		<br />
+		<p:separator />
+        #{baixaPagamentosMB.titulo}
+    </ui:define>
+
+	<ui:define name="description">
+        Escolha a forma de pesquisa
+    </ui:define>
+
+	<ui:define name="head-end">
+		<ui:param name="renderBreadCrumb" value="true" />
+	</ui:define>
+
+	<ui:define name="body">
+		<adm:breadcrumb title="#{baixaPagamentosMB.tituloBreadCrumbString}"
+			link="#{baixaPagamentosMB.linkBreadCrumb}" />
+
+		<h:form id="form-lista">
+
+			<div class="box box-primary">
+				<div class="box-header with-border">
+					<div></div>
+
+					<div class="ui-fluid" style="color: #555">
+
+						<div class="ui-g-3">
+							<p:outputLabel value="Faturas baixadas:" for="faturas" />
+							<p:selectOneMenu id="faturas"
+								value="#{baixaPagamentosMB.faturasBaixadas}">
+								<f:selectItem itemLabel="Não" itemValue="nao" />
+								<f:selectItem itemLabel="Sim" itemValue="sim" />
+								<f:selectItem itemLabel="Não/Sim" itemValue="nao_sim" />
+							</p:selectOneMenu>
+						</div>
+
+						<div class="ui-g-3">
+							<p:outputLabel value="Tipo de fatura:" for="pesquisa-f" />
+							<p:selectOneMenu id="pesquisa-f"
+								value="#{baixaPagamentosMB.tipoFatura}">
+								<f:selectItem itemLabel="Ordem de serviço" itemValue="ordem" />
+								<f:selectItem itemLabel="Venda" itemValue="venda" />
+								<p:ajax event="change" update="label-tipo-pesquisa, pesquisa" />
+							</p:selectOneMenu>
+						</div>
+						
+						<div class="ui-g-3">
+							<p:outputLabel value="Período:" for="data-inicio" />
+							<p:calendar id="data-inicio" style="color: #555"
+								value="#{baixaPagamentosMB.dataInicio}" required="true"
+								pattern="dd/MM/yyyy" mask="true"
+								placeholder="Data de início">
+							</p:calendar>
+							<p:message for="data-inicio" />
+						</div>
+						
+						<div class="ui-g-3">
+							<p:outputLabel value="Data de fim" style="visibility:hidden;" for="data-fim" />
+							<p:calendar id="data-fim" style="color: #555"
+								value="#{baixaPagamentosMB.dataFim}" required="true"
+								pattern="dd/MM/yyyy" mask="true"
+								placeholder="Data de fim">
+							</p:calendar>
+							<p:message for="data-fim" />
+						</div>
+
+						<div class="ui-g-12 ui-md-4">
+							<p:outputLabel value="Tipo de pesquisa:" for="pesquisa" />
+							<p:selectOneMenu id="pesquisa"
+								value="#{baixaPagamentosMB.tipoPesquisa}">
+								<f:selectItem itemLabel="Número (Cód.)" itemValue="numero" />
+								<f:selectItem itemLabel="IMEI" itemValue="numero_cel"
+									itemDisabled="#{baixaPagamentosMB.tipoFatura == 'venda'}" />
+								<f:selectItem itemLabel="Nome cliente" itemValue="nome" />
+								<f:selectItem itemLabel="CPF" itemValue="cpf" />
+								<f:selectItem itemLabel="CNPJ" itemValue="cnpj" />
+								<f:selectItem itemLabel="Todos" itemValue="todos" />
+								<p:ajax event="change" update="label-tipo-pesquisa" />
+							</p:selectOneMenu>
+						</div>
+
+						<div class="ui-g-12 ui-md-8">
+							<h:panelGroup id="label-tipo-pesquisa">
+								<p:outputLabel id="lbCpf" value="CPF:" for="cpf"
+									rendered="#{baixaPagamentosMB.tipoPesquisa == 'cpf'}" />
+
+								<p:outputLabel id="lbCnpj" value="CNPJ:" for="cnpj"
+									rendered="#{baixaPagamentosMB.tipoPesquisa=='cnpj'}" />
+
+								<p:outputLabel id="lb-numero-os" value="Número: "
+									for="numero-os"
+									rendered="#{baixaPagamentosMB.tipoPesquisa=='numero'}" />
+
+								<p:outputLabel id="lb-numero-imei" value="Número IMEI: "
+									for="numero-imei"
+									rendered="#{baixaPagamentosMB.tipoPesquisa=='numero_cel'}" />
+
+								<p:outputLabel id="lb-nome-cliente" value="Nome cliente: "
+									for="nome-cliente"
+									rendered="#{baixaPagamentosMB.tipoPesquisa=='nome'}" />
+								
+								<p:outputLabel value="pes" style="visibility:hidden;"
+									rendered="#{baixaPagamentosMB.tipoPesquisa=='todos'}" />
+
+								<div class="input-group">
+
+									<p:inputMask mask="999.999.999-99" id="cpf"
+										rendered="#{baixaPagamentosMB.tipoPesquisa == 'cpf'}"
+										required="#{baixaPagamentosMB.tipoPesquisa == 'cpf'}"
+										value="#{baixaPagamentosMB.cliente.cpfCnpj}" />
+
+									<p:inputMask mask="99.999.999/9999-99" id="cnpj"
+										rendered="#{baixaPagamentosMB.tipoPesquisa=='cnpj'}"
+										required="#{baixaPagamentosMB.tipoPesquisa=='cnpj'}"
+										value="#{baixaPagamentosMB.cliente.cpfCnpj}" />
+
+									<p:inputText id="numero-os"
+										rendered="#{baixaPagamentosMB.tipoPesquisa=='numero'}"
+										required="#{baixaPagamentosMB.tipoPesquisa=='numero'}"
+										value="#{baixaPagamentosMB.idOrdemOuSaida}" />
+
+									<p:inputMask id="numero-imei"
+										rendered="#{baixaPagamentosMB.tipoPesquisa=='numero_cel'}"
+										required="#{baixaPagamentosMB.tipoPesquisa=='numero_cel'}"
+										value="#{baixaPagamentosMB.ordemDeServico.imei}"
+										mask="999999-99-999999-9" />
+
+									<p:inputText id="nome-cliente"
+										rendered="#{baixaPagamentosMB.tipoPesquisa=='nome'}"
+										required="#{baixaPagamentosMB.tipoPesquisa=='nome'}"
+										value="#{baixaPagamentosMB.cliente.nome}" />
+
+									<p:inputText id="todos"
+										rendered="#{baixaPagamentosMB.tipoPesquisa=='todos'}"
+										style="visibility:hidden;" />
+
+									<span class="input-group-btn" style="padding-left: 2%;">
+										<p:commandButton value="Pesquisar" title="Pesquisar"
+											action="#{baixaPagamentosMB.pesquisarFaturas}"
+											update="tabela-parcela, form-lista" icon="fa fa-search"
+											styleClass="btn-primary" id="btn-pesquisar"
+											validateClient="true" />
+									</span>
+
+								</div>
+
+								<p:message for="cpf"
+									rendered="#{baixaPagamentosMB.tipoPesquisa == 'cpf'}" />
+
+								<p:message for="data-inicio"
+									rendered="#{baixaPagamentosMB.tipoPesquisa == 'data'}" />
+
+								<p:message for="cnpj"
+									rendered="#{baixaPagamentosMB.tipoPesquisa=='cnpj'}" />
+
+								<p:message for="numero-os"
+									rendered="#{baixaPagamentosMB.tipoPesquisa=='numero'}" />
+
+								<p:message for="numero-imei"
+									rendered="#{baixaPagamentosMB.tipoPesquisa=='numero_cel'}" />
+
+								<p:message for="nome-cliente"
+									rendered="#{baixaPagamentosMB.tipoPesquisa=='nome'}" />
+							</h:panelGroup>
+						</div>
+
+						<br />
+
+						<p:dataTable id="tabela-parcela" var="d"
+							value="#{baixaPagamentosMB.model}" 
+							rows="15" paginator="true" lazy="true" 
+							reflow="true"
+							emptyMessage="Escolha os filtros para obter resultados de pesquisa!"
+							style="clear:both; padding-top: 1%;">
+
+							<p:column styleClass="align-center"
+								headerText="Descrição parcela">
+								<h:outputText value="#{d.descricao}" />
+							</p:column>
+
+							<p:column styleClass="align-center" headerText="Data vencimento">
+								<h:outputText value="#{d.dataVencimento}">
+									<f:convertDateTime patter="dd/MM/yyyy" />
+								</h:outputText>
+							</p:column>
+
+							<p:column styleClass="align-center" headerText="Valor">
+								<h:outputText value="#{d.valorParcela}">
+									<f:converter converterId="DoubleConverter" />
+								</h:outputText>
+							</p:column>
+
+							<p:column styleClass="align-center" headerText="Código/Número">
+								<h:outputText
+									rendered="#{baixaPagamentosMB.tipoFatura == 'ordem'}"
+									value="#{d.ordemDeServico.id}" />
+								<h:outputText
+									rendered="#{baixaPagamentosMB.tipoFatura == 'venda'}"
+									value="#{d.saidaDeProdutos.id}" />
+							</p:column>
+
+							<p:column styleClass="align-center" headerText="Cliente">
+								<h:outputText
+									rendered="#{baixaPagamentosMB.tipoFatura == 'ordem'}"
+									value="#{d.ordemDeServico.cliente.nome}" />
+								<h:outputText
+									rendered="#{baixaPagamentosMB.tipoFatura == 'venda'}"
+									value="#{d.saidaDeProdutos.cliente.nome}" />
+							</p:column>
+
+							<p:column styleClass="align-center" headerText="CPF/CNPJ">
+								<h:outputText
+									rendered="#{baixaPagamentosMB.tipoFatura == 'ordem'}"
+									value="#{d.ordemDeServico.cliente.cpfCnpj}" />
+								<h:outputText
+									rendered="#{baixaPagamentosMB.tipoFatura == 'venda'}"
+									value="#{d.saidaDeProdutos.cliente.cpfCnpj}" />
+							</p:column>
+
+							<p:column style="width: 150px;">
+								<div class="ui-fluid">
+									<div class="ui-g-6" style="padding: 0 2% 0 2%;">
+										<h:panelGroup id="btn-baixa">
+											<p:commandButton styleClass="btn btn-warning"
+												icon="fa fa-sort-down" title="Dar baixa"
+												actionListener="#{baixaPagamentosMB.prepara(d)}"
+												onclick="PF('preparaBaixa').show();"
+												rendered="#{!d.baixada}" />
+											<p:commandButton styleClass="btn btn-primary"
+												icon="fa fa-edit" title="Cancela baixa"
+												actionListener="#{baixaPagamentosMB.prepara(d)}"
+												onclick="PF('preparaCancelBaixa').show();"
+												rendered="#{d.baixada}" />
+										</h:panelGroup>
+									</div>
+									<div class="ui-g-6" style="padding: 0 2% 0 2%;">
+										<p:commandButton styleClass="btn btn-default"
+											title="Imprimir recibos" icon="fa fa-print" ajax="false"
+											onclick="this.form.target='_blank'"
+											actionListener="#{baixaPagamentosMB.imprimirReciboSelecionado(d)}"
+											disabled="#{!d.baixada}" />
+									</div>
+								</div>
+							</p:column>
+
+						</p:dataTable>
+						
+						<div
+							style="text-align: right; font-weight: bold; font-size: 1.0em; margin-right: 1%;">
+							<h:outputText value="Totais " />
+							
+						</div>
+						<div
+							style="text-align: right; font-weight: bold; font-size: 1.0em; margin-right: 1%; color: #00A65A;">
+							<h:outputText value="Recebidas: " />
+							<h:outputText id="total-recebidas"
+								value="#{baixaPagamentosMB.model.classeAuxiliarTotaisFaturas.recebidas}">
+								<f:convertNumber type="currency" locale="pt_BR" />
+							</h:outputText>
+						</div>
+						<div
+							style="text-align: right; font-weight: bold; font-size: 1.0em; margin-right: 1%; color: #3C8DBC;">
+							<h:outputText value="À receber: " />
+							<h:outputText id="total-a-receber"
+								value="#{baixaPagamentosMB.model.classeAuxiliarTotaisFaturas.receber}">
+								<f:convertNumber type="currency" locale="pt_BR" />
+							</h:outputText>
+						</div>
+						<div
+							style="text-align: right; font-weight: bold; font-size: 1.0em; margin-right: 1%; color: #BF0000;">
+							<h:outputText value="Vencidas: " />
+							<h:outputText id="total-vencidaas"
+								value="#{baixaPagamentosMB.model.classeAuxiliarTotaisFaturas.vencidas}">
+								<f:convertNumber type="currency" locale="pt_BR" />
+							</h:outputText>
+						</div>
+						<div
+							style="text-align: right; font-weight: bold; font-size: 1.0em; margin-right: 1%;">
+							<h:outputText value="Total de recebimentos: " />
+							<h:outputText id="total-recebimentos"
+								value="#{baixaPagamentosMB.model.classeAuxiliarTotaisFaturas.total}">
+								<f:convertNumber type="currency" locale="pt_BR" />
+							</h:outputText>
+						</div>
+					</div>
+				</div>
+			</div>
+		</h:form>
+
+		<!-- DIALOG DE CANCELA BAIXA -->
+		<p:dialog id="cancela-baixa-dialog" header="Cancelar baixa de parcela"
+			widgetVar="preparaCancelBaixa" responsive="true"
+			styleClass="box-success" modal="true" closeOnEscape="true"
+			width="300" height="120" position="center center">
+			<h:form id="form-cancela-baixa">
+				<div class="ui-fluid" style="color: #555">
+					<p:panelGrid columns="1" layout="grid">
+						<p:column>
+							<h:outputText
+								value="Tem certeza que deseja cancelar a baixa dessa parcela?" />
+						</p:column>
+						<h:outputText value="" />
+					</p:panelGrid>
+					<p:panelGrid columns="2" layout="grid">
+						<p:commandButton value="Sim" update="form-lista:tabela-parcela"
+							process="cancela-baixa-dialog"
+							action="#{baixaPagamentosMB.cancelaBaixa()}" icon="fa fa-check"
+							styleClass="btn-primary"
+							oncomplete="PF('preparaCancelBaixa').hide()" />
+						<p:commandButton value="Não" process="cancela-baixa-dialog"
+							icon="fa fa-close" styleClass="btn-default"
+							oncomplete="PF('preparaCancelBaixa').hide()" />
+					</p:panelGrid>
+				</div>
+			</h:form>
+		</p:dialog>
+
+		<!-- DIALOG DE BAIXA -->
+		<p:dialog id="dar-baixa-dialog" header="Dar baixa"
+			widgetVar="preparaBaixa" responsive="true" styleClass="box-success"
+			modal="true" closeOnEscape="true" width="300" height="120"
+			position="center center">
+			<h:form id="form-dar-baixa">
+				<div class="ui-fluid" style="color: #555">
+					<p:panelGrid columns="1" layout="grid">
+						<p:column>
+							<h:outputText
+								value="Tem certeza que deseja dar baixa nesta fatura?" />
+						</p:column>
+						<h:outputText value="" />
+					</p:panelGrid>
+					<p:panelGrid columns="2" layout="grid">
+						<p:commandButton value="Sim" update="form-lista:tabela-parcela"
+							process="dar-baixa-dialog"
+							action="#{baixaPagamentosMB.darBaixa()}" icon="fa fa-check"
+							styleClass="btn-primary"
+							oncomplete="PF('preparaBaixa').hide(); PF('preparaImpressao').show();" />
+						<p:commandButton value="Não" process="dar-baixa-dialog"
+							icon="fa fa-close" styleClass="btn-default"
+							oncomplete="PF('preparaBaixa').hide()" />
+					</p:panelGrid>
+				</div>
+			</h:form>
+		</p:dialog>
+
+		<!-- DIALOG DE IMPRESSÃO -->
+		<p:dialog id="impressao-dialog" header="Impressão"
+			widgetVar="preparaImpressao" responsive="true"
+			styleClass="box-success" modal="true" closeOnEscape="true"
+			width="300" height="120" position="center center">
+			<h:form id="form-impressao">
+				<div class="ui-fluid" style="color: #555">
+					<p:panelGrid columns="1" layout="grid">
+						<p:column>
+							<h:outputText value="Deseja imprimir o recibo?" />
+							<br />
+							<br />
+						</p:column>
+						<h:outputText value="" />
+					</p:panelGrid>
+					<p:panelGrid columns="2" layout="grid">
+						<p:commandButton value="Sim" ajax="false"
+							action="#{baixaPagamentosMB.gerarRecibo}" icon="fa fa-check"
+							styleClass="btn-primary"
+							oncomplete="PF('preparaImpressao').hide()"
+							onclick="this.form.target='_blank'" />
+						<p:commandButton value="Não" process="impressao-dialog"
+							icon="fa fa-close" styleClass="btn-default"
+							oncomplete="PF('preparaImpressao').hide()" />
+					</p:panelGrid>
+				</div>
+			</h:form>
+		</p:dialog>
+
+	</ui:define>
+
+</ui:composition>

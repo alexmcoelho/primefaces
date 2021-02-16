@@ -1,0 +1,344 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:adm="http://github.com/adminfaces"
+	template="/WEB-INF/templates/template.xhtml">
+
+	<ui:define name="title">
+		<br />
+		<p:separator />
+        Cadastro parcelas
+    </ui:define>
+
+	<ui:define name="head-end">
+		<ui:param name="renderBreadCrumb" value="true" />
+	</ui:define>
+
+	<ui:define name="body">
+
+		<f:metadata>
+			<f:viewParam name="idOrdem" value="#{faturaOrdemCadastroMB.idOrdem}"
+				converter="javax.faces.Long" />
+			<f:viewParam name="idSaida" value="#{faturaOrdemCadastroMB.idSaida}"
+				converter="javax.faces.Long" />
+			<f:event listener="#{faturaOrdemCadastroMB.inicializar()}"
+				type="preRenderView"></f:event>
+		</f:metadata>
+
+		<adm:breadcrumb
+			title="Cadastro parcelas #{faturaOrdemCadastroMB.detalhesFatura.id}"
+			link="/pages/fatura/cadastro-fatura-ordem.xhtml?id=#{faturaOrdemCadastroMB.detalhesFatura.id}" />
+
+		<p:focus />
+
+		<div class="box box-primary">
+
+			<div class="box-header with-border">
+				<h:form id="form-botoes-topo" prependId="false">
+
+					<p:defaultCommand target="botao-aplicar" />
+
+					<div class="ui-fluid">
+
+						<p:panelGrid id="panel-forma-pagamento" columns="1" layout="grid">
+							<p:column>
+								<h:outputText value="Valor total: "
+									style="font-weight:bold; font-size: 14pt;" />
+								<h:outputText
+									value="#{faturaOrdemCadastroMB.classeAuxiliarDetalhesFaturas.valorTotal}"
+									style="font-weight:bold; font-size: 14pt;">
+									<f:convertNumber type="currency" locale="pt_BR" />
+								</h:outputText>
+								<br />
+
+								<h:outputText value="Valor total cobrado: "
+									style="font-weight:bold; font-size: 14pt;" />
+								<h:outputText
+									value="#{faturaOrdemCadastroMB.classeAuxiliarDetalhesFaturas.valorTotalCobrado}"
+									style="font-weight:bold; font-size: 14pt;"
+									id="output-valor-total-cobrado">
+									<f:convertNumber type="currency" locale="pt_BR" />
+								</h:outputText>
+								<br />
+
+								<h:outputText value="Valor pago até o momento: "
+									style="font-weight:bold; font-size: 14pt; color: #00A65A;" />
+								<h:outputText
+									value="#{faturaOrdemCadastroMB.classeAuxiliarDetalhesFaturas.valorPago}"
+									style="font-weight:bold; font-size: 14pt; color: #00A65A;">
+									<f:convertNumber type="currency" locale="pt_BR" />
+								</h:outputText>
+								<br />
+
+								<h:outputText value="Valor que resta à pagar: "
+									style="font-weight:bold; font-size: 14pt; color: #BF0000;" />
+								<h:outputText
+									value="#{faturaOrdemCadastroMB.classeAuxiliarDetalhesFaturas.valorRestante}"
+									style="font-weight:bold; font-size: 14pt; color: #BF0000;"
+									id="output-valor-restante">
+									<f:convertNumber type="currency" locale="pt_BR" />
+								</h:outputText>
+								<br />
+
+								<h:outputText
+									value="#{faturaOrdemCadastroMB.classeAuxiliarDetalhesFaturas.txtValorCorrespondente.toString()}"
+									style="font-weight:bold; color: #3C8DBC;" />
+								<br />
+
+								<h:outputText
+									value="#{faturaOrdemCadastroMB.classeAuxiliarDetalhesFaturas.txtNomeCliente.toString()}"
+									style="font-weight:bold; color: #3C8DBC;" />
+							</p:column>
+						</p:panelGrid>
+
+
+						<p:panelGrid columns="2" layout="grid" id="parcelado">
+							<p:column>
+								<p:outputLabel value="Forma pagamento:" for="forma-pagamento" />
+								<p:selectOneMenu id="forma-pagamento"
+									value="#{faturaOrdemCadastroMB.aVista}">
+									<f:selectItem itemLabel="Parcelado" itemValue="false" />
+									<f:selectItem itemLabel="À vista" itemValue="true" />
+									<p:ajax event="change" update="parcelado a-vista"
+										listener="#{faturaOrdemCadastroMB.atualizaValorAVista}" />
+								</p:selectOneMenu>
+							</p:column>
+
+							<p:column rendered="#{faturaOrdemCadastroMB.aVista == false}">
+								<p:outputLabel value="Com entrada:" for="tem-entrada" />
+								<p:selectOneMenu id="tem-entrada"
+									value="#{faturaOrdemCadastroMB.temEntrada}">
+									<f:selectItem itemLabel="Sim" itemValue="true" />
+									<f:selectItem itemLabel="Não" itemValue="false" />
+									<p:ajax event="change"
+										update="label-valor-entrada label-data-entrada" />
+								</p:selectOneMenu>
+							</p:column>
+
+							<h:panelGroup id="label-valor-entrada"
+								rendered="#{faturaOrdemCadastroMB.aVista == false}">
+								<p:outputLabel value="Valor entrada(R$):" for="valor-entrada"
+									rendered="#{faturaOrdemCadastroMB.temEntrada == true}" />
+								<p:inputNumber id="valor-entrada" decimalSeparator=","
+									thousandSeparator="." decimalPlaces="2"
+									onfocus="mascaraNumber(this, apaga)"
+									value="#{faturaOrdemCadastroMB.detalhesFatura.valorParcela}"
+									style="color: #555"
+									validator="#{faturaOrdemCadastroMB.valorParcelaInferiorAoTotal}"
+									required="#{faturaOrdemCadastroMB.temEntrada == true}"
+									rendered="#{faturaOrdemCadastroMB.temEntrada == true}"
+									requiredMessage="#{beanPadraoMensagensValidacao.retorno('javax.faces.validator.BeanValidator.MESSAGE', 'Valor entrada(R$)')}">
+									<f:validateDoubleRange minimum="1.00" />
+								</p:inputNumber>
+								<p:message id="msg-valor" for="valor-entrada" />
+							</h:panelGroup>
+
+							<h:panelGroup id="label-data-entrada"
+								rendered="#{faturaOrdemCadastroMB.aVista == false}">
+								<p:outputLabel value="Data entrada:" for="data-entrada"
+									rendered="#{faturaOrdemCadastroMB.temEntrada == true}" />
+								<p:calendar id="data-entrada"
+									required="#{faturaOrdemCadastroMB.temEntrada == true}"
+									rendered="#{faturaOrdemCadastroMB.temEntrada == true}"
+									value="#{faturaOrdemCadastroMB.detalhesFatura.dataVencimento}"
+									style="color: #555" pattern="dd/MM/yyyy" mask="true"
+									requiredMessage="#{beanPadraoMensagensValidacao.retorno('javax.faces.validator.BeanValidator.MESSAGE', 'Data entrada')}" />
+								<p:message for="data-entrada" />
+							</h:panelGroup>
+
+							<p:column rendered="#{faturaOrdemCadastroMB.aVista == 'false'}">
+								<p:outputLabel value="Quant. parcelas:" for="quant-parcela" />
+								<p:inputText id="quant-parcela"
+									value="#{faturaOrdemCadastroMB.quantParcelas}"
+									style="color: #555" required="true"
+									onfocus="mascaraNumber(this, apaga)"
+									onkeypress="mascaraNumber(this, permiteApenasNumeros)"
+									validatorMessage="#{beanPadraoMensagensValidacao.retorno('javax.faces.validator.MINIMUM','1')}"
+									requiredMessage="#{beanPadraoMensagensValidacao.retorno('javax.faces.validator.BeanValidator.MESSAGE', 'Quant. parcelas')}">
+									<f:validateLongRange minimum="1" />
+								</p:inputText>
+								<p:message for="quant-parcela" />
+							</p:column>
+
+							<p:column rendered="#{faturaOrdemCadastroMB.aVista == false}">
+								<p:outputLabel value="Dia vencimento:" for="dia-vencimento" />
+								<p:inputText id="dia-vencimento"
+									value="#{faturaOrdemCadastroMB.diaVencimento}"
+									style="color: #555" required="true"
+									onfocus="mascaraNumber(this, apaga)"
+									onkeypress="mascaraNumber(this, permiteApenasNumeros)"
+									validatorMessage="#{beanPadraoMensagensValidacao.retorno('javax.faces.validator.INTERVAL','1', '31')}"
+									requiredMessage="#{beanPadraoMensagensValidacao.retorno('javax.faces.validator.BeanValidator.MESSAGE', 'Dia vencimento')}">
+									<f:validateDoubleRange minimum="1" maximum="31" />
+								</p:inputText>
+								<p:message for="dia-vencimento" />
+							</p:column>
+
+						</p:panelGrid>
+
+						<!-- PAGAMENTO A VISTA - O QUE SERA RENDERIZADO -->
+						<h:panelGroup id="a-vista">
+							<p:panelGrid columns="2" layout="grid"
+								rendered="#{faturaOrdemCadastroMB.aVista == true}">
+								<p:column>
+									<p:outputLabel value="Valor (R$):" for="valor-a-vista" />
+									<p:inputNumber id="valor-a-vista" decimalSeparator=","
+										thousandSeparator="." decimalPlaces="2"
+										onfocus="mascaraNumber(this, apaga)"
+										value="#{faturaOrdemCadastroMB.detalhesFatura.valorParcela}"
+										validator="#{faturaOrdemCadastroMB.valorParcelaInferiorAoTotal}"
+										style="color: #555" required="true"
+										requiredMessage="#{beanPadraoMensagensValidacao.retorno('javax.faces.validator.BeanValidator.MESSAGE', 'Valor (R$)')}">
+										<f:validateDoubleRange minimum="1.00" />
+									</p:inputNumber>
+									<p:message for="valor-a-vista" />
+								</p:column>
+
+								<p:column>
+									<p:outputLabel value="Data vencimento:" for="data-vencimento" />
+									<p:calendar id="data-vencimento" required="true"
+										value="#{faturaOrdemCadastroMB.detalhesFatura.dataVencimento}"
+										style="color: #555" pattern="dd/MM/yyyy" mask="true"
+										requiredMessage="#{beanPadraoMensagensValidacao.retorno('javax.faces.validator.BeanValidator.MESSAGE', 'Data vencimento')}" />
+									<p:message for="data-vencimento" />
+								</p:column>
+							</p:panelGrid>
+						</h:panelGroup>
+
+					</div>
+
+					<div class="box-footer"
+						style="border-top-width: 0; margin-bottom: 0; margin-top: 0;">
+						<p:commandButton value="Aplicar"
+							update="form-botoes-topo, form-salvar:tabela-parcela"
+							action="#{faturaOrdemCadastroMB.aplicar}" icon="fa fa-check" 
+							validateClient="false"
+							title="Aplicar a forma de pagamento" id="botao-aplicar" />
+					</div>
+
+				</h:form>
+
+				<h:form id="form-salvar">
+					<div class="ui-fluid">
+						<!-- TABELA DE PARCELAS GERADAS -->
+						<p:panelGrid columns="1" layout="grid">
+							<p:dataTable id="tabela-parcela" var="d"
+								value="#{faturaOrdemCadastroMB.detalhesFaturas}"
+								reflow="true"
+								emptyMessage="Escolha os filtros para obter resultados de pesquisa!">
+
+								<p:column styleClass="align-center"
+									headerText="Descricão parcela">
+									<h:outputText value="#{d.descricao}" />
+								</p:column>
+
+								<p:column styleClass="align-center" headerText="Data vencimento">
+									<h:outputText value="#{d.dataVencimento}">
+										<f:convertDateTime patter="dd/MM/yyyy" />
+									</h:outputText>
+								</p:column>
+
+								<p:column styleClass="align-center" headerText="Valor">
+									<h:outputText value="#{d.valorParcela}">
+										<f:convertNumber type="currency" locale="pt_BR" />
+									</h:outputText>
+								</p:column>
+
+								<p:column style="width: 200px;">
+									<div class="ui-fluid">
+										<div class="ui-g-2"></div>
+										<div class="ui-g-8" style="padding: 0 2% 0 2%;">
+											<p:commandButton styleClass="btn btn-success"
+												icon="fa fa-edit" title="Alterar parcela" value="Alterar"
+												actionListener="#{faturaOrdemCadastroMB.selecionarDetalhe(d)}"
+												onclick="PF('altDetalheFatura').show();" process="@this"
+												update="form-alt-detalhe-fatura" />
+										</div>
+									</div>
+								</p:column>
+
+							</p:dataTable>
+						</p:panelGrid>
+
+					</div>
+
+					<!-- SALVAR, EXCLUIR E CANCELAR -->
+					<div class="box-footer" style="border-top-width: 0;">
+
+						<p:commandButton value="Salvar" 
+							update=":form-botoes-topo:panel-forma-pagamento, :form-salvar"
+							action="#{faturaOrdemCadastroMB.salvar}" icon="fa fa-check"
+							styleClass="btn-primary" id="botao-salvar" />
+						<p:spacer width="5" />
+
+						<p:commandButton value="Excluir" process="@this"
+							action="#{faturaOrdemCadastroMB.excluir}"
+							rendered="#{faturaOrdemCadastroMB.detalhesFatura.edicao}"
+							icon="fa fa-trash" styleClass="btn-danger">
+						</p:commandButton>
+						<p:spacer width="5" />
+
+						<p:commandButton value="Cancelar" immediate="true"
+							action="#{faturaOrdemCadastroMB.caminhoCancelar}" process="@this"
+							icon="fa fa-close" />
+
+					</div>
+				</h:form>
+			</div>
+		</div>
+
+		<!-- ALTERAR PARCELA -->
+		<p:dialog id="ordem-dialog" header="Alterar parcela"
+			widgetVar="altDetalheFatura" responsive="true"
+			styleClass="box-success" modal="true" closeOnEscape="true"
+			position="center bottom">
+			<div class="box box-primary">
+				<div class="box-header with-border">
+					<h:form id="form-alt-detalhe-fatura">
+						<div class="ui-fluid">
+							<p:panelGrid columns="1" layout="grid">
+
+								<p:outputLabel value="Descrição: " for="desc-parcela" />
+								<p:inputText id="desc-parcela" required="true"
+									value="#{faturaOrdemCadastroMB.detalhesFaturaSelecionado.descricao}" />
+								<p:message for="desc-parcela" />
+
+								<p:outputLabel value="Valor (R$):" for="valor-alt" />
+								<p:inputNumber id="valor-alt" decimalSeparator=","
+									thousandSeparator="." decimalPlaces="2"
+									onfocus="mascaraNumber(this, apaga)" required="true"
+									value="#{faturaOrdemCadastroMB.detalhesFaturaSelecionado.valorParcela}"
+									validatorMessage="#{beanPadraoMensagensValidacao.retorno('javax.faces.validator.MINIMUM','0.0')}"
+									requiredMessage="#{beanPadraoMensagensValidacao.retorno('javax.faces.validator.BeanValidator.MESSAGE', 'Valor (R$)')}">
+									<f:validateDoubleRange minimum="0.00" />
+								</p:inputNumber>
+								<p:message for="valor-alt" />
+
+								<p:outputLabel value="Data vencimento:"
+									for="data-vencimento-alt" />
+								<p:calendar id="data-vencimento-alt" required="true"
+									value="#{faturaOrdemCadastroMB.detalhesFaturaSelecionado.dataVencimento}"
+									style="color: #555" pattern="dd/MM/yyyy" mask="true" />
+								<p:message for="data-vencimento-alt" />
+							</p:panelGrid>
+						</div>
+
+						<div class="box-footer" style="border-top-width: 0;">
+							<p:commandButton value="Salvar"
+								update="form-salvar, :form-botoes-topo:panel-forma-pagamento"
+								process="ordem-dialog" validateClient="true"
+								action="#{faturaOrdemCadastroMB.alterarNaLista()}"
+								icon="fa fa-check" styleClass="btn-primary"
+								oncomplete="if (!args.validationFailed) PF('altDetalheFatura').hide()" />
+						</div>
+					</h:form>
+				</div>
+			</div>
+		</p:dialog>
+
+	</ui:define>
+
+</ui:composition>

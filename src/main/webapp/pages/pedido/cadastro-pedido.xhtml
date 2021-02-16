@@ -1,0 +1,464 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:adm="http://github.com/adminfaces"
+	template="/WEB-INF/templates/template.xhtml">
+
+	<div style="position: fixed; top: 0; left: 0;">
+		<ui:define name="title">
+        	<br/>
+        	<p:separator />
+        	#{pedidoCadastroMB.titulo}
+    	</ui:define>
+
+		<ui:define name="head-end">
+			<ui:param name="renderBreadCrumb" value="true" />
+		</ui:define>
+
+		<ui:define name="body">
+
+			<f:metadata>
+				<f:viewParam name="id"
+					value="#{pedidoCadastroMB.idPedido}"
+					converter="javax.faces.Long" />
+				<f:event listener="#{pedidoCadastroMB.inicializar()}"
+					type="preRenderView"></f:event>
+			</f:metadata>
+
+			<adm:breadcrumb
+				title="#{pedidoCadastroMB.tituloBreadCrumbString}"
+				link="#{pedidoCadastroMB.linkBreadCrumb}" />
+
+			<!-- DIALOG DE EXCLUSÃO DE ENTRADA DE PRODUTOS -->
+			<p:dialog id="excluir-entrada-dialog" header="Excluir registro"
+				widgetVar="excluirEntrada" responsive="true"
+				styleClass="box-success" modal="true" closeOnEscape="true"
+				width="300" height="120" position="center center">
+				<h:form id="form-excluir-entrada">
+
+					<div class="ui-fluid" style="color: #555">
+						<p:panelGrid columns="1" layout="grid">
+							<p:column>
+								<h:outputText value="Tem certeza que deseja excluir o registro?" />
+							</p:column>
+							<h:outputText value="" />
+						</p:panelGrid>
+						<p:panelGrid columns="2" layout="grid">
+							<p:commandButton value="Sim" update="form"
+								process="excluir-entrada-dialog"
+								action="#{pedidoCadastroMB.excluir()}"
+								icon="fa fa-check" styleClass="btn-primary"
+								oncomplete="PF('excluirEntrada').hide()" />
+							<p:commandButton value="Não" process="excluir-entrada-dialog"
+								icon="fa fa-close" styleClass="btn-default"
+								oncomplete="PF('excluirEntrada').hide()" />
+						</p:panelGrid>
+					</div>
+				</h:form>
+			</p:dialog>
+
+			<div class="box box-primary">
+
+				<div class="box-header with-border">
+					<h:form id="form" prependId="false">
+
+						<p:defaultCommand target="botao-salvar" />
+
+						<div class="ui-fluid" style="color: #555">
+
+							<!--INICIO Linha 1 -->
+							<p:panelGrid columns="2" layout="grid">
+
+								<p:column>
+									<p:outputLabel value="Concluído: " for="concluido" />
+									<p:selectOneMenu id="concluido" 
+										value="#{pedidoCadastroMB.pedido.concluido}">
+										<f:selectItems
+											value="#{pedidoCadastroMB.listaEnumSiNaoGenerico}" var="l"
+											itemLabel="#{l.descricao}" itemValue="#{l}" />
+									</p:selectOneMenu>
+								</p:column>
+
+							</p:panelGrid>
+
+						</div>
+
+						<!--INICIA TABELA-->
+
+						<p:panelGrid columns="1" layout="grid" id="teste">
+
+							<p:outputLabel value="Lista de produtos:" />
+
+							<p:column>
+								<div style="padding: 0px;">
+									<p:commandButton title="Adicionar item" value="Adicionar"
+										actionListener="#{pedidoCadastroMB.preparaInclusao()}"
+										onclick="PF('addProduto').show();" process="@this"
+										update="form-add-produto" icon="fa fa-plus" >
+									</p:commandButton>
+								</div>
+
+							</p:column>
+
+							<p:dataTable id="dataTable" var="i"
+								value="#{pedidoCadastroMB.modelItemPedido}" 
+								rows="5" paginator="true" lazy="true"
+								reflow="true"
+								emptyMessage="Nenhum item informado!">
+
+								<p:column styleClass="align-center" headerText="Descrição">
+									<h:outputText value="#{i.produto.descricao}" />
+								</p:column>
+
+								<p:column styleClass="align-center" headerText="Quantidade">
+									<h:outputText value="#{i.quant}" />
+								</p:column>
+
+
+								<p:column style="width: 150px;">
+									<div class="ui-fluid">
+										<div class="ui-g-6" style="padding: 0 2% 0 2%;">
+											<p:commandButton styleClass="btn btn-success"
+												icon="fa fa-edit" title="Alterar"
+												actionListener="#{pedidoCadastroMB.alterarNaListaDeItens(i)}"
+												onclick="PF('addProduto').show();"
+												update="form-add-produto" process="@this" />
+										</div>
+										<div class="ui-g-6" style="padding: 0 2% 0 2%;">
+											<p:commandButton styleClass="btn btn-danger" icon="fa fa-trash"
+												title="Excluir"
+												actionListener="#{pedidoCadastroMB.removerNaListaDeItens(i)}"
+												update="dataTable" process="@this" />
+										</div>
+									</div>
+								</p:column>
+
+							</p:dataTable>
+
+
+
+						</p:panelGrid>
+					
+						<!--FIM TABELA-->
+						
+						<!-- SALVAR, EXCLUIR E CANCELAR ORDEM DE SERVIÇO -->
+						<div class="box-footer" style="border-top-width: 0;">
+							<p:commandButton value="Salvar" 
+								update="@form"
+								action="#{pedidoCadastroMB.salvar()}"
+								icon="fa fa-check" styleClass="btn-primary"
+								validateClient="true" id="botao-salvar" />
+							<p:spacer width="5" />
+							
+							<p:commandButton value="Relatório" validateClient="true"
+								icon="fa fa-wpforms" action="#{pedidoCadastroMB.gerarRelatorio}"
+								ajax="false" styleClass="btn-primary"
+								onclick="this.form.target='_blank'" />
+							<p:spacer width="5" />
+
+							<p:commandButton value="Excluir" process="@this"
+								onclick="PF('excluirEntrada').show();"
+								rendered="#{pedidoCadastroMB.pedido.edicao}"
+								icon="fa fa-trash" styleClass="btn-danger" update="@form">
+							</p:commandButton>
+							<p:spacer width="5" />
+
+							<p:commandButton value="Cancelar" immediate="true"
+								action="#{pedidoCadastroMB.caminhoCancelar}"
+								process="@this" icon="fa fa-close" />
+						</div>
+
+					</h:form>
+					<!-- FIM - formulario principal -->
+				</div>
+			</div>
+
+
+			<!-- ADICIONAR ITEM -->
+			<p:dialog id="produto-dialog" header="Adicionar item"
+				widgetVar="addProduto" 
+				modal="true"
+				width="80%" 
+				height="500"
+				responsive="true" styleClass="box-success"
+				position="center center" closeOnEscape="true">
+				<div class="box box-primary">
+					<div class="box-header with-border">
+						<h:form id="form-add-produto">
+							<div class="ui-fluid" style="color: #555">
+							
+								<p:defaultCommand target="btn-salvar-prod" />
+								
+								<p:growl autoUpdate="false" id="mensagem" severity="warn"
+									showSummary="true" showDetail="true" />
+								
+								<p:panelGrid columns="2" layout="grid">
+									<p:column>
+										<div class="ui-g-10" style="padding-top: 0px;">
+											<p:outputLabel value="Descrição:" for="autocomplete-produto" />
+											<p:autoComplete 
+												value="#{pedidoCadastroMB.descricaoProduto}"
+												appendTo="@this"
+												placeholder="#{pedidoCadastroMB.modelProduto.servicoAutocomplete.placeholder}"
+												maxResults="#{pedidoCadastroMB.modelProduto.servicoAutocomplete.maxResults}"
+												minQueryLength="#{pedidoCadastroMB.modelProduto.servicoAutocomplete.minQueryLength}"
+												cache="#{pedidoCadastroMB.modelProduto.servicoAutocomplete.cache}" 
+												cacheTimeout="#{pedidoCadastroMB.modelProduto.servicoAutocomplete.cacheTimeout}"
+												queryDelay="#{pedidoCadastroMB.modelProduto.servicoAutocomplete.queryDelay}"
+												forceSelection="#{pedidoCadastroMB.modelProduto.servicoAutocomplete.forceSelection}"
+												required="#{pedidoCadastroMB.modelProduto.servicoAutocomplete.required}"
+												onkeypress="mascaraNumber(this, acrescentaZerosSeForNumero)"
+												completeMethod="#{pedidoCadastroMB.filtroProduto}"
+												id="autocomplete-produto"
+												requiredMessage="#{beanPadraoMensagensValidacao.retorno('javax.faces.validator.BeanValidator.MESSAGE', 'Descrição')}"
+											>
+											</p:autoComplete>
+											<p:message for="autocomplete-produto" />
+										</div>
+										<div class="ui-g-2" style="padding-top: 0px; padding-right: 0px;">
+											<p:outputLabel value="Pes" style="visibility:hidden" />
+											<p:commandButton title="Adicionar produto"
+												onclick="PF('cadProduto').show();"
+												process="@this" 
+												update="form-add-produto, form-produto" icon="fa fa-plus"
+												styleClass="btn-primary"
+												action="#{pedidoCadastroMB.abreModalItemParaAdicionarItem}"
+												disabled="#{pedidoCadastroMB.disabledCamposForm}"
+												>
+												<p:resetInput target="autocomplete-produto" />
+											</p:commandButton>
+										</div>
+									</p:column>
+
+									<p:column>
+										<p:outputLabel value="Quantidade:" for="quant-prod" />
+										<p:inputText
+											value="#{pedidoCadastroMB.itemPedido.quant}"
+											id="quant-prod" required="true" 
+											onkeypress="mascaraNumber(this, permiteApenasNumeros)"
+											onfocus="selecionar(this)"
+											disabled="#{pedidoCadastroMB.disabledCamposForm}"
+											>
+											<f:validateDoubleRange minimum="1" />
+										</p:inputText>
+										<p:message for="quant-prod" />
+									</p:column>
+
+								</p:panelGrid>
+							</div>
+							
+							<div class="box-footer" style="border-top-width: 0;">
+								<p:commandButton
+									validateClient="true"
+									value="#{pedidoCadastroMB.txtBotaoInserir}"
+									update="form-add-produto, :form:dataTable"
+									action="#{pedidoCadastroMB.salvarNaListaDeItens}"
+									icon="fa fa-check" styleClass="btn-primary"
+									title="Adicionar à lista de peças" id="btn-salvar-prod" 
+									disabled="#{pedidoCadastroMB.disabledCamposForm}" 
+									/>
+							</div>
+						</h:form>
+					</div>
+				</div>
+			</p:dialog>
+			
+			<!-- ADICIONAR PRODUTO -->
+			<p:dialog id="cad-produto-dialog" header="Cadastro produto"
+				widgetVar="cadProduto" responsive="true" styleClass="box-success"
+				modal="true" closeOnEscape="true" 
+				width="80%" 
+				height="500" 
+				position="center center">
+				
+				<p:ajax event="close" listener="#{pedidoCadastroMB.fechaModalItem}" />
+				
+				<div class="box box-primary">
+					<div class="box-header with-border">
+						<h:form id="form-produto">
+							
+							<p:defaultCommand target="botao-salvar-produto" />
+							
+							<div class="ui-fluid">
+								<p:panelGrid columns="2" layout="grid">
+									<p:column>
+										<p:outputLabel value="Nome: " for="descricao" />
+										<p:inputText id="descricao" required="true"
+											value="#{pedidoCadastroMB.produto.descricao}"
+											disabled="#{pedidoCadastroMB.disabledCamposFormProduto}"
+											/>
+										<p:message for="descricao" />
+									</p:column>
+									<p:column>
+										<p:outputLabel for="definir-valor" value="Escolha a forma como o valor de venda será definido:" />
+										<p:selectOneRadio id="definir-valor" 
+											value="#{pedidoCadastroMB.defineValor}"
+											disabled="#{pedidoCadastroMB.disabledCamposFormProduto}" >
+											<f:selectItem itemLabel="Definir valor" itemValue="true" />
+											<f:selectItem itemLabel="Definir um percentual de lucro" itemValue="false" />
+											<p:ajax update="group-preco-venda" />
+										</p:selectOneRadio>
+									</p:column>
+									
+									<p:column>
+										<h:panelGroup id="group-preco-venda">
+											<p:outputLabel value="Percentual de lucro (%):"
+												for="percentual" rendered="#{!pedidoCadastroMB.defineValor}"/>
+											<p:inputNumber id="percentual"
+												rendered="#{!pedidoCadastroMB.defineValor}"
+												decimalSeparator=","
+												thousandSeparator="."
+												decimalPlaces="2"
+												onfocus="mascaraNumber(this, apaga)" 
+												value="#{pedidoCadastroMB.produto.percentualLucro}"
+												style="color: #555"
+												required="true"
+												validatorMessage="#{beanPadraoMensagensValidacao.retorno('javax.faces.validator.MINIMUM','0.0')}"
+												requiredMessage="#{beanPadraoMensagensValidacao.retorno('javax.faces.validator.BeanValidator.MESSAGE', 'Percentual de lucro (%)')}"
+												disabled="#{pedidoCadastroMB.disabledCamposFormProduto}"
+												>
+												<f:validateDoubleRange minimum="0.00" />
+											</p:inputNumber>
+											<p:message for="percentual" rendered="#{!pedidoCadastroMB.defineValor}"/>
+											
+											<p:outputLabel value="Valor de venda (R$):"
+												for="valor-venda" rendered="#{pedidoCadastroMB.defineValor}"/>
+											<p:inputNumber id="valor-venda"
+												rendered="#{pedidoCadastroMB.defineValor}"
+												decimalPlaces="2"
+												thousandSeparator="."
+												decimalSeparator=","
+												onfocus="mascaraNumber(this, apaga)"
+												value="#{pedidoCadastroMB.produto.valorInformado}"
+												style="color: #555"
+												required="true" 
+												validatorMessage="#{beanPadraoMensagensValidacao.retorno('javax.faces.validator.MINIMUM', '0.00')}"
+												requiredMessage="#{beanPadraoMensagensValidacao.retorno('javax.faces.validator.BeanValidator.MESSAGE', 'Valor de venda (R$)')}"
+												disabled="#{pedidoCadastroMB.disabledCamposFormProduto}"
+												>
+												<f:validateDoubleRange minimum="0.00" />
+											</p:inputNumber>
+											<p:message id="msg-valor-venda" for="valor-venda" rendered="#{pedidoCadastroMB.defineValor}" />
+										</h:panelGroup>
+									</p:column>
+									
+									<p:column>
+										<div class="ui-g-10" style="padding-left: 0px; padding-top: 0px; padding-bottom: 0px;">
+											<p:outputLabel value="Categoria: " for="categoria" />
+											<p:selectOneMenu id="categoria"
+												converter="omnifaces.SelectItemsConverter" style="color: #555"
+												value="#{pedidoCadastroMB.categoria}" required="true" 
+												appendTo="@this">
+												<f:selectItem itemLabel="Selecione" itemValue="" />
+												<f:selectItems value="#{pedidoCadastroMB.categorias}"
+													var="obj" itemLabel="#{obj.descricao}" itemValue="#{obj}" />
+											</p:selectOneMenu>
+											<p:message for="categoria" />
+										</div>
+										<div class="ui-g-2" style="padding-top: 0px; padding-bottom: 0px;">
+											<p:outputLabel value="Add" style="visibility:hidden" />
+											<p:commandButton title="Adicionar categoria"
+												onclick="PF('addCategoria').show();" process="@this"
+												actionListener="#{pedidoCadastroMB.abreModalCategoria}"
+												update="form-categoria form-produto" 
+												icon="fa fa-plus" styleClass="btn-primary"
+												disabled="#{pedidoCadastroMB.disabledCamposFormProduto}">
+												<p:resetInput target="categoria" />
+											</p:commandButton>
+										</div>
+									</p:column>
+									
+									<p:column >
+										<h:panelGroup id="group-imei">
+											<p:outputLabel value="IMEI:" for="imei" 
+												rendered="#{pedidoCadastroMB.categoria.descricao.toLowerCase().contains('celular'.toLowerCase())}"/>
+											<p:inputMask id="imei"
+												value="#{pedidoCadastroMB.produto.imei}"
+												rendered="#{pedidoCadastroMB.categoria.descricao.toLowerCase().contains('celular'.toLowerCase())}"
+												required="true" 
+												mask="999999-99-999999-9"
+												disabled="#{pedidoCadastroMB.disabledCamposFormProduto}"
+												validator="#{validatorJSF.validateIMEIProduto}"
+												>
+											</p:inputMask>
+											<p:message for="imei" 
+												rendered="#{pedidoCadastroMB.categoria.descricao.equalsIgnoreCase('celular')}"/>
+										</h:panelGroup>
+									</p:column>
+
+								</p:panelGrid>
+
+							</div>
+
+							<div class="box-footer"
+								style="border-top-width: 0;">
+								<p:commandButton value="Salvar"
+									update="form-produto, form-add-produto:autocomplete-produto"
+									process="cad-produto-dialog" validateClient="true"
+									action="#{pedidoCadastroMB.salvarProduto()}"
+									icon="fa fa-check" styleClass="btn-primary"
+									oncomplete="handleDialogSubmit(args, 'cadProduto');"
+									disabled="#{pedidoCadastroMB.disabledCamposFormProduto}"
+									id="botao-salvar-produto" />
+								<p:spacer width="5" />
+							</div>
+							
+						</h:form>
+					</div>
+				</div>
+			</p:dialog>
+			
+			<script type="text/javascript">
+			    function handleDialogSubmit(args, dialogName) {
+			        if (!args.validationFailed) {
+			        	$(function(){
+			        		PrimeFaces.focus('form-add-produto:quant-prod');
+			        	});
+			            PF(dialogName).hide();
+			        }
+			    }
+			</script>
+
+			<!-- ADICIONAR CATEGORIA -->
+			<p:dialog id="categoria-dialog" header="Cadastro categoria"
+				widgetVar="addCategoria" responsive="true" styleClass="box-success"
+				modal="true" closeOnEscape="true" width="80%" height="40%">
+				
+				<p:ajax event="close" update="form-produto" listener="#{pedidoCadastroMB.fechaModalCategoria}" />
+				
+				<div class="box box-primary">
+					<div class="box-header with-border">
+						<h:form id="form-categoria">
+						
+							<p:growl autoUpdate="false" 
+								severity="warn" showSummary="true" showDetail="false" />
+									
+							<div class="ui-fluid">
+								<p:panelGrid columns="1" layout="grid">
+									<p:outputLabel value="Descrição: " for="descricao" />
+									<p:inputText id="descricao" required="true"
+										value="#{pedidoCadastroMB.categoria.descricao}" />
+									<p:message for="descricao" />
+								</p:panelGrid>
+
+							</div>
+							<div class="box-footer"
+								style="border-top-width: 0; padding-top: 0; padding-bottom: 0;">
+								<p:commandButton value="Salvar"
+									update="form-categoria"
+									process="categoria-dialog" validateClient="true"
+									action="#{pedidoCadastroMB.salvarCategoria()}"
+									icon="fa fa-check" styleClass="btn-primary" />
+							</div>
+						</h:form>
+					</div>
+				</div>
+			</p:dialog>
+			
+		</ui:define>
+	</div>
+
+</ui:composition>

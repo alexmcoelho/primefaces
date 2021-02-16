@@ -1,0 +1,326 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:adm="http://github.com/adminfaces"
+	template="/WEB-INF/templates/template.xhtml">
+
+	<ui:define name="head-end">
+
+		<style type="text/css">
+.ui-grid-row .ui-grid-col-2, .ui-grid-row .ui-grid-col-10 {
+	padding: 0.5em 0;
+	margin-left: 10px;
+}
+
+.ui-orderlist .ui-orderlist-list {
+	height: auto;
+}
+
+.ui-orderlist .ui-grid-row .ui-grid-col-2, .ui-orderlist .ui-grid-row .ui-grid-col-10
+	{
+	padding: 0;
+}
+</style>
+	</ui:define>
+
+	<ui:define name="title">
+		<br />
+		<p:separator />
+       #{faturaListaMB.titulo} 
+    </ui:define>
+
+	<ui:define name="description">
+        Escolha a forma de pesquisa
+    </ui:define>
+
+	<ui:define name="head-end">
+		<ui:param name="renderBreadCrumb" value="true" />
+	</ui:define>
+
+	<ui:define name="body">
+		<adm:breadcrumb title="#{faturaListaMB.tituloBreadCrumbString}"
+			link="#{faturaListaMB.linkBreadCrumb}" />
+
+		<div class="box box-primary">
+			<div class="box-header with-border">
+				<div></div>
+
+				<h:form id="form-lista">
+					<div class="ui-fluid" style="color: #555">
+
+						<div class="ui-g-12 ui-md-3">
+							<p:outputLabel value="Tipo de fatura:" for="pesquisa-f" />
+							<p:selectOneMenu id="pesquisa-f"
+								value="#{faturaListaMB.tipoFatura}">
+								<f:selectItem itemLabel="Ordem de serviço" itemValue="ordem" />
+								<f:selectItem itemLabel="Venda" itemValue="venda" />
+								<p:ajax event="change"
+									update="label-tipo-pesquisa, botao-pesquisa-ordem, 
+									form-tabela:panel-ordens-vendas, pesquisa" />
+							</p:selectOneMenu>
+						</div>
+
+						<div class="ui-g-12 ui-md-3">
+							<p:outputLabel value="Tipo de pesquisa:" for="pesquisa" />
+							<p:selectOneMenu id="pesquisa"
+								value="#{faturaListaMB.tipoPesquisa}">
+								<f:selectItem itemLabel="Número (Cód.)" itemValue="numero" />
+								<f:selectItem itemLabel="IMEI" itemValue="numero_cel"
+									itemDisabled="#{faturaListaMB.tipoFatura == 'venda'}" />
+								<f:selectItem itemLabel="Nome cliente" itemValue="nome" />
+								<f:selectItem itemLabel="CPF" itemValue="cpf" />
+								<f:selectItem itemLabel="CNPJ" itemValue="cnpj" />
+								<f:selectItem itemLabel="Intervalo entre datas" itemValue="data" />
+								<f:selectItem itemLabel="Todos" itemValue="todos" />
+								<p:ajax event="change"
+									update="label-tipo-pesquisa, botao-pesquisa-ordem" />
+							</p:selectOneMenu>
+						</div>
+
+						<div class="ui-g-12 ui-md-6">
+							<h:panelGroup id="label-tipo-pesquisa">
+								<p:outputLabel id="lbCpf" value="CPF:" for="cpf"
+									rendered="#{faturaListaMB.tipoPesquisa == 'cpf'}" />
+
+								<p:outputLabel value="Período:" for="data-inicio"
+									rendered="#{faturaListaMB.tipoPesquisa == 'data'}" />
+
+								<p:outputLabel id="lbCnpj" value="CNPJ:" for="cnpj"
+									rendered="#{faturaListaMB.tipoPesquisa=='cnpj'}" />
+
+								<p:outputLabel id="lb-numero-os" value="Número: "
+									for="numero-os"
+									rendered="#{faturaListaMB.tipoPesquisa=='numero'}" />
+
+								<p:outputLabel id="lb-numero-imei" value="Número IMEI: "
+									for="numero-imei"
+									rendered="#{faturaListaMB.tipoPesquisa=='numero_cel'}" />
+
+								<p:outputLabel id="lb-nome-cliente" value="Nome cliente: "
+									for="nome-cliente"
+									rendered="#{faturaListaMB.tipoPesquisa=='nome'}" />
+								
+								<p:outputLabel value="pes" style="visibility:hidden;"
+									rendered="#{faturaListaMB.tipoPesquisa=='todos'}" />
+
+								<div class="input-group">
+									<p:inputText id="cpf"
+										rendered="#{faturaListaMB.tipoPesquisa == 'cpf'}"
+										required="#{faturaListaMB.tipoPesquisa == 'cpf'}"
+										value="#{faturaListaMB.cliente.cpfCnpj}" />
+
+									<div class="ui-g-6" style="padding: 0px; padding-right: 3%;">
+										<p:calendar id="data-inicio" style="color: #555"
+											placeholder="Data de início"
+											value="#{faturaListaMB.dataInicio}" required="true"
+											pattern="dd/MM/yyyy" mask="true"
+											rendered="#{faturaListaMB.tipoPesquisa == 'data'}">
+										</p:calendar>
+									</div>
+
+									<div class="ui-g-6" style="padding: 0px;">
+										<p:calendar id="data-fim" style="color: #555"
+											placeholder="Data de fim"
+											value="#{faturaListaMB.dataFim}" required="true"
+											pattern="dd/MM/yyyy" mask="true"
+											rendered="#{faturaListaMB.tipoPesquisa == 'data'}">
+										</p:calendar>
+									</div>
+
+									<p:inputMask mask="99.999.999/9999-99" id="cnpj"
+										rendered="#{faturaListaMB.tipoPesquisa=='cnpj'}"
+										required="#{faturaListaMB.tipoPesquisa=='cnpj'}"
+										value="#{faturaListaMB.cliente.cpfCnpj}" />
+
+									<p:inputText id="numero-os"
+										rendered="#{faturaListaMB.tipoPesquisa=='numero'}"
+										required="#{faturaListaMB.tipoPesquisa=='numero'}"
+										value="#{faturaListaMB.idOrdemOuSaida}" />
+
+									<p:inputMask id="numero-imei"
+										rendered="#{faturaListaMB.tipoPesquisa=='numero_cel'}"
+										required="#{faturaListaMB.tipoPesquisa=='numero_cel'}"
+										value="#{faturaListaMB.ordemDeServico.imei}"
+										mask="999999-99-999999-9" />
+
+									<p:inputText id="nome-cliente"
+										rendered="#{faturaListaMB.tipoPesquisa=='nome'}"
+										required="#{faturaListaMB.tipoPesquisa=='nome'}"
+										value="#{faturaListaMB.cliente.nome}" />
+										
+									<p:inputText id="todos"
+										rendered="#{faturaListaMB.tipoPesquisa=='todos'}"
+										style="visibility:hidden;" />
+										
+									<span class="input-group-btn" style="padding-left: 2%;">
+										<h:panelGroup id="botao-pesquisa-ordem">
+											<p:commandButton value="Pesquisar" title="Pesquisar"
+												action="#{faturaListaMB.pesquisarOrdemSemFaturaGerada}"
+												update="form-tabela:tabela-ordem, form-lista"
+												icon="fa fa-search" styleClass="btn-primary"
+												rendered="#{faturaListaMB.tipoFatura=='ordem'}"
+												validateClient="true" />
+											<p:commandButton value="Pesquisar" title="Pesquisar venda"
+												action="#{faturaListaMB.pesquisarVendaSemFaturaGerada}"
+												update="form-tabela:tabela-venda, form-lista"
+												icon="fa fa-search" styleClass="btn-primary"
+												rendered="#{faturaListaMB.tipoFatura=='venda'}" />
+										</h:panelGroup>
+									</span>
+								</div>
+								
+								<p:message for="cpf"
+									rendered="#{faturaListaMB.tipoPesquisa == 'cpf'}" />
+									
+								<p:message for="data-inicio"
+									rendered="#{faturaListaMB.tipoPesquisa == 'data'}" />
+								
+								<p:message for="data-fim"
+									rendered="#{faturaListaMB.tipoPesquisa == 'data'}" />
+								
+								<p:message for="cnpj"
+									rendered="#{faturaListaMB.tipoPesquisa=='cnpj'}" />
+									
+								<p:message for="numero-os"
+									rendered="#{faturaListaMB.tipoPesquisa=='numero'}" />
+									
+								<p:message for="numero-imei"
+									rendered="#{faturaListaMB.tipoPesquisa=='numero_cel'}" />
+									
+								<p:message for="nome-cliente"
+									rendered="#{faturaListaMB.tipoPesquisa=='nome'}" />
+									
+							</h:panelGroup>
+						</div>
+					</div>
+				</h:form>
+				
+				<br />
+
+				<h:form id="form-tabela" 
+					style="clear: both; padding-top: 1%;">
+
+						<h:panelGroup id="panel-ordens-vendas">
+							<!-- vai renderizar se tipoFatura for = ordem -->
+							<p:dataTable id="tabela-ordem" var="o"
+								value="#{faturaListaMB.modelOrdemDeServico}" 
+								rows="15" paginator="true" lazy="true"
+								reflow="true"
+								emptyMessage="Escolha os filtros para obter resultados de pesquisa!"
+								rendered="#{faturaListaMB.tipoFatura=='ordem'}">
+
+								<p:column styleClass="align-center" headerText="O.S.">
+									<h:outputText value="#{o.id}" />
+								</p:column>
+
+								<p:column styleClass="align-center" headerText="Cliente">
+									<h:outputText value="#{o.cliente.nome}" />
+								</p:column>
+
+								<p:column styleClass="align-center" headerText="CPF/CNPJ">
+									<h:outputText value="#{o.cliente.cpfCnpj}" />
+								</p:column>
+
+								<p:column styleClass="align-center" headerText="Data conclusão">
+									<h:outputText value="#{o.dataConclusao}">
+										<f:convertDateTime patter="dd/MM/yyyy" />
+									</h:outputText>
+								</p:column>
+
+								<p:column style="width: 220px;" >
+									<div class="ui-fluid">
+										<div class="ui-g-1"></div>
+										<div class="ui-g-10" style="padding: 0 2% 0 2%;">
+											<p:commandButton styleClass="btn btn-success" icon="fa fa-edit"
+												title="Gerar faturas" value="Gerar faturas"
+												actionListener="#{faturaListaMB.selecionarOrdemDeServico}"
+												update="form-lista:label-tipo-pesquisa, form-lista:botao-pesquisa-ordem, form-tabela:panel-ordens-vendas">
+												<f:param id="entidadeId" name="entidadeId" value="#{o.id}" />
+											</p:commandButton>
+										</div>
+									</div>
+								</p:column>
+							</p:dataTable>
+
+
+							<!-- vai renderizar se tipoFatura for = venda -->
+							<p:dataTable id="tabela-venda" var="s"
+								value="#{faturaListaMB.modelSaidaDeProdutos}" 
+								rows="15" paginator="true" lazy="true"
+								reflow="true"
+								emptyMessage="Escolha os filtros para obter resultados de pesquisa!"
+								rendered="#{faturaListaMB.tipoFatura=='venda'}">
+
+								<p:column styleClass="align-center" headerText="Número venda">
+									<h:outputText value="#{s.id}" />
+								</p:column>
+
+								<p:column styleClass="align-center" headerText="Cliente">
+									<h:outputText value="#{s.cliente.nome}" />
+								</p:column>
+
+								<p:column styleClass="align-center" headerText="CPF/CNPJ">
+									<h:outputText value="#{s.cliente.cpfCnpj}" />
+								</p:column>
+
+								<p:column styleClass="align-center" headerText="Data">
+									<h:outputText value="#{s.data}">
+										<f:convertDateTime patter="dd/MM/yyyy" />
+									</h:outputText>
+								</p:column>
+
+								<p:column style="width: 220px;" >
+									<div class="ui-fluid">
+										<div class="ui-g-1"></div>
+										<div class="ui-g-10" style="padding: 0 2% 0 2%;">
+											<p:commandButton styleClass="btn btn-success" icon="fa fa-edit"
+												title="Gerar faturas" value="Gerar faturas"
+												actionListener="#{faturaListaMB.selecionarSaidaDeProdutos}"
+												update="form-lista:label-tipo-pesquisa, form-lista:botao-pesquisa-ordem, 
+													form-tabela:panel-ordens-vendas">
+												<f:param id="entidadeId" name="entidadeId" value="#{s.id}" />
+											</p:commandButton>
+										</div>
+									</div>
+								</p:column>
+							</p:dataTable>
+						</h:panelGroup>
+				</h:form>
+			</div>
+		</div>
+
+		<!-- DIALOG DE EXCLUSÃO DE ORDEM DE SERVICO -->
+		<p:dialog id="excluir-ordem-dialog" header="Excluir registro"
+			widgetVar="excluirOrdem" responsive="true" styleClass="box-success"
+			modal="true" closeOnEscape="true" width="300" height="120"
+			position="center center">
+			<h:form id="form-excluir-ordem">
+				<div class="ui-fluid" style="color: #555">
+					<p:panelGrid columns="1" layout="grid">
+						<p:column>
+							<h:outputText value="Tem certeza que deseja excluir o registro?" />
+						</p:column>
+						<h:outputText value="" />
+					</p:panelGrid>
+					<p:panelGrid columns="2" layout="grid">
+						<p:commandButton value="Sim" update="form-tabela:tabela-ordem"
+							process="excluir-ordem-dialog"
+							action="#{faturaListaMB.excluirOrdem()}" icon="fa fa-check"
+							styleClass="btn-primary" oncomplete="PF('excluirOrdem').hide()" />
+						<p:commandButton value="Não" process="excluir-ordem-dialog"
+							icon="fa fa-close" styleClass="btn-default"
+							oncomplete="PF('excluirOrdem').hide()" />
+					</p:panelGrid>
+				</div>
+			</h:form>
+		</p:dialog>
+
+
+
+	</ui:define>
+
+
+
+</ui:composition>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:adm="http://github.com/adminfaces"
+	template="/WEB-INF/templates/template.xhtml">
+
+	<ui:define name="title">
+		<p:growl autoUpdate="true" life="4000" />
+		<div style="position: relative; margin: 0 auto; width: 80%; ">
+			<div style="width: 50%; margin: 0 auto; text-align: center;">
+				<h1 style="font-size: 1.5em; margin: .25em 0">GESSIS - Gestão com sistema</h1>
+				<p>Sistema para o gerenciamento de orçamentos, estoque e vendas.</p>
+				<p:graphicImage class="img-rounded"  library="images" alt="GESSIS - Gestão com sistema" name="icone_alterado.png" height="221" width="250"/>
+			</div>
+		</div>
+   	</ui:define>
+   	
+   	<ui:define name="head-end">
+		<ui:param name="renderBreadCrumb" value="false" />
+	</ui:define>
+
+</ui:composition>

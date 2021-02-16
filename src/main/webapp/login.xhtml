@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+<f:view contentType="text/html">
+    <h:head>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+        <meta name="mobile-web-app-capable" content="yes"/>
+        <meta charset="UTF-8" />
+        <h:outputStylesheet library="css" name="showcase.css"/>
+        <h:outputStylesheet library="css" name="prism.css"/>
+        <link rel="shortcut icon" type="image/x-icon" href="#{resource['images/favicon_certo.ico']}"/>
+        <title>GESSIS - Gestão com sistema</title>
+		<meta name="description" content="GESSIS - Gestão com sistema, gessis é um sistema para o gerenciamento de orçamentos, estoque e vendas" />
+
+        <style type="text/css">
+            @media (max-width: 768px) {
+                div.ui-growl {
+                    display: none!important;
+                }
+
+                div.ui-messages-error {
+                    display: block!important;
+                }
+            }
+
+            @media (min-width: 769px) {
+                div.ui-growl {
+                    display: block!important;
+                }
+
+                div.ui-messages-error {
+                    display: none!important;
+                }
+            }
+
+        </style>
+    </h:head>
+
+
+    <h:body styleClass="hold-transition login-page">
+    
+    	<p:ajaxStatus onstart="PF('statusDialog').show()"
+			onsuccess="PF('statusDialog').hide()" />
+
+		<p:dialog
+			style="filter:alpha(opacity=0.8) !important;opacity: 0.8 !important; padding: 0px; margin: 0px;"
+			widgetVar="statusDialog" modal="true" draggable="false"
+			closable="false" resizable="false" showHeader="false"
+			appendToBody="true">
+			<center>
+				<p:graphicImage style="padding:0px; margin:0px;" width="50"
+					height="50" library="images" name="loading2.gif" />
+			</center>
+		</p:dialog>
+    	
+        <div id="loader" class="load-bar" style="display: none">
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+        </div>
+
+        <div class="login-box">
+            <div class="login-logo">
+                <p:link href="index.xhtml">
+                	<h1 style="font-size: .83em; margin-top: 1.5em;">
+						  GESSIS - Gestão com sistema
+					</h1>
+					<p style="font-size: .7em;" >Gerenciamento de orçamentos, estoque e vendas.</p>
+				</p:link>
+            </div>
+            <!-- /.login-logo -->
+            <div class="box login-box-body" style="margin-top: 50px;">
+                <h:form id="form-login">
+                	<p:messages autoUpdate="true" sticky="true"/>
+                    <p class="login-box-msg">Iniciar sessão</p>
+                    <!-- <p:messages closable="true" /> -->
+                    <div class="form-group has-feedback">
+                        <p:inputText value="#{usuarioMB.usuario.login}" type="text" styleClass="form-control" placeholder="Usuário"
+                                     required="true" autocomplete="off"
+                                     requiredMessage="O preenchimento do usuário é obrigatório"/>
+                        <i class="fa fa-user form-control-feedback" style="margin-top:10px"></i>
+                    </div>
+                    <div class="form-group has-feedback">
+                        <p:inputText value="#{usuarioMB.usuario.senha}" type="password" styleClass="form-control"
+                                     placeholder="Senha" required="true" autocomplete="off"
+                                     requiredMessage="Password is required."/>
+                        <i class="fa fa-lock form-control-feedback" style="margin-top: 10px"></i>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <!-- <p:selectBooleanCheckbox itemLabel="Lembrar login" value="{usuarioMB.remember}"/> -->
+                        </div>
+                        <p:spacer height="10"/>
+                        <div class="col-xs-12">
+                            <p:commandButton styleClass="btn btn-success btn-block"
+                                             action="#{usuarioMB.iniciarSessao()}"
+                                             value="Entrar" process="@form" update="@form"
+                                             id="btn" />
+                        </div>
+                    </div>
+                </h:form>
+
+                <!-- /.social-auth-links -->
+
+            </div>
+            <!-- /.login-box-body -->
+        </div>
+
+        
+        <h:outputScript library="js" name="prism.js"  target="head"/>
+        <h:outputScript library="js" name="admintemplate.js"  target="head"/>
+        
+
+        <style type="text/css">
+            body .load-bar {
+                margin-top: -20px;
+            }
+            
+            footer { 
+			    width: 100%; 
+			    height: 65px; 
+			    border-top: 0.5px solid #CCC;
+			    background-color: #FFF;
+			    bottom: 0;
+			    position: absolute;
+			}
+			
+			@media only screen and (max-width: 400px) {
+				footer { 
+					visibility: hidden;
+				}
+			}
+            
+            @media only screen and (min-width: 600px) {
+            	footer { 
+				    width: 100%; 
+				    height: 50px; 
+				    border-top: 0.5px solid #CCC;
+				    background-color: #FFF;
+				    padding: 5px;
+				    bottom: 0;
+				    margin-bottom: 0;
+				    border-width: 1px 0 0;
+				    position: fixed;
+				    right: 0;
+				    left: 0;
+				    z-index: 1030;
+				}
+            }
+        </style>
+        
+	    <footer class="footer" >
+	    	<div style="display: flex; flex-wrap: wrap; width: 100%;" >
+			
+				<div style="flex: 4.8; flex-wrap: wrap;">
+					<div style="color: black;"><span style="font-weight: bold">Contato:</span> +55 (47) 98904-5873</div>
+					<a target="_blank" href="#">2019, GESSIS, Gerenciamento de orçamentos, estoque e vendas.</a>	
+					<br/>
+				</div>
+				
+				<div style="color: gray; flex: 0.2; align-items: center;
+					display: flex;
+					justify-content: center;" >
+					<i style="text-align: right;" >v1.0</i>
+				</div>
+	
+			</div>
+			
+		</footer>
+
+	     <h:outputScript library="js" name="prism.js"  target="head"/>
+	     <h:outputScript library="js" name="locales.js"  target="head"/>
+	     <h:outputScript library="js" name="jquery.maskMoney.js"  target="head"/>
+    </h:body>
+</f:view>
+</html>

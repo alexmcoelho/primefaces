@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.2.1.final using JasperReports Library version 6.2.1  -->
+<!-- 2018-11-16T16:57:34 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="contasAPagar" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="76399003-a3c0-472d-8902-7a818d238fc5">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<parameter name="id" class="java.lang.Long"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="data" class="java.util.Date"/>
+	<field name="descricao" class="java.lang.String"/>
+	<field name="valor" class="java.math.BigDecimal"/>
+	<field name="entradaDeProdutos.id" class="java.lang.Long"/>
+	<field name="paga" class="java.lang.Boolean"/>
+	<variable name="somaValor" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{valor}]]></variableExpression>
+	</variable>
+	<group name="Group1">
+		<groupExpression><![CDATA[$F{entradaDeProdutos.id}]]></groupExpression>
+		<groupHeader>
+			<band height="26">
+				<staticText>
+					<reportElement mode="Transparent" x="0" y="5" width="114" height="20" backcolor="#E6E6E6" uuid="81197c02-4f1c-4d13-9393-f8f1fb29916b"/>
+					<textElement>
+						<font size="14" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Cód. da entrada: ]]></text>
+				</staticText>
+				<textField>
+					<reportElement mode="Transparent" x="114" y="5" width="441" height="20" backcolor="#E6E6E6" uuid="ff480be7-02f7-4fb1-bd28-260d8acbbf87"/>
+					<textElement textAlignment="Left" verticalAlignment="Top">
+						<font size="14"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{entradaDeProdutos.id}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement positionType="FixRelativeToBottom" x="0" y="24" width="555" height="1" uuid="fd08e5f0-050a-482c-8e71-48e153c50940"/>
+				</line>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="22">
+				<staticText>
+					<reportElement x="289" y="0" width="163" height="20" uuid="2921f042-8747-4aef-9ccf-f0340ad22256"/>
+					<textElement textAlignment="Right">
+						<font size="14" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Total da entrada:]]></text>
+				</staticText>
+				<textField pattern="¤#,##0.##;¤-#,##0.##">
+					<reportElement x="452" y="0" width="103" height="20" uuid="88c88f7b-e607-4380-80e8-14235c5b6971"/>
+					<textElement textAlignment="Center">
+						<font size="14"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{somaValor}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band/>
+	</background>
+	<title>
+		<band height="72">
+			<frame>
+				<reportElement mode="Opaque" x="-20" y="-20" width="595" height="92" backcolor="#006699" uuid="bd4d7fd6-5af5-4a1a-b90b-2e23fa567f47"/>
+				<textField>
+					<reportElement mode="Transparent" x="20" y="20" width="310" height="43" forecolor="#FFFFFF" uuid="c395900d-2405-4cb1-b50c-1bf13b395c33"/>
+					<textElement>
+						<font size="20" isBold="true"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{paga}== false  ?   "Contas à pagar" :  "Contas pagas"]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="380" y="43" width="195" height="37" forecolor="#FFFFFF" uuid="dfe9626a-1000-4834-90d7-6898296f22da"/>
+					<textElement>
+						<font size="9"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{paga} == false  ?   "Relatório de contas não quitadas. Todas relacionadas a uma entrada de produtos."  :  "Relatório de contas  quitadas. Todas relacionadas a uma entrada de produtos."]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="13"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="20">
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="0" width="140" height="20" forecolor="#066990" backcolor="#E6E6E6" uuid="3e9970d2-4df4-44e4-83dd-c9244f4f92dc"/>
+				<textElement textAlignment="Center" markup="styled">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Data vencimento]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="140" y="0" width="310" height="20" forecolor="#066990" backcolor="#E6E6E6" uuid="a6dcf529-66f5-4da6-b0b7-d247a76d487a"/>
+				<textElement>
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Descrição parcela]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="450" y="0" width="104" height="20" forecolor="#066990" backcolor="#E6E6E6" uuid="de7934ca-a329-4780-a697-771595ad9470"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Valor]]></text>
+			</staticText>
+			<line>
+				<reportElement positionType="FixRelativeToBottom" x="0" y="19" width="555" height="1" uuid="b5f2ea26-80df-44f4-b98a-74b75530e565"/>
+			</line>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="24">
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="0" y="0" width="140" height="20" uuid="1ff096bb-829b-4b8d-a3e6-eabcd2d00a37"/>
+				<textElement textAlignment="Center">
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{data}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="140" y="0" width="312" height="20" uuid="72b4a34c-b0b3-40ca-accc-33d95fc28ec0"/>
+				<textElement>
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{descricao}]]></textFieldExpression>
+			</textField>
+			<textField pattern="¤#,##0.##;¤-#,##0.##">
+				<reportElement x="452" y="0" width="103" height="20" uuid="d44303b8-8186-425e-a83d-742608504642"/>
+				<textElement textAlignment="Center">
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{valor}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement positionType="FixRelativeToBottom" x="0" y="21" width="555" height="1" uuid="71483e25-3264-478c-b8f5-e0f687a1c4ca"/>
+			</line>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="27">
+			<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.FreeLayout"/>
+			<textField pattern="¤#,##0.##;¤-#,##0.##">
+				<reportElement x="452" y="0" width="101" height="22" uuid="41588ad6-e524-4fed-ad43-89ca8e817e56"/>
+				<textElement textAlignment="Right">
+					<font size="16"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{somaValor}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="287" y="0" width="165" height="22" uuid="306afef3-d106-4d3f-a4e9-4b45b330269b"/>
+				<textElement textAlignment="Right">
+					<font size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total de parcelas: ]]></text>
+			</staticText>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band height="17">
+			<textField>
+				<reportElement mode="Opaque" x="0" y="4" width="515" height="13" backcolor="#E6E6E6" uuid="ea94dc20-9d43-4acc-9cc6-b9d630a1a7da"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Página "+$V{PAGE_NUMBER}+" de"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement mode="Opaque" x="515" y="4" width="40" height="13" backcolor="#E6E6E6" uuid="f4a78a48-a9d0-4618-937d-87dd94b656fd"/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement x="0" y="4" width="100" height="13" uuid="2f58f568-ab65-4046-8dec-3a7d3f7703be"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band/>
+	</summary>
+</jasperReport>

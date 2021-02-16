@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="ehcache.xsd" updateCheck="true"
+    monitoring="autodetect" dynamicConfig="true">
+ 
+ 	<!-- CONFIGURAÇÕES TIRADAS DESSES DOIS LUGARES:
+ 	 https://examples.javacodegeeks.com/enterprise-java/hibernate/second-level-cache-hibernate-example/ 
+ 	 https://www.baeldung.com/hibernate-second-level-cache-->
+    <diskStore path="java.io.tmpdir/ehcache" />
+ 
+    <defaultCache maxEntriesLocalHeap="10000" eternal="false"
+        timeToIdleSeconds="120" timeToLiveSeconds="120" diskSpoolBufferSizeMB="30"
+        maxEntriesLocalDisk="10000000" diskExpiryThreadIntervalSeconds="120"
+        memoryStoreEvictionPolicy="LRU" statistics="true">
+        <persistence strategy="localTempSwap" />
+    </defaultCache>
+  
+    <cache name="org.hibernate.cache.internal.StandardQueryCache"
+        maxEntriesLocalHeap="5" eternal="false" timeToLiveSeconds="120">
+        <persistence strategy="localTempSwap" />
+    </cache>
+  
+    <cache name="org.hibernate.cache.spi.UpdateTimestampsCache"
+        maxEntriesLocalHeap="5000" eternal="true">
+        <persistence strategy="localTempSwap" />
+    </cache>
+    
+    <cache name="com.alex.modelo.Produto" maxElementsInMemory="1000" />
+    <cache name="com.alex.modelo.Produto.itemProdSaidas" maxElementsInMemory="50000" />
+    <cache name="com.alex.modelo.Produto.itemProdutos" maxElementsInMemory="50000" />
+    <cache name="com.alex.modelo.Produto.itemEntradas" maxElementsInMemory="50000" />
+    <cache name="com.alex.modelo.ItemProdSaida" maxElementsInMemory="5000" />
+    <cache name="com.alex.modelo.ItemProduto" maxElementsInMemory="5000" />
+    <cache name="com.alex.modelo.ItemEntrada" maxElementsInMemory="5000" />
+ 
+</ehcache>

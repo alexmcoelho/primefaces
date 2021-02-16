@@ -1,0 +1,222 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:adm="http://github.com/adminfaces"
+	template="/WEB-INF/templates/template.xhtml">
+
+	<ui:define name="head-end">
+		<style type="text/css">
+.ui-grid-row .ui-grid-col-2, .ui-grid-row .ui-grid-col-10 {
+	padding: 0.5em 0;
+	margin-left: 10px;
+}
+
+.ui-orderlist .ui-orderlist-list {
+	height: auto;
+}
+
+.ui-orderlist .ui-grid-row .ui-grid-col-2, .ui-orderlist .ui-grid-row .ui-grid-col-10
+	{
+	padding: 0;
+}
+</style>
+	</ui:define>
+
+	<ui:define name="title">
+        <br/>
+	    <p:separator />
+        #{clienteListaMB.titulo}
+    </ui:define>
+
+	<ui:define name="description">
+        Escolha a forma de pesquisa
+    </ui:define>
+
+	<ui:define name="head-end">
+		<ui:param name="renderBreadCrumb" value="true" />
+	</ui:define>
+
+	<ui:define name="body">
+		<adm:breadcrumb title="#{clienteListaMB.tituloBreadCrumbString}" 
+			link="#{clienteListaMB.linkBreadCrumb}"/>
+
+		<div class="box box-primary">
+			<div class="box-header with-border">
+				<h:form id="form-lista" 
+					onkeypress="if (event.keyCode == 13) { return false; }" >
+				
+					<!-- Dispara event assim que o enter for pressionado e cursor estiver em um dos inputs abaixo -->
+					<p:remoteCommand name="pesquisar"
+						update="form-lista form-tabela"
+						actionListener="#{clienteListaMB.pesquisar}" />
+
+					<div></div>
+					<div id="main-buttons" class="hidden-sm hidden-xs">
+						<p:commandButton
+							action="/pages/cliente/cadastro-cliente?faces-redirect=true"
+							process="@this" icon="fa fa-plus" value="Novo"
+							styleClass="btn-primary" />
+					</div>
+
+					<p:splitButton
+						action="/pages/cliente/cadastro-cliente?faces-redirect=true"
+						process="@this" icon="fa fa-plus" value="Novo"
+						styleClass="hidden-md hidden-lg btn-primary">
+					</p:splitButton>
+
+					<p:separator />
+
+					<div class="ui-fluid" style="color: #555;">
+
+							<div class="ui-g-12 ui-md-4">
+								<p:outputLabel value="Tipo de pesquisa:" for="pesquisa" />
+								<p:selectOneMenu id="pesquisa"
+									value="#{clienteListaMB.tipoPesquisa}">
+									<f:selectItem itemLabel="Número (Cód.)" itemValue="codigo" />
+									<f:selectItem itemLabel="Nome" itemValue="nome" />
+									<f:selectItem itemLabel="Todos" itemValue="todos" />
+									<p:ajax event="change"
+										update="label-tipo-pesquisa" />
+								</p:selectOneMenu>
+							</div>
+
+							<div class="ui-g-12 ui-md-8">
+								<h:panelGroup id="label-tipo-pesquisa">
+
+									<p:outputLabel id="lb-codigo" value="Número (Cód.): "
+										for="codigo"
+										rendered="#{clienteListaMB.tipoPesquisa=='codigo'}" />
+									
+									<p:outputLabel id="lb-nome" value="Nome: " for="nome"
+										rendered="#{clienteListaMB.tipoPesquisa=='nome'}" />
+									
+									<p:outputLabel value="pes" style="visibility:hidden;"
+										rendered="#{clienteListaMB.tipoPesquisa=='todos'}" />
+									
+									<div class="input-group">
+										<p:inputText id="codigo"
+											rendered="#{clienteListaMB.tipoPesquisa=='codigo'}"
+											required="#{clienteListaMB.tipoPesquisa=='codigo'}"
+											value="#{clienteListaMB.model.cliente.id}" 
+											onkeypress="if (event.keyCode == 13) { return pesquisar(); } " 
+											requiredMessage="#{beanPadraoMensagensValidacao.retorno('javax.faces.validator.BeanValidator.MESSAGE', 'Número (Cód.)')}"
+											/>
+										
+										<p:inputText id="nome"
+											rendered="#{clienteListaMB.tipoPesquisa=='nome'}"
+											required="#{clienteListaMB.tipoPesquisa=='nome'}"
+											value="#{clienteListaMB.model.cliente.nome}" 
+											onkeypress="if (event.keyCode == 13) { return pesquisar(); } "
+											requiredMessage="#{beanPadraoMensagensValidacao.retorno('javax.faces.validator.BeanValidator.MESSAGE', 'Nome')}"
+											/>
+										
+										<p:panelGrid id="todos" style="visibility:hidden;"
+											rendered="#{clienteListaMB.tipoPesquisa=='todos'}" />
+										
+										<span class="input-group-btn" style="padding-left: 2%;">
+											<p:commandButton value="Pesquisar" title="Pesquisar cliente"
+												action="#{clienteListaMB.pesquisar}" update="form-lista form-tabela"
+												id="btn-pesquisar" icon="fa fa-search"
+												styleClass="btn-primary" 
+												validateClient="true"/>
+										</span>
+									</div>
+									
+									<p:message for="codigo"
+										rendered="#{clienteListaMB.tipoPesquisa=='codigo'}" />
+									
+									<p:message for="nome"
+										rendered="#{clienteListaMB.tipoPesquisa=='nome'}" />
+
+								</h:panelGroup>
+							</div>
+
+					</div>
+					</h:form>
+
+					<br />
+					
+					<h:form id="form-tabela"
+						style="clear: both; padding-top: 1%">
+						<p:dataTable id="dataTable" var="u"
+							value="#{clienteListaMB.model}" 
+							rows="15" paginator="true" lazy="true"
+							reflow="true"
+							emptyMessage="Escolha os filtros para obter resultados de pesquisa!">
+
+							<p:column styleClass="align-center" headerText="Número (Cód.)">
+								<h:outputText value="#{u.id}" />
+							</p:column>
+
+							<p:column styleClass="align-center" headerText="Nome">
+								<h:outputText value="#{u.nome}" />
+							</p:column>
+							
+							<p:column styleClass="align-center" headerText="Telefone">
+								<h:outputText value="#{u.telefonePrincipal.toString()}" escape="false" />
+							</p:column>
+
+							<p:column styleClass="align-center" headerText="CPF/CNPJ">
+								<h:outputText value="#{u.cpfCnpj}" />
+							</p:column>
+
+							<p:column styleClass="align-center" headerText="Data nascimento">
+								<h:outputText value="#{u.dataNascimento}">
+									<f:convertDateTime patter="dd/MM/yyyy" />
+								</h:outputText>
+							</p:column>
+
+							<p:column style="width: 150px;">
+								<div class="ui-fluid">
+									<div class="ui-g-6" style="padding: 0 2% 0 2%;">
+										<p:commandButton styleClass="btn btn-success"
+											icon="fa fa-edit" title="Alterar"
+											actionListener="#{clienteCadastroMB.selecionarRegistro}"
+											update="form-lista">
+											<f:param id="entidadeId" name="entidadeId" value="#{u.id}" />
+										</p:commandButton>
+									</div>
+									<div class="ui-g-6" style="padding: 0 2% 0 2%;">
+										<p:commandButton styleClass="btn btn-danger" icon="fa fa-trash"
+											onclick="PF('excluirSaida').show();"
+											action="#{clienteListaMB.preparaExclusao(u)}" />
+									</div>
+								</div>
+							</p:column>
+
+						</p:dataTable>
+				</h:form>
+			</div>
+		</div>
+
+		<!-- DIALOG DE EXCLUSÃO DE ORDEM DE ORDEM DE SERVICO -->
+		<p:dialog id="excluir-saida-dialog" header="Excluir registro"
+			widgetVar="excluirSaida" responsive="true" styleClass="box-success"
+			modal="true" closeOnEscape="true" width="300" height="120"
+			position="center center">
+			<h:form id="form-excluir-ordem">
+				<div class="ui-fluid" style="color: #555">
+					<p:panelGrid columns="1" layout="grid">
+						<p:column>
+							<h:outputText value="Tem certeza que deseja excluir o registro?" />
+						</p:column>
+						<h:outputText value="" />
+					</p:panelGrid>
+					<p:panelGrid columns="2" layout="grid">
+						<p:commandButton value="Sim" update="form-tabela:dataTable"
+							process="excluir-saida-dialog"
+							action="#{clienteListaMB.excluir()}" icon="fa fa-check"
+							styleClass="btn-primary" oncomplete="PF('excluirSaida').hide()" />
+						<p:commandButton value="Não" process="excluir-saida-dialog"
+							icon="fa fa-close" styleClass="btn-default"
+							oncomplete="PF('excluirSaida').hide()" />
+					</p:panelGrid>
+				</div>
+			</h:form>
+		</p:dialog>
+
+	</ui:define>
+
+</ui:composition>

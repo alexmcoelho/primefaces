@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:adm="http://github.com/adminfaces"
+	template="/WEB-INF/templates/template.xhtml">
+
+	<ui:define name="title">
+        Emissão do relatório de contas à pagar
+    </ui:define>
+    
+    <ui:define name="description">
+        Escolha os filtros
+    </ui:define>
+
+	<ui:define name="head-end">
+		<ui:param name="renderBreadCrumb" value="false" />
+	</ui:define>
+
+	<ui:define name="body">
+
+		<adm:breadcrumb title="Emissão relatório de contas à pagar" />
+
+		<h:form id="form" prependId="false">
+			<p:focus />
+
+			<div class="box box-primary">
+
+				<div class="box-header with-border">
+					<div></div>
+					
+					<div class="ui-fluid">
+						<p:panelGrid columns="4" layout="grid">
+							<p:column>
+								<p:outputLabel value="Contas pagas" for="faturas" />
+								<p:selectOneMenu id="faturas"
+									value="#{contasAPagarRelatorioMB.contasPagas}">
+									<f:selectItem itemLabel="Não" itemValue="false" />
+									<f:selectItem itemLabel="Sim" itemValue="true" />
+								</p:selectOneMenu>
+							</p:column>
+						
+							<p:column>
+								<p:outputLabel value="Tipo de relatorio" for="pesquisa" />
+								<p:selectOneMenu id="pesquisa"
+									value="#{contasAPagarRelatorioMB.tipoRelatorio}">
+									<f:selectItem itemLabel="Número (Cód.)"
+										itemValue="numero_entrada" />
+									<f:selectItem itemLabel="Intervalo entre datas"
+										itemValue="data" />
+									<f:selectItem itemLabel="Todos" itemValue="todos" />
+									<p:ajax event="change"
+										update="label-tipo-pesquisa" />
+								</p:selectOneMenu>
+							</p:column>
+
+							<p:column>
+								<h:panelGroup id="label-tipo-pesquisa">
+
+									<div class="ui-g-6" style="padding: 0px; padding-right: 4%;">
+										<p:outputLabel value="Data de início:" for="data-inicio"
+											rendered="#{contasAPagarRelatorioMB.tipoRelatorio == 'data'}" />
+										<p:calendar id="data-inicio" style="color: #555"
+											value="#{contasAPagarRelatorioMB.dataInicio}"
+											required="true" pattern="dd/MM/yyyy" mask="true"
+											rendered="#{contasAPagarRelatorioMB.tipoRelatorio == 'data'}">
+										</p:calendar>
+										<p:message for="data-inicio"
+											rendered="#{contasAPagarRelatorioMB.tipoRelatorio == 'data'}" />
+									</div>
+
+									<div class="ui-g-6" style="padding: 0px; padding-left: 4%;">
+										<p:outputLabel value="Data de fim:" for="data-fim"
+											rendered="#{contasAPagarRelatorioMB.tipoRelatorio == 'data'}" />
+										<p:calendar id="data-fim" style="color: #555"
+											value="#{contasAPagarRelatorioMB.dataFim}" required="true"
+											pattern="dd/MM/yyyy" mask="true"
+											rendered="#{contasAPagarRelatorioMB.tipoRelatorio == 'data'}">
+										</p:calendar>
+										<p:message for="data-fim"
+											rendered="#{contasAPagarRelatorioMB.tipoRelatorio == 'data'}" />
+									</div>
+
+									<p:outputLabel id="lb-numero-os" value="Número entrada: "
+										for="numero-entrada"
+										rendered="#{contasAPagarRelatorioMB.tipoRelatorio=='numero_entrada'}" />
+									<p:inputText id="numero-entrada"
+										rendered="#{contasAPagarRelatorioMB.tipoRelatorio=='numero_entrada'}"
+										required="#{contasAPagarRelatorioMB.tipoRelatorio=='numero_entrada'}"
+										value="#{contasAPagarRelatorioMB.codigo}" />
+									<p:message for="numero-entrada"
+										rendered="#{contasAPagarRelatorioMB.tipoRelatorio=='numero_entrada'}" />
+
+								</h:panelGroup>
+							</p:column>
+							
+							<p:column>
+								<p:outputLabel value="pes" style="visibility:hidden;"  />
+								<p:commandButton value="Relatório"
+									validateClient="true"
+									action="#{contasAPagarRelatorioMB.gerarRelatorio}" ajax="false"
+									styleClass="btn-primary" 
+									onclick="this.form.target='_blank'"/>
+							</p:column>
+						</p:panelGrid>
+
+						
+					</div>
+				</div>
+			</div>
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>

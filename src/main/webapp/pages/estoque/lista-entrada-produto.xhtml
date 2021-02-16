@@ -1,0 +1,258 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:adm="http://github.com/adminfaces"
+	template="/WEB-INF/templates/template.xhtml">
+
+	<ui:define name="head-end">
+		<style type="text/css">
+.ui-grid-row .ui-grid-col-2, .ui-grid-row .ui-grid-col-10 {
+	padding: 0.5em 0;
+	margin-left: 10px;
+}
+
+.ui-orderlist .ui-orderlist-list {
+	height: auto;
+}
+
+.ui-orderlist .ui-grid-row .ui-grid-col-2, .ui-orderlist .ui-grid-row .ui-grid-col-10
+	{
+	padding: 0;
+}
+</style>
+	</ui:define>
+
+	<ui:define name="title">
+		<br />
+		<p:separator />
+        #{entradaDeProdutosListaMB.titulo} 
+    </ui:define>
+
+	<ui:define name="description">
+        Escolha a forma de pesquisa
+    </ui:define>
+
+	<ui:define name="head-end">
+		<ui:param name="renderBreadCrumb" value="true" />
+	</ui:define>
+
+	<ui:define name="body">
+		<adm:breadcrumb
+			title="#{entradaDeProdutosListaMB.tituloBreadCrumbString}"
+			link="#{entradaDeProdutosListaMB.linkBreadCrumb}" />
+
+		<div class="box box-primary">
+			<div class="box-header with-border">
+				<div></div>
+				<h:form id="form-lista"
+					onkeypress="if (event.keyCode == 13) { return false; }">
+
+					<!-- Dispara event assim que o enter for pressionado e cursor estiver em um dos inputs abaixo -->
+					<p:remoteCommand name="pesquisar" update="form-lista form-tabela"
+						actionListener="#{entradaDeProdutosListaMB.pesquisar}" />
+
+					<div id="main-buttons" class="hidden-sm hidden-xs">
+						<p:commandButton
+							action="/pages/estoque/cadastro-entrada-produto?faces-redirect=true"
+							process="@this" icon="fa fa-plus" value="Novo"
+							styleClass="btn-primary" />
+					</div>
+
+					<p:splitButton
+						action="/pages/estoque/cadastro-entrada-produto?faces-redirect=true"
+						process="@this" icon="fa fa-plus" value="Novo"
+						styleClass="hidden-md hidden-lg btn-primary">
+					</p:splitButton>
+
+					<p:separator />
+
+					<div class="ui-fluid" style="color: #555">
+
+						<div class="ui-g-12 ui-md-4">
+							<p:outputLabel value="Tipo de pesquisa:" for="pesquisa" />
+							<p:selectOneMenu id="pesquisa"
+								value="#{entradaDeProdutosListaMB.tipoPesquisa}">
+								<f:selectItem itemLabel="Número (Cód.)"
+									itemValue="numero_entrada" />
+								<f:selectItem itemLabel="Código nota" itemValue="codigo_nota" />
+								<f:selectItem itemLabel="Produto" itemValue="produto" />
+								<f:selectItem itemLabel="Intervalo entre datas" itemValue="data" />
+								<f:selectItem itemLabel="Todos" itemValue="todos" />
+								<p:ajax event="change" update="label-tipo-pesquisa" />
+							</p:selectOneMenu>
+						</div>
+
+						<div class="ui-g-12 ui-md-8">
+							<h:panelGroup id="label-tipo-pesquisa">
+
+								<p:outputLabel value="Período:" for="data-inicio"
+									rendered="#{entradaDeProdutosListaMB.tipoPesquisa == 'data'}" />
+
+								<p:outputLabel id="lb-numero-entrada" value="Número entrada: "
+									for="numero-entrada"
+									rendered="#{entradaDeProdutosListaMB.tipoPesquisa=='numero_entrada'}" />
+
+								<p:outputLabel id="lb-codigo-nota" value="Código nota: "
+									for="codigo-nota"
+									rendered="#{entradaDeProdutosListaMB.tipoPesquisa=='codigo_nota'}" />
+									
+								<p:outputLabel value="Produto: "
+									for="produto"
+									rendered="#{entradaDeProdutosListaMB.tipoPesquisa=='produto'}" />
+
+								<p:outputLabel value="pes" style="visibility:hidden;"
+									rendered="#{entradaDeProdutosListaMB.tipoPesquisa=='todos'}" />
+
+								<div class="input-group">
+									<div class="ui-g-6" style="padding: 0px; padding-right: 3%;">
+										<p:calendar id="data-inicio" style="color: #555"
+											placeholder="Data de início"
+											value="#{entradaDeProdutosListaMB.dataInicio}"
+											required="true" pattern="dd/MM/yyyy" mask="true"
+											rendered="#{entradaDeProdutosListaMB.tipoPesquisa == 'data'}"
+											requiredMessage="#{beanPadraoMensagensValidacao.retorno('javax.faces.validator.BeanValidator.MESSAGE', 'Data de início')}">
+										</p:calendar>
+									</div>
+
+									<div class="ui-g-6" style="padding: 0px;">
+										<p:calendar id="data-fim" style="color: #555"
+											placeholder="Data de fim"
+											value="#{entradaDeProdutosListaMB.dataFim}" required="true"
+											pattern="dd/MM/yyyy" mask="true"
+											rendered="#{entradaDeProdutosListaMB.tipoPesquisa == 'data'}"
+											onkeypress="if (event.keyCode == 13) { return pesquisar(); } "
+											requiredMessage="#{beanPadraoMensagensValidacao.retorno('javax.faces.validator.BeanValidator.MESSAGE', 'Data de fim')}">
+										</p:calendar>
+									</div>
+
+									<p:inputText id="numero-entrada"
+										rendered="#{entradaDeProdutosListaMB.tipoPesquisa=='numero_entrada'}"
+										required="#{entradaDeProdutosListaMB.tipoPesquisa=='numero_entrada'}"
+										value="#{entradaDeProdutosListaMB.model.entradaDeProduto.id}"
+										onkeypress="if (event.keyCode == 13) { return pesquisar(); } "
+										requiredMessage="#{beanPadraoMensagensValidacao.retorno('javax.faces.validator.BeanValidator.MESSAGE', 'Número entrada')}" />
+
+									<p:inputText id="codigo-nota"
+										rendered="#{entradaDeProdutosListaMB.tipoPesquisa=='codigo_nota'}"
+										required="#{entradaDeProdutosListaMB.tipoPesquisa=='codigo_nota'}"
+										value="#{entradaDeProdutosListaMB.model.entradaDeProduto.codigoNota}"
+										onkeypress="if (event.keyCode == 13) { return pesquisar(); } "
+										requiredMessage="#{beanPadraoMensagensValidacao.retorno('javax.faces.validator.BeanValidator.MESSAGE', 'Código nota')}" />
+									
+									<p:inputText id="produto"
+										rendered="#{entradaDeProdutosListaMB.tipoPesquisa=='produto'}"
+										required="#{entradaDeProdutosListaMB.tipoPesquisa=='produto'}"
+										value="#{entradaDeProdutosListaMB.model.descricaoProduto}"
+										onkeypress="if (event.keyCode == 13) { return pesquisar(); } "
+										placeholder="Descrição"
+										requiredMessage="#{beanPadraoMensagensValidacao.retorno('javax.faces.validator.BeanValidator.MESSAGE', 'Produto')}" />
+
+									<span class="input-group-btn" style="padding-left: 2%;">
+										<p:commandButton value="Pesquisar" title="Pesquisar"
+											action="#{entradaDeProdutosListaMB.pesquisar}"
+											update="form-lista form-tabela" icon="fa fa-search"
+											styleClass="btn-primary" id="btn-pesquisar"
+											validateClient="true" />
+									</span>
+								</div>
+
+								<p:message for="data-inicio"
+									rendered="#{entradaDeProdutosListaMB.tipoPesquisa == 'data'}" />
+
+								<p:message for="data-fim"
+									rendered="#{entradaDeProdutosListaMB.tipoPesquisa == 'data'}" />
+
+								<p:message for="numero-entrada"
+									rendered="#{entradaDeProdutosListaMB.tipoPesquisa=='numero_entrada'}" />
+
+								<p:message for="codigo-nota"
+									rendered="#{entradaDeProdutosListaMB.tipoPesquisa=='codigo_nota'}" />
+									
+								<p:message for="produto"
+									rendered="#{entradaDeProdutosListaMB.tipoPesquisa=='produto'}" />
+
+							</h:panelGroup>
+						</div>
+					</div>
+				</h:form>
+
+				<br />
+
+				<h:form id="form-tabela" style="clear: both; padding-top: 1%">
+					<p:dataTable id="dataTable" var="s"
+						value="#{entradaDeProdutosListaMB.model}" rows="15"
+						paginator="true" lazy="true" reflow="true"
+						emptyMessage="Escolha os filtros para obter resultados de pesquisa!">
+
+						<p:column styleClass="align-center" headerText="Número (Cód.)">
+							<h:outputText value="#{s.id}" />
+						</p:column>
+
+						<p:column styleClass="align-center" headerText="Fornecedor">
+							<h:outputText value="#{s.fornecedor.nome}" />
+						</p:column>
+
+						<p:column styleClass="align-center" headerText="Código nota">
+							<h:outputText value="#{s.codigoNota}" />
+						</p:column>
+
+						<p:column styleClass="align-center" headerText="Data">
+							<h:outputText value="#{s.data}">
+								<f:convertDateTime patter="dd/MM/yyyy" />
+							</h:outputText>
+						</p:column>
+
+						<p:column style="width: 150px;">
+							<div class="ui-fluid">
+								<div class="ui-g-6" style="padding: 0 2% 0 2%;">
+									<p:commandButton styleClass="btn btn-success" icon="fa fa-edit"
+										title="Alterar"
+										actionListener="#{entradaDeProdutosListaMB.selecionarEntradaDeProduto}"
+										update="form-lista:label-tipo-pesquisa">
+										<f:param id="entidadeId" name="entidadeId" value="#{s.id}" />
+									</p:commandButton>
+								</div>
+								<div class="ui-g-6" style="padding: 0 2% 0 2%;">
+									<p:commandButton styleClass="btn btn-danger" icon="fa fa-trash"
+										onclick="PF('excluirSaida').show();"
+										action="#{entradaDeProdutosListaMB.preparaExclusao(s)}" />
+								</div>
+							</div>
+						</p:column>
+
+					</p:dataTable>
+				</h:form>
+			</div>
+		</div>
+
+		<!-- DIALOG DE EXCLUSÃO DE ORDEM DE ORDEM DE SERVICO -->
+		<p:dialog id="excluir-saida-dialog" header="Excluir registro"
+			widgetVar="excluirSaida" responsive="true" styleClass="box-success"
+			modal="true" closeOnEscape="true" width="300" height="120"
+			position="center center">
+			<h:form id="form-excluir-ordem">
+				<div class="ui-fluid" style="color: #555">
+					<p:panelGrid columns="1" layout="grid">
+						<p:column>
+							<h:outputText value="Tem certeza que deseja excluir o registro?" />
+						</p:column>
+						<h:outputText value="" />
+					</p:panelGrid>
+					<p:panelGrid columns="2" layout="grid">
+						<p:commandButton value="Sim" update="form-tabela:dataTable"
+							process="excluir-saida-dialog"
+							action="#{entradaDeProdutosListaMB.excluir()}" icon="fa fa-check"
+							styleClass="btn-primary" oncomplete="PF('excluirSaida').hide()" />
+						<p:commandButton value="Não" process="excluir-saida-dialog"
+							icon="fa fa-close" styleClass="btn-default"
+							oncomplete="PF('excluirSaida').hide()" />
+					</p:panelGrid>
+				</div>
+			</h:form>
+		</p:dialog>
+
+	</ui:define>
+
+</ui:composition>

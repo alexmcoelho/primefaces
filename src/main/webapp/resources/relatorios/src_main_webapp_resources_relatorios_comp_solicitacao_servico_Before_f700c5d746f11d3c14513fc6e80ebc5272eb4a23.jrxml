@@ -1,0 +1,766 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="sem_informacoes" pageWidth="595" pageHeight="842" columnWidth="525" leftMargin="35" rightMargin="35" topMargin="35" bottomMargin="35" uuid="6766051f-8522-46e8-8f49-7f5d2a4de7d5">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<style name="Table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="Dataset1" uuid="96c3d882-9a58-45b1-a8d8-389af8dd7b04">
+		<queryString>
+			<![CDATA[]]>
+		</queryString>
+	</subDataset>
+	<subDataset name="Dataset2" uuid="e6ca9495-f2f5-46b5-a7f7-f9c3f4ea1c85">
+		<queryString>
+			<![CDATA[]]>
+		</queryString>
+	</subDataset>
+	<parameter name="caminhoImgLogo" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="id" class="java.lang.Long"/>
+	<field name="cliente.nome" class="java.lang.String"/>
+	<field name="estado.descricao" class="java.lang.String"/>
+	<field name="modelo.modelo" class="java.lang.String"/>
+	<field name="modelo.aparelho.marca" class="java.lang.String"/>
+	<field name="dataEntrada" class="java.util.Date"/>
+	<field name="imei" class="java.lang.String"/>
+	<field name="estadoAparelho" class="java.lang.String"/>
+	<field name="bateria.descricao" class="java.lang.String"/>
+	<field name="carregador.descricao" class="java.lang.String"/>
+	<field name="defeitoInformado" class="java.lang.String"/>
+	<field name="laudoTecnico" class="java.lang.String"/>
+	<field name="observacoes" class="java.lang.String"/>
+	<field name="valor" class="java.math.BigDecimal"/>
+	<background>
+		<band/>
+	</background>
+	<columnHeader>
+		<band height="772">
+			<line>
+				<reportElement positionType="FixRelativeToBottom" mode="Opaque" x="0" y="384" width="525" height="1" backcolor="#0D0C0C" uuid="9e5b6525-7160-4f03-a119-77ccde138cb5"/>
+				<graphicElement>
+					<pen lineStyle="Dashed"/>
+				</graphicElement>
+			</line>
+			<rectangle radius="5">
+				<reportElement mode="Transparent" x="1" y="438" width="525" height="332" uuid="8150959f-5c22-416f-aa66-90b40605795e"/>
+				<graphicElement>
+					<pen lineWidth="1.0"/>
+				</graphicElement>
+			</rectangle>
+			<textField>
+				<reportElement mode="Transparent" x="116" y="467" width="409" height="20" backcolor="#E6E6E6" uuid="9277d920-1a36-4584-be26-7044eb9fff24"/>
+				<box topPadding="1" leftPadding="5" bottomPadding="1" rightPadding="1">
+					<pen lineWidth="1.0" lineStyle="Dotted"/>
+					<topPen lineWidth="1.0" lineColor="#FFFFFF"/>
+					<leftPen lineWidth="1.0" lineColor="#FFFFFF"/>
+					<bottomPen lineWidth="1.25" lineColor="#FFFFFF"/>
+					<rightPen lineWidth="1.0" lineStyle="Dotted" lineColor="#FFFFFF"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle" markup="none">
+					<font fontName="DejaVu Serif" size="12"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cliente.nome}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="3" y="467" width="95" height="20" uuid="30e2a206-d240-456a-9a1d-a572cae6b936"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+					<paragraph leftIndent="0" rightIndent="5"/>
+				</textElement>
+				<text><![CDATA[Solicitante:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="3" y="487" width="97" height="20" uuid="91a42275-9bd3-4c41-b1c5-616ffa12446a"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+					<paragraph lineSpacing="AtLeast" leftIndent="0" rightIndent="5"/>
+				</textElement>
+				<text><![CDATA[Aparelho:]]></text>
+			</staticText>
+			<textField>
+				<reportElement mode="Transparent" x="116" y="487" width="172" height="20" backcolor="#E6E6E6" uuid="63f34be1-e54f-4f3f-b988-ba7aee8f814b"/>
+				<box topPadding="1" leftPadding="5" bottomPadding="1" rightPadding="1">
+					<pen lineWidth="1.0" lineStyle="Dotted"/>
+					<topPen lineWidth="1.0" lineColor="#FFFFFF"/>
+					<leftPen lineWidth="1.0" lineColor="#FFFFFF"/>
+					<bottomPen lineWidth="1.25" lineColor="#FFFFFF"/>
+					<rightPen lineWidth="1.0" lineColor="#FFFFFF"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Serif" size="12"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{modelo.aparelho.marca} + " - " + $F{modelo.modelo}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="FixRelativeToBottom" x="201" y="751" width="100" height="17" uuid="83d6243b-2214-420b-9240-35041ad80ba4"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font fontName="DejaVu Sans" size="14"/>
+				</textElement>
+				<text><![CDATA[Assinatura]]></text>
+			</staticText>
+			<textField pattern="d &apos;de&apos; MMMM &apos;de&apos; yyyy&apos;.&apos;">
+				<reportElement x="76" y="701" width="145" height="20" uuid="e4aa7268-b0e5-4145-bf17-84252796d8fc">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font fontName="DejaVu Serif" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="FixRelativeToBottom" x="3" y="701" width="73" height="20" uuid="4d4346cc-cb4b-4566-8c65-1fdc81635d04"/>
+				<textElement textAlignment="Left" verticalAlignment="Top">
+					<font fontName="DejaVu Sans" size="12"/>
+				</textElement>
+				<text><![CDATA[Ituporanga, ]]></text>
+			</staticText>
+			<line>
+				<reportElement positionType="FixRelativeToBottom" mode="Opaque" x="88" y="750" width="355" height="1" backcolor="#0D0C0C" uuid="63871b73-18d7-493f-83ab-85ad9e20a23a"/>
+			</line>
+			<staticText>
+				<reportElement x="302" y="447" width="71" height="20" uuid="50ba2f6d-1444-4f9d-a1ef-cd8510e1f9bf"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+					<paragraph lineSpacing="AtLeast" leftIndent="0" rightIndent="5"/>
+				</textElement>
+				<text><![CDATA[Situação:]]></text>
+			</staticText>
+			<textField>
+				<reportElement mode="Transparent" x="390" y="447" width="111" height="20" backcolor="#E6E6E6" uuid="217a27e9-67a3-4bad-963b-7358a429dad3"/>
+				<box topPadding="1" leftPadding="5" bottomPadding="1" rightPadding="1">
+					<pen lineWidth="1.0" lineStyle="Dotted"/>
+					<topPen lineWidth="1.0" lineColor="#FFFFFF"/>
+					<leftPen lineWidth="1.0" lineColor="#FFFFFF"/>
+					<bottomPen lineWidth="1.25" lineColor="#FFFFFF"/>
+					<rightPen lineWidth="1.0" lineColor="#FFFFFF"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Serif" size="12" isUnderline="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{estado.descricao}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="3" y="447" width="113" height="20" uuid="61ad504e-04fd-4da0-9a0d-d13432c0ee0d"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+					<paragraph leftIndent="0" rightIndent="5"/>
+				</textElement>
+				<text><![CDATA[O.S.:]]></text>
+			</staticText>
+			<textField>
+				<reportElement mode="Transparent" x="116" y="447" width="95" height="20" backcolor="#E6E6E6" uuid="0561bcc0-036f-4add-994c-9b5f43bca391"/>
+				<box topPadding="1" leftPadding="5" bottomPadding="1" rightPadding="1">
+					<pen lineWidth="1.0" lineStyle="Dotted"/>
+					<topPen lineWidth="1.0" lineColor="#FFFFFF"/>
+					<leftPen lineWidth="1.0" lineColor="#FFFFFF"/>
+					<bottomPen lineWidth="1.25" lineColor="#FFFFFF"/>
+					<rightPen lineWidth="1.0" lineStyle="Dotted" lineColor="#FFFFFF"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle" markup="none">
+					<font fontName="DejaVu Serif" size="12"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{id}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="302" y="487" width="70" height="20" uuid="51530960-7073-4e99-8f24-a4aad3bf2cff"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+					<paragraph leftIndent="0" rightIndent="5"/>
+				</textElement>
+				<text><![CDATA[IMEI:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="3" y="507" width="118" height="33" uuid="32fbc4bd-8a61-4e50-affc-2b10b47615f5"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+					<paragraph lineSpacing="AtLeast" leftIndent="0" rightIndent="5"/>
+				</textElement>
+				<text><![CDATA[Estado equip.:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="false">
+				<reportElement mode="Transparent" x="116" y="507" width="409" height="33" backcolor="#E6E6E6" uuid="20646657-2165-4fc9-ba67-a9445a62766e"/>
+				<box topPadding="1" leftPadding="5" bottomPadding="1" rightPadding="1">
+					<pen lineWidth="1.0" lineStyle="Dotted"/>
+					<topPen lineWidth="1.0" lineColor="#FFFFFF"/>
+					<leftPen lineWidth="1.0" lineColor="#FFFFFF"/>
+					<bottomPen lineWidth="1.25" lineColor="#FFFFFF"/>
+					<rightPen lineWidth="1.0" lineColor="#FFFFFF"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Serif" size="12"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{estadoAparelho}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="3" y="540" width="97" height="20" uuid="40d4fbf4-f54f-4f18-a4bb-f66287f3727c"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+					<paragraph lineSpacing="AtLeast" leftIndent="0" rightIndent="5"/>
+				</textElement>
+				<text><![CDATA[Bateria:]]></text>
+			</staticText>
+			<textField>
+				<reportElement mode="Transparent" x="116" y="540" width="172" height="20" backcolor="#E6E6E6" uuid="c29c2444-c0bd-49e4-966b-8df1c3945516"/>
+				<box topPadding="1" leftPadding="5" bottomPadding="1" rightPadding="1">
+					<pen lineWidth="1.0" lineStyle="Dotted"/>
+					<topPen lineWidth="1.0" lineColor="#FFFFFF"/>
+					<leftPen lineWidth="1.0" lineColor="#FFFFFF"/>
+					<bottomPen lineWidth="1.25" lineColor="#FFFFFF"/>
+					<rightPen lineWidth="1.0" lineColor="#FFFFFF"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Serif" size="12"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{bateria.descricao}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="302" y="540" width="87" height="20" uuid="2a16fc22-6ab5-492a-89a7-1371fe04dc39"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+					<paragraph leftIndent="0" rightIndent="5"/>
+				</textElement>
+				<text><![CDATA[Carregador:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="3" y="560" width="118" height="33" uuid="ab9108dd-2f3f-4142-9da3-3b1191c2f963"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+					<paragraph lineSpacing="AtLeast" leftIndent="0" rightIndent="5"/>
+				</textElement>
+				<text><![CDATA[Defeito informado:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="false">
+				<reportElement mode="Transparent" x="116" y="560" width="409" height="33" backcolor="#E6E6E6" uuid="ef6fbb32-c395-4007-9861-e93247e6d2b1"/>
+				<box topPadding="1" leftPadding="5" bottomPadding="1" rightPadding="1">
+					<pen lineWidth="1.0" lineStyle="Dotted"/>
+					<topPen lineWidth="1.0" lineColor="#FFFFFF"/>
+					<leftPen lineWidth="1.0" lineColor="#FFFFFF"/>
+					<bottomPen lineWidth="1.25" lineColor="#FFFFFF"/>
+					<rightPen lineWidth="1.0" lineColor="#FFFFFF"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Serif" size="12"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{defeitoInformado}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement mode="Transparent" x="116" y="593" width="409" height="33" backcolor="#E6E6E6" uuid="6876d2db-ee22-4b86-976d-d1501bc3e803"/>
+				<box topPadding="1" leftPadding="5" bottomPadding="1" rightPadding="1">
+					<pen lineWidth="1.0" lineStyle="Dotted"/>
+					<topPen lineWidth="1.0" lineColor="#FFFFFF"/>
+					<leftPen lineWidth="1.0" lineColor="#FFFFFF"/>
+					<bottomPen lineWidth="1.25" lineColor="#FFFFFF"/>
+					<rightPen lineWidth="1.0" lineColor="#FFFFFF"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Serif" size="12"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{laudoTecnico}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="3" y="593" width="118" height="33" uuid="861724cb-b139-45cd-a49e-da9706f6393b"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+					<paragraph lineSpacing="AtLeast" leftIndent="0" rightIndent="5"/>
+				</textElement>
+				<text><![CDATA[Laudo técnico:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="3" y="627" width="118" height="33" uuid="3614d00e-dd3d-4b78-b0a3-3baa6932f923"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+					<paragraph lineSpacing="AtLeast" leftIndent="0" rightIndent="5"/>
+				</textElement>
+				<text><![CDATA[Observações:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="false">
+				<reportElement mode="Transparent" x="116" y="627" width="409" height="33" backcolor="#E6E6E6" uuid="89c0a634-e346-4073-973b-bf8d8197d240"/>
+				<box topPadding="1" leftPadding="5" bottomPadding="1" rightPadding="1">
+					<pen lineWidth="1.0" lineStyle="Dotted"/>
+					<topPen lineWidth="1.0" lineColor="#FFFFFF"/>
+					<leftPen lineWidth="1.0" lineColor="#FFFFFF"/>
+					<bottomPen lineWidth="1.25" lineColor="#FFFFFF"/>
+					<rightPen lineWidth="1.0" lineColor="#FFFFFF"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Serif" size="12"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{observacoes}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="3" y="660" width="118" height="20" uuid="749dbb80-05fc-48d7-bd13-38858d5791c9"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+					<paragraph lineSpacing="AtLeast" leftIndent="0" rightIndent="5"/>
+				</textElement>
+				<text><![CDATA[Valor:]]></text>
+			</staticText>
+			<textField pattern="¤#,##0.00;¤-#,##0.00">
+				<reportElement mode="Transparent" x="116" y="660" width="172" height="20" backcolor="#E6E6E6" uuid="33114f01-d268-449a-be55-59426eb09a86"/>
+				<box topPadding="1" leftPadding="5" bottomPadding="1" rightPadding="1">
+					<pen lineWidth="1.0" lineStyle="Dotted"/>
+					<topPen lineWidth="1.0" lineColor="#FFFFFF"/>
+					<leftPen lineWidth="1.0" lineColor="#FFFFFF"/>
+					<bottomPen lineWidth="1.25" lineColor="#FFFFFF"/>
+					<rightPen lineWidth="1.0" lineColor="#FFFFFF"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Serif" size="12"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{valor}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="FixRelativeToBottom" x="3" y="684" width="516" height="16" uuid="db198b48-460e-4b25-a989-6d539a7ea1eb"/>
+				<textElement textAlignment="Left" verticalAlignment="Top">
+					<font fontName="DejaVu Sans" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ATENÇÂO: A não retirada do aparelho em 120 dias implica em multa de R$ 10,00 ao dia.]]></text>
+			</staticText>
+			<image>
+				<reportElement x="0" y="394" width="130" height="43" uuid="0932fad1-9f3b-45f9-8850-63280b7306a2"/>
+				<imageExpression><![CDATA[$P{caminhoImgLogo}]]></imageExpression>
+			</image>
+			<rectangle radius="5">
+				<reportElement mode="Transparent" x="1" y="42" width="525" height="332" uuid="5114bb1f-0286-4d55-bd71-b5b76285f870"/>
+				<graphicElement>
+					<pen lineWidth="1.0"/>
+				</graphicElement>
+			</rectangle>
+			<textField>
+				<reportElement mode="Transparent" x="116" y="71" width="409" height="20" backcolor="#E6E6E6" uuid="54fd397f-e006-4810-b62b-29bf07c06355"/>
+				<box topPadding="1" leftPadding="5" bottomPadding="1" rightPadding="1">
+					<pen lineWidth="1.0" lineStyle="Dotted"/>
+					<topPen lineWidth="1.0" lineColor="#FFFFFF"/>
+					<leftPen lineWidth="1.0" lineColor="#FFFFFF"/>
+					<bottomPen lineWidth="1.25" lineColor="#FFFFFF"/>
+					<rightPen lineWidth="1.0" lineStyle="Dotted" lineColor="#FFFFFF"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle" markup="none">
+					<font fontName="DejaVu Sans" size="12"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cliente.nome}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="3" y="71" width="95" height="20" uuid="c7d8afb7-1949-4c9b-97f0-92e0a27fbe29"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+					<paragraph leftIndent="0" rightIndent="5"/>
+				</textElement>
+				<text><![CDATA[Solicitante:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="3" y="91" width="97" height="20" uuid="a72a2a68-ce5f-43fd-82f7-a841fc817f6b"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+					<paragraph lineSpacing="AtLeast" leftIndent="0" rightIndent="5"/>
+				</textElement>
+				<text><![CDATA[Aparelho:]]></text>
+			</staticText>
+			<textField>
+				<reportElement mode="Transparent" x="116" y="91" width="172" height="20" backcolor="#E6E6E6" uuid="3201cf40-d591-4a28-b558-ec911b442332"/>
+				<box topPadding="1" leftPadding="5" bottomPadding="1" rightPadding="1">
+					<pen lineWidth="1.0" lineStyle="Dotted"/>
+					<topPen lineWidth="1.0" lineColor="#FFFFFF"/>
+					<leftPen lineWidth="1.0" lineColor="#FFFFFF"/>
+					<bottomPen lineWidth="1.25" lineColor="#FFFFFF"/>
+					<rightPen lineWidth="1.0" lineColor="#FFFFFF"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{modelo.aparelho.marca} + " - " + $F{modelo.modelo}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="FixRelativeToBottom" x="201" y="355" width="100" height="17" uuid="8dcf4fb0-2407-4719-8938-1529c984fcda"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font fontName="DejaVu Sans" size="14"/>
+				</textElement>
+				<text><![CDATA[Assinatura]]></text>
+			</staticText>
+			<textField pattern="d &apos;de&apos; MMMM &apos;de&apos; yyyy&apos;.&apos;">
+				<reportElement x="76" y="305" width="145" height="20" uuid="98580341-e376-4e80-b251-928b084cbfb3">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="FixRelativeToBottom" x="3" y="305" width="73" height="20" uuid="a1ac7d5f-34f2-48ac-b29e-09f972e9da3f"/>
+				<textElement textAlignment="Left" verticalAlignment="Top">
+					<font fontName="DejaVu Sans" size="12"/>
+				</textElement>
+				<text><![CDATA[Ituporanga, ]]></text>
+			</staticText>
+			<line>
+				<reportElement positionType="FixRelativeToBottom" mode="Opaque" x="88" y="354" width="355" height="1" backcolor="#0D0C0C" uuid="6f661f19-af39-4a45-b6e0-33824cb718a3"/>
+			</line>
+			<staticText>
+				<reportElement x="302" y="51" width="71" height="20" uuid="2d9bd55e-92d8-456f-9b8f-fbd8f80949c2"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+					<paragraph lineSpacing="AtLeast" leftIndent="0" rightIndent="5"/>
+				</textElement>
+				<text><![CDATA[Situação:]]></text>
+			</staticText>
+			<textField>
+				<reportElement mode="Transparent" x="390" y="51" width="111" height="20" backcolor="#E6E6E6" uuid="b7a9140c-905c-41cd-a171-79baa111d3c1"/>
+				<box topPadding="1" leftPadding="5" bottomPadding="1" rightPadding="1">
+					<pen lineWidth="1.0" lineStyle="Dotted"/>
+					<topPen lineWidth="1.0" lineColor="#FFFFFF"/>
+					<leftPen lineWidth="1.0" lineColor="#FFFFFF"/>
+					<bottomPen lineWidth="1.25" lineColor="#FFFFFF"/>
+					<rightPen lineWidth="1.0" lineColor="#FFFFFF"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isUnderline="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{estado.descricao}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="3" y="51" width="113" height="20" uuid="0b684cce-b51c-4b6a-91ef-5ba47661f698"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+					<paragraph leftIndent="0" rightIndent="5"/>
+				</textElement>
+				<text><![CDATA[O.S.:]]></text>
+			</staticText>
+			<textField>
+				<reportElement mode="Transparent" x="116" y="51" width="95" height="20" backcolor="#E6E6E6" uuid="35d6756e-71b7-4a3f-bf11-4a6048528c5d"/>
+				<box topPadding="1" leftPadding="5" bottomPadding="1" rightPadding="1">
+					<pen lineWidth="1.0" lineStyle="Dotted"/>
+					<topPen lineWidth="1.0" lineColor="#FFFFFF"/>
+					<leftPen lineWidth="1.0" lineColor="#FFFFFF"/>
+					<bottomPen lineWidth="1.25" lineColor="#FFFFFF"/>
+					<rightPen lineWidth="1.0" lineStyle="Dotted" lineColor="#FFFFFF"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle" markup="none">
+					<font fontName="DejaVu Sans" size="12"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{id}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="302" y="91" width="70" height="20" uuid="a71fa286-d273-4198-87c0-b5a01cec2654"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+					<paragraph leftIndent="0" rightIndent="5"/>
+				</textElement>
+				<text><![CDATA[IMEI:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="3" y="111" width="112" height="33" uuid="15d9b31b-dac9-448d-a464-0b544cd48bb0"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+					<paragraph lineSpacing="AtLeast" leftIndent="0" rightIndent="5"/>
+				</textElement>
+				<text><![CDATA[Estado equip.:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="false">
+				<reportElement mode="Transparent" x="116" y="111" width="409" height="33" backcolor="#E6E6E6" uuid="b302639a-d55a-4cb8-8f9f-4797e5721afa"/>
+				<box topPadding="1" leftPadding="5" bottomPadding="1" rightPadding="1">
+					<pen lineWidth="1.0" lineStyle="Dotted"/>
+					<topPen lineWidth="1.0" lineColor="#FFFFFF"/>
+					<leftPen lineWidth="1.0" lineColor="#FFFFFF"/>
+					<bottomPen lineWidth="1.25" lineColor="#FFFFFF"/>
+					<rightPen lineWidth="1.0" lineColor="#FFFFFF"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{estadoAparelho}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="3" y="144" width="97" height="20" uuid="2ebdf71a-8d58-4302-8769-258c2520d318"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+					<paragraph lineSpacing="AtLeast" leftIndent="0" rightIndent="5"/>
+				</textElement>
+				<text><![CDATA[Bateria:]]></text>
+			</staticText>
+			<textField>
+				<reportElement mode="Transparent" x="116" y="144" width="172" height="20" backcolor="#E6E6E6" uuid="3508dd9f-f71d-4023-984a-e2c559999818"/>
+				<box topPadding="1" leftPadding="5" bottomPadding="1" rightPadding="1">
+					<pen lineWidth="1.0" lineStyle="Dotted"/>
+					<topPen lineWidth="1.0" lineColor="#FFFFFF"/>
+					<leftPen lineWidth="1.0" lineColor="#FFFFFF"/>
+					<bottomPen lineWidth="1.25" lineColor="#FFFFFF"/>
+					<rightPen lineWidth="1.0" lineColor="#FFFFFF"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{bateria.descricao}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="302" y="144" width="87" height="20" uuid="246a335a-02f7-47c1-be37-cf7a4a9d610d"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+					<paragraph leftIndent="0" rightIndent="5"/>
+				</textElement>
+				<text><![CDATA[Carregador:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="3" y="164" width="112" height="33" uuid="5e7f1f7d-0bb8-4500-97d4-5e6be916cbc7"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+					<paragraph lineSpacing="AtLeast" leftIndent="0" rightIndent="5"/>
+				</textElement>
+				<text><![CDATA[Defeito informado:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="false">
+				<reportElement mode="Transparent" x="116" y="164" width="409" height="33" backcolor="#E6E6E6" uuid="8af3a809-8720-4d3b-a2db-b2dc06bcd8aa"/>
+				<box topPadding="1" leftPadding="5" bottomPadding="1" rightPadding="1">
+					<pen lineWidth="1.0" lineStyle="Dotted"/>
+					<topPen lineWidth="1.0" lineColor="#FFFFFF"/>
+					<leftPen lineWidth="1.0" lineColor="#FFFFFF"/>
+					<bottomPen lineWidth="1.25" lineColor="#FFFFFF"/>
+					<rightPen lineWidth="1.0" lineColor="#FFFFFF"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{defeitoInformado}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement mode="Transparent" x="116" y="197" width="409" height="33" backcolor="#E6E6E6" uuid="7e7cf22d-7346-4f66-bba0-42d98f61ec8a"/>
+				<box topPadding="1" leftPadding="5" bottomPadding="1" rightPadding="1">
+					<pen lineWidth="1.0" lineStyle="Dotted"/>
+					<topPen lineWidth="1.0" lineColor="#FFFFFF"/>
+					<leftPen lineWidth="1.0" lineColor="#FFFFFF"/>
+					<bottomPen lineWidth="1.25" lineColor="#FFFFFF"/>
+					<rightPen lineWidth="1.0" lineColor="#FFFFFF"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{laudoTecnico}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="3" y="197" width="112" height="33" uuid="e031df21-a7e4-4ebf-943d-1406ff85faa1"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+					<paragraph lineSpacing="AtLeast" leftIndent="0" rightIndent="5"/>
+				</textElement>
+				<text><![CDATA[Laudo técnico:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="3" y="231" width="112" height="33" uuid="b98e900f-628f-4032-a381-d81a932c5e1f"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+					<paragraph lineSpacing="AtLeast" leftIndent="0" rightIndent="5"/>
+				</textElement>
+				<text><![CDATA[Observações:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="false">
+				<reportElement mode="Transparent" x="116" y="231" width="409" height="33" backcolor="#E6E6E6" uuid="b8f45c26-7448-4ce7-83ac-8ff6bd3fbd8a"/>
+				<box topPadding="1" leftPadding="5" bottomPadding="1" rightPadding="1">
+					<pen lineWidth="1.0" lineStyle="Dotted"/>
+					<topPen lineWidth="1.0" lineColor="#FFFFFF"/>
+					<leftPen lineWidth="1.0" lineColor="#FFFFFF"/>
+					<bottomPen lineWidth="1.25" lineColor="#FFFFFF"/>
+					<rightPen lineWidth="1.0" lineColor="#FFFFFF"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{observacoes}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="3" y="264" width="112" height="20" uuid="a2f4ef40-e8b9-4546-bf73-999d3877f122"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+					<paragraph lineSpacing="AtLeast" leftIndent="0" rightIndent="5"/>
+				</textElement>
+				<text><![CDATA[Valor:]]></text>
+			</staticText>
+			<textField pattern="¤#,##0.00;¤-#,##0.00">
+				<reportElement mode="Transparent" x="116" y="264" width="172" height="20" backcolor="#E6E6E6" uuid="151ed07e-81ea-4716-b99e-045e80cb303a"/>
+				<box topPadding="1" leftPadding="5" bottomPadding="1" rightPadding="1">
+					<pen lineWidth="1.0" lineStyle="Dotted"/>
+					<topPen lineWidth="1.0" lineColor="#FFFFFF"/>
+					<leftPen lineWidth="1.0" lineColor="#FFFFFF"/>
+					<bottomPen lineWidth="1.25" lineColor="#FFFFFF"/>
+					<rightPen lineWidth="1.0" lineColor="#FFFFFF"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{valor}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="FixRelativeToBottom" x="3" y="288" width="516" height="16" uuid="d5709279-124a-4e4f-b1ee-5fc8b27320a0"/>
+				<textElement textAlignment="Left" verticalAlignment="Top" markup="html">
+					<font fontName="DejaVu Sans" size="10" isBold="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[ATENÇÂO: A não retirada do aparelho em 120 dias implica em multa de R$ 10,00 ao dia.]]></text>
+			</staticText>
+			<image>
+				<reportElement x="0" y="-2" width="130" height="43" uuid="1d3c49f3-d885-4cf8-bdf5-f9ece2698d1c"/>
+				<imageExpression><![CDATA[$P{caminhoImgLogo}]]></imageExpression>
+			</image>
+			<rectangle radius="4">
+				<reportElement mode="Transparent" x="87" y="-2" width="438" height="43" uuid="ecdbd0ae-6083-4267-81f1-e5fde555d83d"/>
+				<graphicElement>
+					<pen lineWidth="1.0"/>
+				</graphicElement>
+			</rectangle>
+			<rectangle radius="4">
+				<reportElement mode="Transparent" x="87" y="394" width="438" height="43" uuid="9207b30a-eabe-4dd8-902c-c0c5894de9bd"/>
+				<graphicElement>
+					<pen lineWidth="1.0"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="87" y="-4" width="432" height="43" uuid="240cd7d2-a569-4688-97d4-3598904d871d"/>
+				<box bottomPadding="0"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font fontName="DejaVu Sans" size="8"/>
+					<paragraph lineSpacing="Proportional" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[
+elitetelecomunicacoes@hotmail.com
+Rua Governador Celso Ramos, nº 186 - Bloco A - Sala 04 Ed. Torre de Frate - Centro - 88400-000 - Ituporanga-SC]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="210" y="1" width="191" height="14" uuid="a8174e0a-0e7c-4bad-9a4d-acb8bac07390"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font fontName="DejaVu Sans" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[(47) 3533-5281]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="87" y="392" width="432" height="43" uuid="be3804e9-ba2a-4358-b8f4-590c0e2e1ce7"/>
+				<box bottomPadding="0"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font fontName="DejaVu Sans" size="8"/>
+					<paragraph lineSpacing="Proportional"/>
+				</textElement>
+				<text><![CDATA[
+elitetelecomunicacoes@hotmail.com
+Rua Governador Celso Ramos, nº 186 - Bloco A - Sala 04 Ed. Torre de Frate - Centro - 88400-000 - Ituporanga-SC]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="210" y="397" width="191" height="14" uuid="0d5fa3c9-8c23-46bb-85f6-53376be4a1b4"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font fontName="DejaVu Sans" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[(47) 3533-5281]]></text>
+			</staticText>
+			<textField>
+				<reportElement mode="Transparent" x="390" y="144" width="124" height="20" backcolor="#E6E6E6" uuid="fa4e433b-02d0-4dac-8a15-cbf61a6433b7"/>
+				<box topPadding="1" leftPadding="5" bottomPadding="1" rightPadding="1">
+					<pen lineWidth="1.0" lineStyle="Dotted"/>
+					<topPen lineWidth="1.0" lineColor="#FFFFFF"/>
+					<leftPen lineWidth="1.0" lineColor="#FFFFFF"/>
+					<bottomPen lineWidth="1.25" lineColor="#FFFFFF"/>
+					<rightPen lineWidth="1.0" lineStyle="Dotted" lineColor="#FFFFFF"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle" markup="none">
+					<font fontName="DejaVu Sans" size="12"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{carregador.descricao}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Transparent" x="390" y="91" width="135" height="20" backcolor="#E6E6E6" uuid="5839af2c-1d60-4bfd-85cf-c765680b732a"/>
+				<box topPadding="1" leftPadding="5" bottomPadding="1" rightPadding="1">
+					<pen lineWidth="1.0" lineStyle="Dotted"/>
+					<topPen lineWidth="1.0" lineColor="#FFFFFF"/>
+					<leftPen lineWidth="1.0" lineColor="#FFFFFF"/>
+					<bottomPen lineWidth="1.25" lineColor="#FFFFFF"/>
+					<rightPen lineWidth="1.0" lineStyle="Dotted" lineColor="#FFFFFF"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle" markup="none">
+					<font fontName="DejaVu Sans" size="12"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{imei}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Transparent" x="390" y="540" width="124" height="20" backcolor="#E6E6E6" uuid="4f5dc437-ad46-44e2-9319-6e62bc0c5e5a"/>
+				<box topPadding="1" leftPadding="5" bottomPadding="1" rightPadding="1">
+					<pen lineWidth="1.0" lineStyle="Dotted"/>
+					<topPen lineWidth="1.0" lineColor="#FFFFFF"/>
+					<leftPen lineWidth="1.0" lineColor="#FFFFFF"/>
+					<bottomPen lineWidth="1.25" lineColor="#FFFFFF"/>
+					<rightPen lineWidth="1.0" lineStyle="Dotted" lineColor="#FFFFFF"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle" markup="none">
+					<font fontName="DejaVu Serif" size="12"/>
+					<paragraph lineSpacing="Fixed"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{carregador.descricao}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Transparent" x="390" y="487" width="135" height="20" backcolor="#E6E6E6" uuid="03518aae-d223-4eb7-a4bc-60cdd3799cc1"/>
+				<box topPadding="1" leftPadding="5" bottomPadding="1" rightPadding="1">
+					<pen lineWidth="1.0" lineStyle="Dotted"/>
+					<topPen lineWidth="1.0" lineColor="#FFFFFF"/>
+					<leftPen lineWidth="1.0" lineColor="#FFFFFF"/>
+					<bottomPen lineWidth="1.25" lineColor="#FFFFFF"/>
+					<rightPen lineWidth="1.0" lineStyle="Dotted" lineColor="#FFFFFF"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle" markup="none">
+					<font fontName="DejaVu Serif" size="12"/>
+					<paragraph lineSpacing="Fixed"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{imei}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<columnFooter>
+		<band/>
+	</columnFooter>
+	<summary>
+		<band/>
+	</summary>
+</jasperReport>

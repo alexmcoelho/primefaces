@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<faces-config version="2.2"
+	xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-facesconfig_2_2.xsd">
+	<application>
+
+
+		<action-listener>org.primefaces.application.DialogActionListener</action-listener>
+		<navigation-handler>org.primefaces.application.DialogNavigationHandler</navigation-handler>
+		<view-handler>org.primefaces.application.DialogViewHandler</view-handler>
+
+		<resource-handler>org.omnifaces.resourcehandler.CombinedResourceHandler</resource-handler>
+		
+		<!--         <message-bundle>com.alex.Messages</message-bundle> -->
+		
+		<locale-config>
+			<default-locale>pt_BR</default-locale>
+		</locale-config>
+		
+     	<el-resolver>com.alex.util.EmptyNullStringResolver</el-resolver>
+		
+	</application>
+</faces-config>

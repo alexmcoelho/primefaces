@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<projectDescription>
+	<name>relatorios</name>
+	<comment></comment>
+	<projects>
+	</projects>
+	<buildSpec>
+		<buildCommand>
+			<name>org.eclipse.jdt.core.javabuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+		<buildCommand>
+			<name>net.sf.jasperreports.builder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+	</buildSpec>
+	<natures>
+		<nature>org.eclipse.jdt.core.javanature</nature>
+		<nature>net.sf.jasperreports.nature</nature>
+	</natures>
+	<linkedResources>
+		<link>
+			<name>alunosDepoisDeProgredir.jrprint</name>
+			<type>1</type>
+			<location>C:/Users/Alex/Desktop/testes-progredir-alunos/alunosDepoisDeProgredir.jrprint</location>
+		</link>
+		<link>
+			<name>src_main_webapp_resources_relatorios_comp_solicitacao_servico_Before_f700c5d746f11d3c14513fc6e80ebc5272eb4a23.jasper</name>
+			<type>1</type>
+			<location>C:/Users/Alex/AppData/Local/Temp/src_main_webapp_resources_relatorios_comp_solicitacao_servico_Before_f700c5d746f11d3c14513fc6e80ebc5272eb4a23.jasper</location>
+		</link>
+		<link>
+			<name>src_main_webapp_resources_relatorios_comp_venda_Before_f700c5d746f11d3c14513fc6e80ebc5272eb4a23.jasper</name>
+			<type>1</type>
+			<location>C:/Users/Alex/AppData/Local/Temp/src_main_webapp_resources_relatorios_comp_venda_Before_f700c5d746f11d3c14513fc6e80ebc5272eb4a23.jasper</location>
+		</link>
+		<link>
+			<name>src_main_webapp_resources_relatorios_comp_venda_Before_f700c5d746f11d3c14513fc6e80ebc5272eb4a23_1.jasper</name>
+			<type>1</type>
+			<location>C:/Users/Alex/AppData/Local/Temp/src_main_webapp_resources_relatorios_comp_venda_Before_f700c5d746f11d3c14513fc6e80ebc5272eb4a23.jasper</location>
+		</link>
+	</linkedResources>
+</projectDescription>

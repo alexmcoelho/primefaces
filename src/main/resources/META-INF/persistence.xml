@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.1"
+	xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
+	<persistence-unit name="crudPU">
+
+		<provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+		<properties>
+			<!-- <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver" />  
+			<property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5InnoDBDialect" /> -->
+			
+			<property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver" /> <!-- DB Driver -->
+			<property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/> <!-- DB Dialect -->
+            <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/gessis" />
+            <!-- <property name="javax.persistence.jdbc.user" value="power_user" />
+            <property name="hibernate.default_schema" value="gessis01" />
+            <property name="javax.persistence.jdbc.password" value="1234" />  -->
+			
+			<property name="javax.persistence.schema-generation.database.action" value="none" /> <!-- drop-and-create  ou updade-->
+      		<property name="javax.persistence.schema-generation.create-source" value="metadata" />
+      		<!-- <property name="javax.persistence.sql-load-script-source" value="META-INF/sql/inserts.sql"/> -->  
+      		
+			<!-- <property name="hibernate.show_sql" value="true" /> 
+			<property name="hibernate.format_sql" value="true" /> -->
+			
+			<property name="hibernate.connection.autoReconnect" value="true" />
+			<property name="hibernate.cache.use_second_level_cache" value="true" />
+			<property name="hibernate.cache.use_query_cache" value="true" />
+			<property name="hibernate.cache.region.factory_class" value="org.hibernate.cache.ehcache.EhCacheRegionFactory" />
+			<property name="net.sf.ehcache.configurationResourceName" value="ehcache.xml" />
+			
+		</properties>
+
+	</persistence-unit>
+	
+	
+</persistence>

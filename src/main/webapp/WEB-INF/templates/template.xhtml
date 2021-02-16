@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html" template="/admin.xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:define name="head">
+		<h:outputStylesheet library="css" name="showcase.css" />
+		<h:outputStylesheet library="css" name="prism.css" />
+		<link rel="stylesheet"
+			href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css" />
+		<h:outputStylesheet library="webjars"
+			name="font-awesome/4.7.0/css/font-awesome-jsf.css" />
+		<f:event type="preRenderView" listener="#{modeloMB.verificarSessao()}" />
+		<!-- <f:event listener="{usuarioMB.verificaLogin()}" type="preRenderView" /> -->
+
+		<link rel="shortcut icon" type="image/x-icon"
+			href="#{resource['images/favicon_certo.ico']}" />
+
+		<title>GESSIS - Gestão com sistema</title>
+		<meta name="description" content="GESSIS - Gestão com sistema, gessis é um sistema para o gerenciamento de orçamentos, estoque e vendas" />
+	</ui:define>
+
+	<ui:define name="logo-lg">
+		<h:outputText value="#{usuarioMB.mostraNome()}" />
+	</ui:define>
+
+	<ui:define name="logo-mini">
+		<h:outputText value="#{usuarioMB.mostrarIniciaisNome()}" />
+	</ui:define>
+
+	<ui:define name="menu-begin">
+		<ui:include src="/includes/menu-search.xhtml" />
+	</ui:define>
+
+	<ui:define name="menu">
+		<ui:include src="/includes/menu.xhtml" />
+	</ui:define>
+
+	<ui:define name="top-menu">
+		<ui:include src="/includes/top-menu.xhtml" />
+	</ui:define>
+
+	<ui:define name="content-end">
+
+		<section class="content">
+			<ui:insert name="code" />
+		</section>
+	</ui:define>
+
+	<ui:define name="footer">
+
+		<p:ajaxStatus onstart="PF('statusDialog').show()"
+			onsuccess="PF('statusDialog').hide()" />
+
+		<p:dialog
+			style="filter:alpha(opacity=0.8) !important;opacity: 0.8 !important; padding: 0px; margin: 0px;"
+			widgetVar="statusDialog" modal="true" draggable="false"
+			closable="false" resizable="false" showHeader="false"
+			appendToBody="true">
+			<center>
+				<p:graphicImage style="padding:0px; margin:0px;" width="50"
+					height="50" library="images" name="loading2.gif" />
+			</center>
+		</p:dialog>
+		
+		
+		<div style="display: flex; width: 100%">
+		
+			<div style="flex: 4.8">
+				<div style="color: black"><span style="font-weight: bold">Contato:</span> +55 (47) 98904-5873</div>
+				<a target="_blank" href="#">2019, GESSIS, Gerenciamento de orçamentos, estoque e vendas.</a>	
+			</div>
+			
+			<div style="color: gray; flex: 0.2; align-items: center;
+				display: flex;
+				justify-content: center;" >
+				<i style="text-align: right;" >v1.0</i>
+			</div>
+
+		</div>
+		<h:outputScript library="js" name="prism.js" target="head" />
+		<h:outputScript library="js" name="locales.js" target="head" />
+		<h:outputScript library="js" name="jquery.maskMoney.js" target="head" />
+
+		<script type="text/javascript">
+		
+			history.forward(1);
+		
+			//para resolver problema p: defaultCommand acionado por gerenciadores de senha do navegador devido à falta da declaração keyCode.NUMPAD_ENTER
+			//tirado de https://github.com/primefaces/primefaces/issues/2448
+			$.extend ( $.ui.keyCode, {
+			   NUMPAD_ENTER :  108 
+			});
+		
+			function irParaFimDoScroll() {
+				let doc = $(document).height();
+				let win = $(window).height();
+
+				if(doc > win){
+				  return win;
+				} else {
+				  return 0;
+				}
+				
+			}
+		
+			function mascara(o, onBlur, f) {
+				v_obj = o;
+				v_obj.maxLength = 10;
+				v_fun = f;
+				v_onBlur = onBlur;
+				setTimeout("execmascara()", 1);
+			}
+			function execmascara() {
+				v_obj.value = v_fun(v_obj.value, v_onBlur);
+			}
+
+			function telefone(v, onBlur) {
+				if (onBlur) {
+					if (!(v.length >= 9)) {
+						return "";
+					}
+				}
+				// Remove tudo o que não é dígito
+				v = v.replace(/\D/g, "");
+
+				return v.replace(/(\d)(\d{4})$/, "$1-$2");
+			}
+			
+			function mascaraNumber(o, f) {
+				v_obj = o
+				v_fun = f
+				setTimeout("execmascaraNumber()", 1)
+			}
+
+			function execmascaraNumber() {
+				v_obj.value = v_fun(v_obj.value)
+			}
+			
+			function acrescentaZerosSeForNumero(v){
+			
+				if(v != null &amp;&amp; v.match(/^[0-9]+$/)){ 
+					if(v.length > 0){
+						//tira zeros a esquerda
+						v = v.replace(/^0+/, '');
+						return v.padStart(6,'0');
+					}
+					return v;
+				}
+				return v;
+			}
+			
+			function apaga(v) {
+				if(v == "0,00" || v == "0"){
+					return "";
+				}
+				return v;
+			}
+
+			function permiteApenasNumeros(v) {
+				v = v.replace(/\D/g, ""); // permite digitar apenas numero 
+				return v;			
+			}
+			
+			function selecionar(o) {
+				v_obj = o;
+				setTimeout("execSeleciona()", 0);
+			}
+
+			function execSeleciona() {
+				if(v_obj.value){
+					tam = v_obj.value.length;
+					v_obj.selectionStart = tam;
+				}
+			}
+			
+			function foco(o) {
+				v_obj = o
+				setTimeout("execFoco()", 0)
+			}
+
+			function execFoco() {
+				document.getElementById(v_obj.replace(/:/g, "\:")).focus();
+			}
+			
+			function tiraEspaco(v){
+				v = v.replace(/[\s\t\n]/g, ""); //tira espaço
+				v = v.replace(/[^a-zA-Z 0-9]+/g,''); //tira acento
+				return v;
+			}
+
+			$(function() {
+				$("#valor-ordem").maskMoney();
+			});
+
+			$(function() {
+				$("#valor-ordem").maskMoney({
+					symbol : ' ',
+					thousands : '.',
+					decimal : ',',
+					symbolStay : true,
+					showSymbol : false
+				});
+			});
+
+			function valorEntrada() {
+				$("#valor-entrada").maskMoney();
+				$("#valor-entrada").maskMoney({
+					symbol : ' ',
+					thousands : '.',
+					decimal : ',',
+					symbolStay : true,
+					showSymbol : false
+				});
+			}
+
+			function valorVista() {
+				$("#valor-a-vista").maskMoney();
+				$("#valor-a-vista").maskMoney({
+					symbol : ' ',
+					thousands : '.',
+					decimal : ',',
+					symbolStay : true,
+					showSymbol : false
+				});
+			}
+
+			function valorVista() {
+				$("#valor-alt").maskMoney();
+				$("#valor-alt").maskMoney({
+					symbol : ' ',
+					thousands : '.',
+					decimal : ',',
+					symbolStay : true,
+					showSymbol : false
+				});
+			}
+		</script>
+
+
+	</ui:define>
+
+
+
+
+</ui:composition>

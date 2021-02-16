@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:adm="http://github.com/adminfaces"
+	template="/WEB-INF/templates/template.xhtml">
+
+	<div style="position: fixed; top: 0; left: 0;">
+		<ui:define name="title">
+	        <br/>
+	        <p:separator />
+	        #{usuarioCadastroMB.titulo}
+	    </ui:define>
+
+		<ui:define name="head-end">
+			<ui:param name="renderBreadCrumb" value="true" />
+		</ui:define>
+
+		<ui:define name="body">
+
+			<f:metadata>
+				<f:viewParam name="id" value="#{usuarioCadastroMB.idUsuario}"
+					converter="javax.faces.Long" />
+				<f:viewParam name="entidadeApareceSenha"
+					value="#{usuarioCadastroMB.apareceSenha}"
+					converter="javax.faces.Boolean" />
+				<f:event listener="#{usuarioCadastroMB.inicializar()}"
+					type="preRenderView"></f:event>
+			</f:metadata>
+
+			<adm:breadcrumb title="#{usuarioCadastroMB.tituloBreadCrumbString}"
+				link="#{usuarioCadastroMB.linkBreadCrumb}" />
+
+			<!-- DIALOG DE EXCLUSÃO DE ORDEM DE ORDEM DE SERVICO -->
+			<p:dialog id="excluir-ordem-dialog" header="Excluir registro"
+				widgetVar="excluirUsuario" responsive="true" styleClass="box-success"
+				modal="true" closeOnEscape="true" width="300" height="120"
+				position="center center">
+				<h:form id="form-excluir-ordem">
+					<div class="ui-fluid" style="color: #555">
+						<p:panelGrid columns="1" layout="grid">
+							<p:column>
+								<h:outputText value="Tem certeza que deseja excluir o registro?" />
+							</p:column>
+							<h:outputText value="" />
+						</p:panelGrid>
+						<p:panelGrid columns="2" layout="grid">
+							<p:commandButton value="Sim" update="form"
+								process="excluir-ordem-dialog"
+								action="#{usuarioCadastroMB.excluir()}" icon="fa fa-check"
+								styleClass="btn-primary" oncomplete="PF('excluirUsuario').hide()" />
+							<p:commandButton value="Não" process="excluir-ordem-dialog"
+								icon="fa fa-close" styleClass="btn-default"
+								oncomplete="PF('excluirUsuario').hide()" />
+						</p:panelGrid>
+					</div>
+				</h:form>
+			</p:dialog>
+
+			<div class="box box-primary">
+
+				<div class="box-header with-border">
+					<h:form id="form" prependId="false">
+						
+						<p:defaultCommand target="botao-salvar" />
+					
+						<div class="ui-fluid" style="color: #555">
+
+							<p:panelGrid columns="2" layout="grid">
+								<p:column>
+									<p:outputLabel value="Nome:" for="nome" />
+									<p:inputText id="nome"
+										value="#{usuarioCadastroMB.usuario.nome}" required="true" />
+									<p:message for="nome" />
+								</p:column>
+
+								<p:column>
+									<p:outputLabel value="Login: " for="usuario" />
+									<p:inputText id="usuario"
+										onkeypress="mascaraNumber(this, tiraEspaco)"
+										value="#{usuarioCadastroMB.usuario.login}" required="true" />
+									<p:message for="usuario" />
+								</p:column>
+
+								<p:column>
+									<p:outputLabel value="E-mail: " for="email" />
+									<p:inputText id="email" label="email" size="30" required="true"
+										requiredMessage="O e-mail não foi informado!"
+										validatorMessage="Endereço de e-mail inválido!"
+										value="#{usuarioCadastroMB.usuario.email}">
+										<f:validateRegex
+											pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+									</p:inputText>
+									<p:message for="email" />
+								</p:column>
+
+								<p:column>
+									<p:outputLabel for="tipo_usuario" value="Tipo de usuário: " />
+									<p:selectOneMenu id="tipo_usuario"
+										converter="omnifaces.SelectItemsConverter" style="color: #555"
+										value="#{usuarioCadastroMB.tipoUsuario}" required="true">
+										<f:selectItem itemLabel="Selecione" itemValue="" />
+										<f:selectItems value="#{usuarioCadastroMB.tipoUsuarios}"
+											var="t" itemLabel="#{t.tipo}" itemValue="#{t}" />
+									</p:selectOneMenu>
+									<p:message for="tipo_usuario" />
+								</p:column>
+
+								<p:column>
+									<p:outputLabel for="perfil" value="Perfil de usuário: " />
+									<p:selectManyCheckbox id="perfil"
+										value="#{usuarioCadastroMB.selecionaPerfis}" required="true">
+										<f:selectItems value="#{usuarioCadastroMB.perfis}" var="p"
+											itemLabel="#{p.tipoPerfil}" itemValue="#{p.tipoPerfil}" />
+									</p:selectManyCheckbox>
+									<p:message for="perfil" />
+								</p:column>
+
+								<p:column>
+									<p:outputLabel for="ativo" value="Ativo: " />
+									<br />
+									<p:selectBooleanCheckbox id="ativo"
+										value="#{usuarioCadastroMB.usuario.ativo}" required="true">
+										<f:selectItem itemLabel="Ativo" itemValue="Ativo" />
+									</p:selectBooleanCheckbox>
+									<p:message for="ativo" />
+								</p:column>
+
+							</p:panelGrid>
+
+
+							<h:panelGrid id="gridSenha" style="padding: 0px; margin:0px;">
+								<p:panelGrid columns="1" layout="grid" id="teste"
+									rendered="#{usuarioCadastroMB.apareceSenha == true}">
+									<p:column>
+										<p:outputLabel for="senha1" value="Senha: " />
+										<p:password id="senha1"
+											value="#{usuarioCadastroMB.usuario.senha}" required="true"
+											validatorMessage="As senhas não confirmam" weakLabel="Fraca"
+											strongLabel="Forte" goodLabel="Rozoável" match="senha2"
+											feedback="true" promptLabel="Informe uma senha" />
+										<p:message for="senha1" />
+									</p:column>
+
+									<p:column />
+
+									<p:column>
+										<p:outputLabel for="senha2" value="Repetir senha: " />
+										<p:password id="senha2" required="true" />
+										<p:message for="senha2" />
+									</p:column>
+								</p:panelGrid>
+								<p:panelGrid columns="1" layout="grid">
+									<p:outputLabel value="Alterar ou definir senha:" for="alterar-senha" />
+									<p:selectOneMenu id="alterar-senha" style="color: #555"
+										value="#{usuarioCadastroMB.apareceSenha}">
+										<f:selectItem itemLabel="Não" itemValue="false" />
+										<f:selectItem itemLabel="Sim" itemValue="true" />
+										<p:ajax update="gridSenha" event="change" />
+									</p:selectOneMenu>
+								</p:panelGrid>
+							</h:panelGrid>
+
+
+							<!--FIM Linha 2 -->
+
+						</div>
+						
+						<div class="box-footer"
+								style="border-top-width: 0;">
+							<p:commandButton value="Salvar" update="@form"
+								action="#{usuarioCadastroMB.salvar()}" icon="fa fa-check"
+								styleClass="btn-primary" validateClient="true" 
+								id="botao-salvar" />
+							<p:spacer width="5" />
+
+							<p:commandButton value="Excluir" process="@this"
+								onclick="PF('excluirUsuario').show();" 
+								rendered="#{usuarioCadastroMB.usuario.edicao}"
+								icon="fa fa-trash" styleClass="btn-danger" update="@form">
+							</p:commandButton>
+							<p:spacer width="5" />
+
+							<p:commandButton value="Cancelar" immediate="true"
+								action="#{usuarioCadastroMB.caminhoCancelar}" process="@this"
+								icon="fa fa-close" />
+						</div>
+
+					</h:form>
+					<!-- FIM - formulario principal -->
+				</div>
+			</div>
+
+		</ui:define>
+	</div>
+
+</ui:composition>

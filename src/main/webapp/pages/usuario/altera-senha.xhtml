@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:adm="http://github.com/adminfaces"
+	template="/WEB-INF/templates/template.xhtml">
+
+	<div style="position: fixed; top: 0; left: 0;">
+		<ui:define name="title">
+	        <br/>
+	        <p:separator />
+	        Alterar senha
+	    </ui:define>
+
+		<ui:define name="head-end">
+			<ui:param name="renderBreadCrumb" value="true" />
+		</ui:define>
+
+		<ui:define name="body">
+
+			<f:metadata>
+				<f:viewParam name="id" value="#{usuarioCadastroMB.idUsuario}"
+					converter="javax.faces.Long" />
+				
+				<f:event listener="#{usuarioCadastroMB.inicializar()}"
+					type="preRenderView"></f:event>
+			</f:metadata>
+
+			<adm:breadcrumb title="Alterar senha usuário"
+				link="/pages/usuario/altera-senha.jsf?id=#{usuarioCadastroMB.idUsuario}" />
+
+			<p:dialog id="excluir-ordem-dialog" header="Excluir registro"
+				widgetVar="excluirSaida" responsive="true" styleClass="box-success"
+				modal="true" closeOnEscape="true" width="300" height="120"
+				position="center center">
+				<h:form id="form-excluir-ordem">
+					<div class="ui-fluid" style="color: #555">
+						<p:panelGrid columns="1" layout="grid">
+							<p:column>
+								<h:outputText value="Tem certeza que deseja excluir o registro?" />
+							</p:column>
+							<h:outputText value="" />
+						</p:panelGrid>
+						<p:panelGrid columns="2" layout="grid">
+							<p:commandButton value="Sim" update="form"
+								process="excluir-ordem-dialog"
+								action="#{usuarioCadastroMB.excluir()}" icon="fa fa-check"
+								styleClass="btn-primary" oncomplete="PF('excluirSaida').hide()" />
+							<p:commandButton value="Não" process="excluir-ordem-dialog"
+								icon="fa fa-close" styleClass="btn-default"
+								oncomplete="PF('excluirSaida').hide()" />
+						</p:panelGrid>
+					</div>
+				</h:form>
+			</p:dialog>
+
+			<div class="box box-primary">
+
+				<div class="box-header with-border">
+					<h:form id="form" prependId="false">
+						
+						<p:defaultCommand target="botao-salvar" />
+					
+						<p:focus />
+						
+						<div class="ui-fluid" style="color: #555">
+
+							<h:panelGrid id="gridSenha" style="padding: 0px; margin:0px;">
+								<p:panelGrid columns="1" layout="grid" id="teste">
+									<p:column>
+										<p:outputLabel for="senha1" value="Senha: " />
+										<p:password id="senha1"
+											value="#{usuarioCadastroMB.usuario.senha}" required="true"
+											validatorMessage="As senhas não confirmam" weakLabel="Fraca"
+											strongLabel="Forte" goodLabel="Rozoável" match="senha2"
+											feedback="true" promptLabel="Informe uma senha" />
+										<p:message for="senha1" />
+									</p:column>
+
+									<p:column />
+
+									<p:column>
+										<p:outputLabel for="senha2" value="Repetir senha: " />
+										<p:password id="senha2" required="true" />
+										<p:message for="senha2" />
+									</p:column>
+								</p:panelGrid>
+							</h:panelGrid>
+
+
+							<!--FIM Linha 2 -->
+
+						</div>
+						
+						<div class="box-footer"
+								style="border-top-width: 0;">
+							<p:commandButton value="Salvar" update="@form"
+								action="#{usuarioCadastroMB.salvarSenha()}" icon="fa fa-check"
+								styleClass="btn-primary" validateClient="true" 
+								id="botao-salvar" />
+							<p:spacer width="5" />
+
+							<p:commandButton value="Excluir" process="@this"
+								onclick="PF('excluirSaida').show();" rendered="#"
+								icon="fa fa-trash" styleClass="btn-danger" update="@form">
+							</p:commandButton>
+							<p:spacer width="5" />
+
+							<p:commandButton value="Cancelar" immediate="true"
+								action="/index?faces-redirect=true" process="@this"
+								icon="fa fa-close" />
+						</div>
+
+					</h:form>
+					<!-- FIM - formulario principal -->
+				</div>
+			</div>
+
+		</ui:define>
+	</div>
+
+</ui:composition>

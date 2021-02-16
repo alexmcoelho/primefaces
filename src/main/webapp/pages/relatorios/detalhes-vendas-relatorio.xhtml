@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:adm="http://github.com/adminfaces"
+	template="/WEB-INF/templates/template.xhtml">
+
+	<ui:define name="title">
+		<br />
+		<p:separator />
+        #{saidaDeProdutosRelatorioMB.titulo}
+    </ui:define>
+
+	<ui:define name="description">
+        Escolha os filtros
+    </ui:define>
+
+	<ui:define name="head-end">
+		<ui:param name="renderBreadCrumb" value="true" />
+	</ui:define>
+
+	<ui:define name="body">
+
+		<adm:breadcrumb
+			title="#{saidaDeProdutosRelatorioMB.tituloBreadCrumbString}"
+			link="#{saidaDeProdutosRelatorioMB.linkBreadCrumb}" />
+
+		<h:form id="form-relatorio" prependId="false">
+			<p:focus />
+
+			<div class="box box-primary">
+
+				<div class="box-header with-border">
+					<div></div>
+
+					<div class="ui-fluid">
+
+						<div class="ui-g-6 ui-md-3">
+							<p:outputLabel value="Faturas geradas:" for="faturas" />
+							<p:selectOneMenu id="faturas"
+								value="#{saidaDeProdutosRelatorioMB.faturas}">
+								<f:selectItem itemLabel="Não" itemValue="1" />
+								<f:selectItem itemLabel="Sim" itemValue="2" />
+								<f:selectItem itemLabel="Não/Sim" itemValue="3" />
+							</p:selectOneMenu>
+						</div>
+
+						<div class="ui-g-6 ui-md-3">
+							<p:outputLabel value="Tipo de pesquisa:" for="pesquisa" />
+							<p:selectOneMenu id="pesquisa"
+								value="#{saidaDeProdutosRelatorioMB.tipoPesquisa}">
+								<f:selectItem itemLabel="Número (Cód.)" itemValue="numero_venda" />
+								<f:selectItem itemLabel="Nome cliente" itemValue="nome" />
+								<f:selectItem itemLabel="CPF" itemValue="cpf" />
+								<f:selectItem itemLabel="CNPJ" itemValue="cnpj" />
+								<f:selectItem itemLabel="Intervalo entre datas" itemValue="data" />
+								<f:selectItem itemLabel="Todos" itemValue="todos" />
+								<p:ajax event="change" update="label-tipo-pesquisa" />
+							</p:selectOneMenu>
+						</div>
+
+						<div class="ui-g-12 ui-md-6">
+							<h:panelGroup id="label-tipo-pesquisa">
+								<p:outputLabel id="lbCpf" value="CPF:" for="cpf"
+									rendered="#{saidaDeProdutosRelatorioMB.tipoPesquisa == 'cpf'}" />
+
+								<p:outputLabel value="Período:" for="data-inicio"
+									rendered="#{saidaDeProdutosRelatorioMB.tipoPesquisa == 'data'}" />
+
+								<p:outputLabel id="lbCnpj" value="CNPJ:" for="cnpj"
+									rendered="#{saidaDeProdutosRelatorioMB.tipoPesquisa=='cnpj'}" />
+
+								<p:outputLabel id="lb-numero-os" value="Número venda: "
+									for="numero-os"
+									rendered="#{saidaDeProdutosRelatorioMB.tipoPesquisa=='numero_venda'}" />
+
+								<p:outputLabel id="lb-nome-cliente" value="Nome: "
+									for="nome-cliente"
+									rendered="#{saidaDeProdutosRelatorioMB.tipoPesquisa=='nome'}" />
+
+								<p:outputLabel value="pes" style="visibility:hidden;"
+									rendered="#{saidaDeProdutosRelatorioMB.tipoPesquisa=='todos'}" />
+
+								<div class="input-group">
+									<p:inputMask mask="999.999.999-99" id="cpf"
+										rendered="#{saidaDeProdutosRelatorioMB.tipoPesquisa == 'cpf'}"
+										required="#{saidaDeProdutosRelatorioMB.tipoPesquisa == 'cpf'}"
+										value="#{saidaDeProdutosRelatorioMB.cliente.cpfCnpj}" />
+
+									<div class="ui-g-6" style="padding: 0px; padding-right: 3%;">
+										<p:calendar id="data-inicio" style="color: #555"
+											placeholder="Data de início"
+											value="#{saidaDeProdutosRelatorioMB.dataInicio}"
+											required="true" pattern="dd/MM/yyyy" mask="true"
+											rendered="#{saidaDeProdutosRelatorioMB.tipoPesquisa == 'data'}">
+										</p:calendar>
+									</div>
+
+									<div class="ui-g-6" style="padding: 0px;">
+										<p:calendar id="data-fim" style="color: #555"
+											placeholder="Data de fim"
+											value="#{saidaDeProdutosRelatorioMB.dataFim}" required="true"
+											pattern="dd/MM/yyyy" mask="true"
+											rendered="#{saidaDeProdutosRelatorioMB.tipoPesquisa == 'data'}">
+										</p:calendar>
+									</div>
+
+									<p:inputMask mask="99.999.999/9999-99" id="cnpj"
+										rendered="#{saidaDeProdutosRelatorioMB.tipoPesquisa=='cnpj'}"
+										required="#{saidaDeProdutosRelatorioMB.tipoPesquisa=='cnpj'}"
+										value="#{saidaDeProdutosRelatorioMB.cliente.cpfCnpj}" />
+
+									<p:inputText id="numero-os"
+										rendered="#{saidaDeProdutosRelatorioMB.tipoPesquisa=='numero_venda'}"
+										required="#{saidaDeProdutosRelatorioMB.tipoPesquisa=='numero_venda'}"
+										value="#{saidaDeProdutosRelatorioMB.saidaDeProdutos.id}" />
+
+									<p:inputText id="nome-cliente"
+										rendered="#{saidaDeProdutosRelatorioMB.tipoPesquisa=='nome'}"
+										required="#{saidaDeProdutosRelatorioMB.tipoPesquisa=='nome'}"
+										value="#{saidaDeProdutosRelatorioMB.cliente.nome}" />
+
+									<span class="input-group-btn" style="padding-left: 2%;">
+										<p:commandButton value="Relatório" icon="fa fa-wpforms"
+											validateClient="true" update="form-relatorio"
+											action="#{saidaDeProdutosRelatorioMB.gerarRelatorio}"
+											ajax="false" styleClass="btn-primary"
+											onclick="this.form.target='_blank'" />
+									</span>
+								</div>
+
+								<p:message for="cpf"
+									rendered="#{saidaDeProdutosRelatorioMB.tipoPesquisa == 'cpf'}" />
+
+								<p:message for="data-inicio"
+									rendered="#{saidaDeProdutosRelatorioMB.tipoPesquisa == 'data'}" />
+
+								<p:message for="data-fim"
+									rendered="#{saidaDeProdutosRelatorioMB.tipoPesquisa == 'data'}" />
+
+								<p:message for="cnpj"
+									rendered="#{saidaDeProdutosRelatorioMB.tipoPesquisa=='cnpj'}" />
+
+								<p:message for="numero-os"
+									rendered="#{saidaDeProdutosRelatorioMB.tipoPesquisa=='numero_venda'}" />
+
+								<p:message for="nome-cliente"
+									rendered="#{saidaDeProdutosRelatorioMB.tipoPesquisa=='nome'}" />
+
+							</h:panelGroup>
+						</div>
+					</div>
+				</div>
+			</div>
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>

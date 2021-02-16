@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	>
+
+<f:view contentType="text/html">
+	<h:head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport"
+			content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+		<meta name="mobile-web-app-capable" content="yes" />
+		<link rel="shortcut icon" type="image/x-icon"
+			href="#{resource['images/favicon_certo.ico']}" />
+		<title>GESSIS - Gestão com sistema</title>
+		<meta name="description" content="GESSIS - Gestão com sistema, gessis é um sistema para o gerenciamento de orçamentos, estoque e vendas. Nesta sessão é possível acompanhar a situação da assistência." />
+		<style type="text/css">
+			body .load-bar {
+				margin-top: -20px;
+			}
+			
+			footer { 
+			    width: 100%; 
+			    height: 65px; 
+			    border-top: 0.5px solid #CCC;
+			    background-color: #FFF;
+			    bottom: 0;
+			    position: absolute;
+			}
+            
+            @media only screen and (min-width: 600px) {
+            	footer { 
+				    width: 100%; 
+				    height: 50px; 
+				    border-top: 0.5px solid #CCC;
+				    background-color: #FFF;
+				    padding: 5px;
+				    bottom: 0;
+				    margin-bottom: 0;
+				    border-width: 1px 0 0;
+				    position: fixed;
+				    right: 0;
+				    left: 0;
+				    z-index: 1030;
+				}
+            }
+		</style>
+
+	</h:head>
+
+
+	<h:body styleClass="hold-transition login-page">
+	
+		<p:ajaxStatus onstart="PF('statusDialog').show()"
+			onsuccess="PF('statusDialog').hide()" />
+
+		<p:dialog
+			style="filter:alpha(opacity=0.8) !important;opacity: 0.8 !important; padding: 0px; margin: 0px;"
+			widgetVar="statusDialog" modal="true" draggable="false"
+			closable="false" resizable="false" showHeader="false"
+			appendToBody="true">
+			<center>
+				<p:graphicImage style="padding:0px; margin:0px;" width="50"
+					height="50" library="images" name="loading2.gif" />
+			</center>
+		</p:dialog>
+		
+		<div class="login-box">
+			<h1 style="text-align: center;">Acompanhe a situação da assistência</h1>
+			<!-- /.login-logo -->
+			<div class="box login-box-body" style="margin-top: 20px;">
+				<h:form id="form-mostrar">
+				
+					<p:growl autoUpdate="false" id="mensagem-growl" severity="warn"
+						showSummary="true" showDetail="true" />
+
+					<p class="login-box-msg">Informe o código e a chave da ordem de serviço</p>
+					<!-- <p:messages closable="true" /> -->
+					<div class="form-group has-feedback">
+						<p:inputText value="#{estadoOSMB.ordemDeServico.id}" type="text"
+							styleClass="form-control" 
+							placeholder="Código da ordem"
+							required="true" 
+							id="id-ordem"
+							onkeypress="mascaraNumber(this, permiteApenasNumeros)"
+							onfocus="selecionar(this)"
+							maxlength="6"
+							requiredMessage="O preenchimento do código da ordem é obrigatório" >
+							<f:validateLongRange minimum="1" />
+						</p:inputText>
+						<p:message for="id-ordem" id="mensagem" />
+					</div>
+					<div class="form-group has-feedback">	
+						<p:inputText value="#{estadoOSMB.ordemDeServico.chave}" type="text"
+							styleClass="form-control" placeholder="Chave"
+							required="true" 
+							id="key"
+							requiredMessage="O preenchimento do código da ordem é obrigatório" 
+							validatorMessage="Chave inválida">
+							<f:validateRegex pattern="[a-zA-Z]{3}[0-9]{3}" />
+						</p:inputText>
+						<p:message for="key" id="mensagem-key"  />
+					</div>
+					
+					<div class="row">
+						<div class="col-xs-12" style="text-align: center;">
+							<p:commandButton styleClass="btn btn-success btn-block"
+								action="#{estadoOSMB.mostrarEstado}" value="Mostrar"
+								update="@form"
+								validateClient="true" 
+								rendered="#{!estadoOSMB.bloqueiaBotao}"/>
+							<h:outputText value="#{estadoOSMB.situacao}" escape="false"/>
+						</div>
+					</div>
+					
+
+<!-- 					<div class="row">
+						<div class="col-xs-12" >
+							<div class="g-recaptcha" 
+							    align="center"
+								data-sitekey="6LcA_rgUAAAAAOZwWTvD8VCPVsFAPzMRwiu-TuWM"></div>
+						</div>
+
+						<p:spacer height="10" />
+
+						
+
+					</div> -->
+					
+				</h:form>
+
+			</div>
+		</div>
+		<!-- <script src="https://www.google.com/recaptcha/api.js"></script> -->
+
+		<script type="text/javascript">
+		
+			//para resolver problema p: defaultCommand acionado por gerenciadores de senha do navegador devido à falta da declaração keyCode.NUMPAD_ENTER
+			//tirado de https://github.com/primefaces/primefaces/issues/2448
+			window.onload = function() {
+				document.getElementById('form-mostrar:id-ordem').focus();
+			}
+			$.extend ( $.ui.keyCode, {
+			   NUMPAD_ENTER :  108 
+			});
+			
+			function mascaraNumber(o, f) {
+				v_obj = o
+				v_fun = f
+				setTimeout("execmascaraNumber()", 1)
+			}
+
+			function execmascaraNumber() {
+				v_obj.value = v_fun(v_obj.value)
+			}
+
+			function permiteApenasNumeros(v) {
+				v = v.replace(/\D/g, ""); // permite digitar apenas numero 
+				return v;			
+			}
+			
+			function selecionar(o) {
+				v_obj = o;
+				setTimeout("execSeleciona()", 0);
+			}
+			
+			function execSeleciona() {
+				if(v_obj.value){
+					tam = v_obj.value.length;
+					v_obj.selectionStart = tam;
+				}
+			}
+		</script>
+
+		<footer class="footer" >
+	    	<div style="display: flex; flex-wrap: wrap; width: 100%;" >
+			
+				<div style="flex: 4.8; flex-wrap: wrap;">
+					<div style="color: black;"><span style="font-weight: bold">Contato:</span> +55 (47) 98904-5873</div>
+					<a target="_blank" href="#">2019, GESSIS, Gerenciamento de orçamentos, estoque e vendas.</a>	
+					<br/>
+				</div>
+				
+				<div style="color: gray; flex: 0.2; align-items: center;
+					display: flex;
+					justify-content: center;" >
+					<i style="text-align: right;" >v1.0</i>
+				</div>
+	
+			</div>
+			
+		</footer>
+
+	</h:body>
+</f:view>
+</html>

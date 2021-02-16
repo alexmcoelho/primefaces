@@ -1,0 +1,4 @@
+telefone: (47) 3533-5281
+email: elitetelecomunicacoes@hotmail.com
+endereco: Rua Governador Celso Ramos, nº 186 - Bloco A - Sala 04 Ed. Torre de Frate - Centro - 88400-000 - Ituporanga-SC
+cidade: Ituporanga

@@ -1,0 +1,324 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:adm="http://github.com/adminfaces"
+	template="/WEB-INF/templates/template.xhtml">
+
+	<div style="position: fixed; top: 0; left: 0;">
+		<ui:define name="title">
+			<br />
+			<p:separator />
+        	#{clienteCadastroMB.titulo}
+   		</ui:define>
+
+		<ui:define name="head-end">
+			<ui:param name="renderBreadCrumb" value="true" />
+		</ui:define>
+
+		<ui:define name="body">
+
+			<f:metadata>
+				<f:viewParam name="id" value="#{clienteCadastroMB.idCliente}"
+					converter="javax.faces.Long" />
+				<f:event listener="#{clienteCadastroMB.inicializar()}"
+					type="preRenderView"></f:event>
+			</f:metadata>
+
+			<adm:breadcrumb title="#{clienteCadastroMB.tituloBreadCrumbString}"
+				link="#{clienteCadastroMB.linkBreadCrumb}" />
+
+			<!-- DIALOG DE EXCLUSÃO DE ORDEM DE ORDEM DE SERVICO -->
+			<p:dialog id="excluir-ordem-dialog" header="Excluir registro"
+				widgetVar="excluirSaida" responsive="true" styleClass="box-success"
+				modal="true" closeOnEscape="true" width="300" height="120"
+				position="center center">
+
+				<h:form id="form-exclusao">
+					<div class="ui-fluid" style="color: #555">
+						<p:panelGrid columns="1" layout="grid">
+							<p:column>
+								<h:outputText value="Tem certeza que deseja excluir o registro?" />
+							</p:column>
+							<h:outputText value="" />
+						</p:panelGrid>
+						<p:panelGrid columns="2" layout="grid">
+							<p:commandButton value="Sim" update="form-cliente"
+								process="excluir-ordem-dialog"
+								action="#{clienteCadastroMB.excluir()}" icon="fa fa-check"
+								styleClass="btn-primary" oncomplete="PF('excluirSaida').hide()" />
+							<p:commandButton value="Não" process="excluir-ordem-dialog"
+								icon="fa fa-close" styleClass="btn-default"
+								oncomplete="PF('excluirSaida').hide()" />
+						</p:panelGrid>
+					</div>
+				</h:form>
+
+			</p:dialog>
+
+
+			<h:form id="form-cliente" name="formulario">
+				<div class="box box-primary">
+
+					<div class="box-header with-border">
+						<p:defaultCommand target="botao-salvar" />
+
+						<div class="ui-fluid">
+
+							<div class="ui-g-8">
+								<p:outputLabel value="Nome:" for="nome-cliente" />
+								<p:inputText id="nome-cliente" required="true"
+									value="#{clienteCadastroMB.cliente.nome}" />
+								<p:message for="nome-cliente" />
+							</div>
+
+							<div class="ui-g-4">
+								<p:outputLabel value="Nome:" style="visibility:hidden" />
+								<p:selectOneRadio id="pessoa"
+									value="#{clienteCadastroMB.pessoa}" required="true">
+									<f:selectItem itemLabel="Física" itemValue="Física" />
+									<f:selectItem itemLabel="Jurídica" itemValue="Jurídica" />
+									<p:ajax event="change" update="pnlPessoa, pnlDataNascimento"
+										process="pessoa" />
+								</p:selectOneRadio>
+								<p:message for="pessoa" />
+							</div>
+
+							<div class="ui-g-6">
+								<h:panelGroup id="pnlPessoa">
+									<p:outputLabel id="lbCpf" value="CPF:" for="cpf"
+										rendered="#{clienteCadastroMB.pessoa=='Física'}" />
+									<p:inputMask mask="999.999.999-99" id="cpf"
+										rendered="#{clienteCadastroMB.pessoa=='Física'}"
+										required="#{clienteCadastroMB.pessoa=='Física'}"
+										value="#{clienteCadastroMB.cliente.cpfCnpj}"
+										validator="#{validatorJSF.validateCpfCnpjCliente}" >
+										<f:attribute name="idCliente" value="#{clienteCadastroMB.cliente.id}" />
+									</p:inputMask>
+									<p:message for="cpf"
+										rendered="#{clienteCadastroMB.pessoa=='Física'}" />
+
+
+									<p:outputLabel id="lbCnpj" value="CNPJ:" for="cnpj"
+										rendered="#{clienteCadastroMB.pessoa=='Jurídica'}" />
+									<p:inputMask mask="99.999.999/9999-99" id="cnpj"
+										rendered="#{clienteCadastroMB.pessoa=='Jurídica'}"
+										required="#{clienteCadastroMB.pessoa=='Jurídica'}"
+										value="#{clienteCadastroMB.cliente.cpfCnpj}"
+										validator="#{validatorJSF.validateCpfCnpjCliente}" >
+										<f:attribute name="idCliente" value="#{clienteCadastroMB.cliente.id}" />
+									</p:inputMask>
+									<p:message for="cnpj"
+										rendered="#{clienteCadastroMB.pessoa=='Jurídica'}" />
+
+								</h:panelGroup>
+							</div>
+
+							<div class="ui-g-6">
+								<h:panelGroup id="pnlDataNascimento">
+									<p:outputLabel value="Data nascimento: " for="data-nascimento"
+										rendered="#{clienteCadastroMB.pessoa=='Física'}" />
+									<p:calendar id="data-nascimento" pattern="dd/MM/yyyy"
+										mask="true"
+										value="#{clienteCadastroMB.cliente.dataNascimento}"
+										rendered="#{clienteCadastroMB.pessoa=='Física'}"
+										required="#{clienteCadastroMB.pessoa=='Física'}" />
+									<p:message for="data-nascimento"
+										rendered="#{clienteCadastroMB.pessoa=='Física'}" />
+								</h:panelGroup>
+							</div>
+
+						</div>
+
+						<p:focus />
+
+						<div style="clear: both;"></div>
+
+						<div id="main-buttons" class="hidden-sm hidden-xs"
+							style="padding-left: 1%;">
+							<p:commandButton value="Telefone" icon="fa fa-plus"
+								onclick="PF('addTelefone').show();" process="@this"
+								title="Adicionar telefone"
+								action="#{clienteCadastroMB.preparaInclusao()}"
+								update="form-add-telefone" />
+							<p:spacer width="5" />
+						</div>
+
+						<p:splitButton value="Telefone" icon="fa fa-plus"
+							onclick="PF('addTelefone').show();" process="@this"
+							styleClass="hidden-md hidden-lg">
+						</p:splitButton>
+
+						<div class="ui-fluid">
+
+							<div class="ui-g-12">
+								<p:dataTable id="dataTable" var="i"
+									style="padding: 0px; margin:0px;"
+									value="#{clienteCadastroMB.telefones}" reflow="true"
+									emptyMessage="Nenhum telefone foi informado!">
+
+									<p:column styleClass="align-center" headerText="Tipo telefone">
+										<h:outputText value="#{i.tipoTelefone.descricao}" />
+									</p:column>
+
+									<p:column styleClass="align-center" headerText="DDD">
+										<h:outputText value="#{i.ddd}" />
+									</p:column>
+
+									<p:column styleClass="align-center" headerText="Número">
+										<h:outputText value="#{i.numero}" />
+									</p:column>
+
+									<p:column styleClass="align-center" headerText="Ramal">
+										<h:outputText value="#{i.ramal}" />
+									</p:column>
+
+									<p:column style="width: 150px;">
+										<div class="ui-fluid">
+											<div class="ui-g-6" style="padding: 0 2% 0 2%;">
+												<p:commandButton styleClass="btn btn-success"
+													icon="fa fa-edit" title="Alterar"
+													actionListener="#{clienteCadastroMB.alterarNaListaDeItens(i, clienteCadastroMB.telefones)}"
+													onclick="PF('addTelefone').show();"
+													update=":form-add-telefone" process="@this" />
+											</div>
+											<div class="ui-g-6" style="padding: 0 2% 0 2%;">
+												<p:commandButton styleClass="btn btn-danger"
+													icon="fa fa-trash" title="Excluir" update="dataTable"
+													actionListener="#{clienteCadastroMB.removerNaListaDeItens(i)}"
+													process="@this" />
+											</div>
+										</div>
+									</p:column>
+
+								</p:dataTable>
+							</div>
+
+							<div class="ui-g-12">
+								<p:outputLabel value="Email:" for="email" />
+								<p:inputText id="email" label="email"
+									value="#{clienteCadastroMB.cliente.email}" />
+								<p:message for="email" />
+							</div>
+
+							<div class="ui-g-12">
+								<p:outputLabel value="Endereço:" for="endereco" />
+								<p:inputTextarea id="endereco"
+									value="#{clienteCadastroMB.cliente.endereco}" />
+								<p:message for="endereco" />
+							</div>
+
+						</div>
+
+						<!-- SALVAR, EXCLUIR E CANCELAR ORDEM DE SERVIÇO -->
+						<div class="box-footer" style="border-top-width: 0;">
+							<p:commandButton value="Salvar" update="form-cliente"
+								validateClient="true" action="#{clienteCadastroMB.salvar()}"
+								icon="fa fa-check" styleClass="btn-primary" id="botao-salvar" />
+							<p:spacer width="5" />
+
+							<p:commandButton value="Excluir" process="@this"
+								onclick="PF('excluirSaida').show();"
+								rendered="#{clienteCadastroMB.cliente.edicao}"
+								icon="fa fa-trash" styleClass="btn-danger" update="@form">
+							</p:commandButton>
+							<p:spacer width="5" />
+
+							<p:commandButton value="Cancelar" immediate="true"
+								action="#{clienteCadastroMB.caminhoCancelar}" process="@this"
+								icon="fa fa-close" />
+						</div>
+
+
+					</div>
+				</div>
+
+			</h:form>
+			<!-- FIM - formulario principal -->
+
+			<!-- ADICIONAR TELEFONE -->
+			<p:dialog id="telefone-dialog" header="Adicionar telefone"
+				widgetVar="addTelefone" responsive="true" styleClass="box-success"
+				closeOnEscape="true" width="80%" height="300"
+				position="center center" modal="true">
+				<div class="box box-primary">
+					<div class="box-header with-border">
+						<div class="ui-fluid" style="color: #555">
+
+							<h:form id="form-add-telefone">
+
+								<p:defaultCommand target="btn-salvar-telefone" />
+
+								<p:growl autoUpdate="false" id="mensagem-telefone-duplicado"
+									severity="warn" showSummary="true" showDetail="false" />
+
+								<p:panelGrid columns="4" layout="grid">
+									<p:column>
+										<p:outputLabel id="label-tipo-telefone" value="Tipo telefone"
+											for="tipo-telefone" />
+										<p:selectOneMenu id="tipo-telefone" style="color: #555"
+											required="true"
+											value="#{clienteCadastroMB.telefone.tipoTelefone}"
+											appendTo="@this">
+											<f:selectItem itemLabel="Selecione" itemValue="" />
+											<f:selectItems
+												value="#{clienteCadastroMB.listaEnumTipoTelefone}" var="l"
+												itemLabel="#{l.descricao}" itemValue="#{l}" />
+										</p:selectOneMenu>
+										<p:message for="tipo-telefone" />
+									</p:column>
+
+									<p:column>
+										<p:outputLabel value="DDD: " for="ddd" />
+										<p:inputText id="ddd"
+											value="#{clienteCadastroMB.telefone.ddd}" required="true"
+											onkeypress="mascaraNumber(this, permiteApenasNumeros)"
+											maxlength="3">
+											<f:validateLength minimum="3" />
+										</p:inputText>
+										<p:message for="ddd" />
+									</p:column>
+
+									<p:column>
+										<p:outputLabel value="Número" for="numero" />
+										<p:inputText id="numero"
+											value="#{clienteCadastroMB.telefone.numero}" required="true"
+											onblur="mascara(this, true, telefone);"
+											onkeypress="mascara(this, false, telefone);">
+											<f:validateLength minimum="9" />
+										</p:inputText>
+										<p:message for="numero" />
+									</p:column>
+
+									<p:column>
+										<p:outputLabel value="Ramal" for="ramal" />
+										<p:inputText value="#{clienteCadastroMB.telefone.ramal}"
+											id="ramal" />
+										<p:message for="ramal" />
+									</p:column>
+
+									<p:column>
+										<p:outputLabel value="btn" style="visibility:hidden" />
+										<p:commandButton value="#{clienteCadastroMB.txtBotaoInserir}"
+											validateClient="true"
+											update="form-add-telefone, form-cliente:dataTable"
+											action="#{clienteCadastroMB.salvarNaListaDeItens}"
+											icon="fa fa-check" styleClass="btn-primary"
+											title="#{clienteCadastroMB.txtBotaoInserir}"
+											id="btn-salvar-telefone" />
+									</p:column>
+
+								</p:panelGrid>
+							</h:form>
+						</div>
+					</div>
+				</div>
+			</p:dialog>
+
+		</ui:define>
+	</div>
+
+
+</ui:composition>

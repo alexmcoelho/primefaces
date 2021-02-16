@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+
+	<ul class="sidebar-menu" style="min-height: 630px;">
+		 
+		<!--<li><p:link href="/index.jsf">
+				<i class="fa fa-home"></i>
+				<span>Home</span>
+			</p:link></li>
+			
+		 <li class="header">Cadastros</li>-->
+
+		<!-- <li class=""><p:link href="/pages/tarefa/lista-tarefa.jsf">
+				<i class="fa fa-edit"></i>
+				<span>Tarefa</span>
+			</p:link></li>
+
+		<li class="treeview"><a href=""> <i class="fa fa-user-circle"
+				aria-hidden="true"></i> <span>Usuários</span> <span
+				class="pull-right-container"> <i
+					class="fa fa-angle-left pull-right"></i>
+			</span>
+		</a>
+			<ul class="treeview-menu">
+				<li><p:link href="/pages/usuario/lista-tipo.jsf">
+						<i class="fa fa-user-plus" aria-hidden="true"></i>
+						<span>Tipo</span>
+					</p:link></li>
+
+				<li><p:link href="#">
+						<i class="fa fa-bars"></i>
+						<span>Não faz nada (exemplo)</span>
+					</p:link></li>
+			</ul></li>
+ 			-->
+		
+		<h:outputText escape="false" value="#{menuMB.textoDoBuilder}" />
+		
+		<!-- CÓDIGO PEGANDO DIRETO DO BANCO DE DADOS -->
+		<!--<ui:repeat var="subMenu"
+			value="#{menuMB.subMenus}"
+			varStatus="status">
+
+			<h:panelGroup rendered="{subMenu.menu.id == null}">
+				<li><p:link href="{subMenu.link}">
+						<i class="{subMenu.icone}"></i>
+						<span><h:outputText value="{subMenu.nome}" /></span>
+					</p:link></li>
+			</h:panelGroup>
+			
+			 
+
+			<h:panelGroup rendered="{subMenu.menu.id != null}">
+
+				<h:panelGroup rendered="{menuMB.idMenu != subMenu.menu.id}">
+
+					<li class="treeview">
+						<a href="#">
+							<i class="{subMenu.menu.icone}" aria-hidden="true"></i>
+							<span> <h:outputText value="{subMenu.menu.nome}" /></span> 
+							<span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+						</a>
+						
+						<ul class="treeview-menu">
+						
+							<ui:repeat var="subMenuConsulta"
+								value="{menuMB.listaSubmenuFiltradoPorMenu(subMenu.menu.id)}"
+								varStatus="status2">
+							
+								
+								<li><p:link href="{subMenuConsulta.link}">
+										<i class="{subMenuConsulta.icone}" aria-hidden="true"></i>
+										<span><h:outputText value="{subMenuConsulta.nome}" /></span>
+									</p:link></li>
+							</ui:repeat>
+						</ul></li>
+
+				</h:panelGroup>
+			</h:panelGroup>
+		</ui:repeat> -->
+
+	</ul>
+
+
+</ui:composition>

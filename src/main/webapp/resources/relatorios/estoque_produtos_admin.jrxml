@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="estoque_produtos" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="8162bbe0-af91-4251-bf09-99ff03fdb451">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="descricao" class="java.lang.String"/>
+	<field name="quant" class="java.lang.Integer"/>
+	<field name="id" class="java.lang.Long"/>
+	<field name="valorSugerido" class="java.math.BigDecimal"/>
+	<field name="valorPago" class="java.math.BigDecimal"/>
+	<field name="lucro" class="java.math.BigDecimal"/>
+	<variable name="somaValorPago" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{valorPago}]]></variableExpression>
+	</variable>
+	<variable name="somaValorSugerido" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{valorSugerido}]]></variableExpression>
+	</variable>
+	<variable name="somaLucro" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{lucro}]]></variableExpression>
+	</variable>
+	<background>
+		<band/>
+	</background>
+	<title>
+		<band height="72">
+			<frame>
+				<reportElement mode="Opaque" x="-20" y="-20" width="595" height="92" backcolor="#006699" uuid="5bbba737-9ede-485d-b200-0c87e9d9b5de"/>
+				<staticText>
+					<reportElement x="20" y="20" width="375" height="43" forecolor="#FFFFFF" uuid="ae59a74b-1598-42c5-9d62-f7681119c5d2"/>
+					<textElement>
+						<font size="20" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Estoque de produtos]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="440" y="54" width="145" height="26" forecolor="#FFFFFF" uuid="fe2dbdc3-822f-4abb-abe1-f0a436904eec"/>
+					<textElement textAlignment="Left">
+						<font size="9" isBold="false"/>
+					</textElement>
+					<text><![CDATA[Quantidade total de produtos em estoque.]]></text>
+				</staticText>
+			</frame>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="13"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="22">
+			<line>
+				<reportElement x="0" y="20" width="555" height="1" forecolor="#666666" uuid="057c6865-034c-41e2-9744-96e72e13bf20"/>
+			</line>
+			<staticText>
+				<reportElement mode="Opaque" x="50" y="0" width="200" height="20" backcolor="#E6E6E6" uuid="babe9581-5b45-4588-b344-9ab4ab1a159c"/>
+				<textElement>
+					<font size="14" isBold="true"/>
+					<paragraph leftIndent="20"/>
+				</textElement>
+				<text><![CDATA[Descrição]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="250" y="0" width="50" height="20" backcolor="#E6E6E6" uuid="88fa2ea2-de54-4ed1-b0f0-7a01d73c4c3b"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Quant.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="0" width="50" height="20" backcolor="#E6E6E6" uuid="137f62f0-7395-4804-98fb-e7231ee7c564"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Código]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="300" y="0" width="85" height="20" backcolor="#E6E6E6" uuid="8e11a75b-4574-4436-8b46-d0a3efb61fd2"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Vlr pago]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="385" y="0" width="85" height="20" backcolor="#E6E6E6" uuid="594af0a5-28e9-4d5e-ae5e-d510ca728288"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Vlr venda]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="470" y="0" width="85" height="20" backcolor="#E6E6E6" uuid="12cc5e12-9f2f-4f9f-b99b-c350dc7f1019"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Lucro]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="40">
+			<textField>
+				<reportElement x="50" y="-1" width="200" height="36" isPrintWhenDetailOverflows="true" uuid="555316fb-9483-4348-a971-f9b9d561d759"/>
+				<textElement verticalAlignment="Middle">
+					<font size="14"/>
+					<paragraph lineSpacingSize="1.0" leftIndent="20"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{descricao}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="250" y="-1" width="50" height="36" uuid="0a2f526d-1563-4374-b2cd-9b2b22692b08"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{quant}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement positionType="FixRelativeToBottom" x="0" y="37" width="555" height="1" uuid="cda78998-411a-44de-824b-a16150c043c6"/>
+			</line>
+			<textField>
+				<reportElement x="0" y="-1" width="50" height="36" uuid="e8c567b6-996e-435e-8af6-5656ba042dc2"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{id}]]></textFieldExpression>
+			</textField>
+			<textField pattern="¤#,##0.00;¤-#,##0.00">
+				<reportElement x="300" y="-1" width="85" height="36" uuid="2d4ab53e-863c-4d7e-82cd-d7d97ab5201b"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{valorPago}]]></textFieldExpression>
+			</textField>
+			<textField pattern="¤#,##0.00;¤-#,##0.00">
+				<reportElement x="385" y="-1" width="85" height="36" uuid="0093232a-d78f-48fc-93e9-f40f186b32b7"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{valorSugerido}]]></textFieldExpression>
+			</textField>
+			<textField pattern="¤#,##0.00;¤-#,##0.00">
+				<reportElement x="470" y="-1" width="85" height="36" uuid="9bb03399-8808-4de9-a047-0b5b5689cb54"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{lucro}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="40">
+			<textField pattern="¤#,##0.00;¤-#,##0.00">
+				<reportElement x="300" y="19" width="85" height="20" uuid="4d9df11a-4f5f-4c54-8398-0fa04424adb9"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{somaValorPago}]]></textFieldExpression>
+			</textField>
+			<textField pattern="¤#,##0.00;¤-#,##0.00">
+				<reportElement x="385" y="19" width="85" height="20" uuid="d5e81d77-6c41-44ff-b685-fdbd6a4afcd3"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{somaValorSugerido}]]></textFieldExpression>
+			</textField>
+			<textField pattern="¤#,##0.00;¤-#,##0.00">
+				<reportElement x="470" y="19" width="85" height="20" uuid="e7248d5f-e6e0-46b9-a2dd-41c4e92523e7"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{somaLucro}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="-1" width="80" height="40" uuid="119c152e-4b77-4772-a088-4ca02634a14a"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Totais:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="300" y="-1" width="85" height="20" backcolor="#FFFFFF" uuid="01ffeeb4-918a-4bd2-a225-ff2f1365ca28"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Vlr pago]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="385" y="-1" width="85" height="20" backcolor="#FFFFFF" uuid="a6361743-011f-4073-965f-4211755472b6"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Vlr venda]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="470" y="-1" width="85" height="20" backcolor="#FFFFFF" uuid="9896d736-a853-46a6-834f-73e817829bd5"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Lucro]]></text>
+			</staticText>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band height="17">
+			<textField>
+				<reportElement mode="Opaque" x="0" y="4" width="515" height="13" backcolor="#E6E6E6" uuid="31f383fc-2c81-46f2-973d-5b286a7f09ac"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Página "+$V{PAGE_NUMBER}+" de"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement mode="Opaque" x="515" y="4" width="40" height="13" backcolor="#E6E6E6" uuid="67938dbb-b759-472f-b73e-3d196a2391aa"/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement x="0" y="4" width="160" height="13" uuid="3cf06dc2-95cf-4b07-adbc-cf08bfad8f3e"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band/>
+	</summary>
+</jasperReport>

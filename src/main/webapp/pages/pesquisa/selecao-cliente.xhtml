@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<meta charset="UTF-8"/>
+	<h:outputStylesheet library="css" name="showcase.css"/>
+    <h:outputStylesheet library="css" name="prism.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css"/>
+    <h:outputStylesheet library="webjars" name="font-awesome/4.7.0/css/font-awesome-jsf.css" />
+    <link rel="shortcut icon" type="image/x-icon" href="#{resource['images/favicon.ico']}"/>
+    
+    <style type="text/css">
+		.ui-grid-row .ui-grid-col-2, .ui-grid-row .ui-grid-col-10 {
+			padding: 0.5em 0;
+			margin-left: 10px;
+		}
+		
+		.ui-orderlist .ui-orderlist-list {
+			height: auto;
+		}
+		
+		.ui-orderlist .ui-grid-row .ui-grid-col-2, .ui-orderlist .ui-grid-row .ui-grid-col-10
+			{
+			padding: 0;
+		}
+	</style>
+	
+	<title>Seleção de cliente</title>
+	
+</h:head>
+<h:body>
+		
+	
+	<h:form>
+		<div class="ui-fluid" style="color: #555">
+			<p:panelGrid columns="1" layout="grid">
+				<p:column>
+			    	<div class="ui-g-9">
+			    		<p:inputText id="nome" size="40" value="#{selecaoClienteBean.nome}" placeholder="Nome do cliente" />
+			    	</div>
+			    		
+			    	<div class="ui-g-3">			    		
+			    		<p:commandButton value="Pesquisar" title="Pesquisar cliente" action="#{selecaoClienteBean.pesquisar}" update="@form" 
+			    		icon="fa fa-search" styleClass="btn-primary" />
+			    	</div>
+		    	</p:column>
+		    	
+		    	</p:panelGrid>
+		    	<div class="box box-primary">
+		    	<div class="box-header with-border">
+		    			  
+			    	<p:dataTable value="#{selecaoClienteBean.clientesFiltrados}" var="cliente"
+			    		emptyMessage="Nenhum cliente encontrado." rows="10"
+			    		paginator="true" paginatorAlwaysVisible="false" paginatorPosition="bottom">
+			    		
+			    		<p:column headerText="Código" styleClass="align-center" width = "10%">
+			    			<h:outputLabel value="#{cliente.id}" />
+			    		</p:column>
+			    		<p:column headerText="Nome">
+			    			<h:outputLabel value="#{cliente.nome}" />
+			    		</p:column>
+			    		<p:column styleClass="align-center" width="15%">
+			    			<p:commandButton icon="fa fa-check" value="" title=""
+			    				action="#{selecaoClienteBean.selecionar(cliente)}"
+			    				process="@this" 
+			    				styleClass="btn-primary" />
+			    		</p:column>
+			    		
+			    	</p:dataTable>
+			    	
+	    		</div>
+	    		</div>
+	    	
+		</div>    	
+	</h:form>
+	
+	
+	<h:outputScript library="js" name="prism.js"  target="head"/>
+    <h:outputScript library="js" name="locales.js"  target="head"/>
+</h:body>
+</html>

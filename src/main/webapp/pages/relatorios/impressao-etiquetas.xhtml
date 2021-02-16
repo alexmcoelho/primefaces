@@ -1,0 +1,331 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:adm="http://github.com/adminfaces"
+	template="/WEB-INF/templates/template.xhtml">
+
+	<ui:define name="title">
+		<br />
+		<p:separator />
+        #{impressaoEtiquetasMB.titulo}
+    </ui:define>
+
+	<ui:define name="description">
+        Escolha os filtros
+    </ui:define>
+
+	<ui:define name="head-end">
+		<ui:param name="renderBreadCrumb" value="true" />
+	</ui:define>
+
+	<ui:define name="body">
+		<adm:breadcrumb title="#{impressaoEtiquetasMB.tituloBreadCrumbString}"
+			link="#{impressaoEtiquetasMB.linkBreadCrumb}"
+			style="margin-top: 50px;" />
+
+		<p:focus />
+
+		<div class="box box-primary">
+
+			<div class="box-header with-border">
+				<h:form id="form" prependId="false">
+					<div></div>
+
+					<div class="ui-fluid">
+
+						<div class="ui-g-12 ui-md-4">
+							<p:outputLabel value="Tipo de relatorio:" for="pesquisa" />
+							<p:selectOneMenu id="pesquisa"
+								value="#{impressaoEtiquetasMB.tipoPesquisa}">
+								<f:selectItem itemLabel="Número (Cód.)" itemValue="codigo" />
+								<f:selectItem itemLabel="Descrição" itemValue="descricao" />
+								<f:selectItem itemLabel="Categoria" itemValue="categoria" />
+								<f:selectItem itemLabel="Todos" itemValue="todos" />
+								<p:ajax event="change" update="label-tipo-pesquisa" 
+									listener="#{impressaoEtiquetasMB.criaInstanciaCategoria()}" />
+							</p:selectOneMenu>
+						</div>
+
+						<div class="ui-g-12 ui-md-8">
+							<h:panelGroup id="label-tipo-pesquisa">
+
+								<p:outputLabel id="lb-codigo" value="Número (Cód.): "
+									for="codigo"
+									rendered="#{impressaoEtiquetasMB.tipoPesquisa=='codigo'}" />
+
+								<p:outputLabel id="lb-descricao" value="Descrição produto: "
+									for="descricao"
+									rendered="#{impressaoEtiquetasMB.tipoPesquisa=='descricao'}" />
+									
+								<p:outputLabel value="Categoria: "
+									for="categoria"
+									rendered="#{impressaoEtiquetasMB.tipoPesquisa=='categoria'}" />
+
+								<p:outputLabel value="pes" style="visibility:hidden;"
+									rendered="#{impressaoEtiquetasMB.tipoPesquisa=='todos'}" />
+
+								<div class="input-group">
+									<p:inputText id="codigo"
+										rendered="#{impressaoEtiquetasMB.tipoPesquisa=='codigo'}"
+										required="#{impressaoEtiquetasMB.tipoPesquisa=='codigo'}"
+										value="#{impressaoEtiquetasMB.id}" />
+
+									<p:inputText id="descricao"
+										rendered="#{impressaoEtiquetasMB.tipoPesquisa=='descricao'}"
+										required="#{impressaoEtiquetasMB.tipoPesquisa=='descricao'}"
+										value="#{impressaoEtiquetasMB.descricao}" />
+										
+									<p:inputText id="categoria"
+										rendered="#{impressaoEtiquetasMB.tipoPesquisa=='categoria'}"
+										required="#{impressaoEtiquetasMB.tipoPesquisa=='categoria'}"
+										value="#{impressaoEtiquetasMB.descricao}" />
+
+									<p:panelGrid style="visibility:hidden;"
+										rendered="#{impressaoEtiquetasMB.tipoPesquisa=='todos'}" />
+
+									<span class="input-group-btn" style="padding-left: 2%;">
+										<p:commandButton value="Pesquisar" validateClient="true"
+											icon="fa fa-search" update="form"
+											action="#{impressaoEtiquetasMB.pesquisar}"
+											styleClass="btn-primary" />
+
+									</span>
+
+								</div>
+
+								<p:message for="codigo"
+									rendered="#{impressaoEtiquetasMB.tipoPesquisa=='codigo'}" />
+
+								<p:message for="descricao"
+									rendered="#{impressaoEtiquetasMB.tipoPesquisa=='descricao'}" />
+									
+								<p:message for="categoria"
+									rendered="#{impressaoEtiquetasMB.tipoPesquisa=='categoria'}" />
+							</h:panelGroup>
+						</div>
+					</div>
+
+					<div style="clear: both; margin-bottom: 1%;">
+					</div>
+
+					<p:dataTable id="dataTable" var="p"
+						value="#{impressaoEtiquetasMB.model}" rows="15" paginator="true"
+						lazy="true" reflow="true" emptyMessage="Nenhum item informado!">
+
+						<p:column styleClass="align-center" headerText="Código">
+							<h:outputText value="#{p.id}" />
+						</p:column>
+
+						<p:column styleClass="align-center" headerText="Descrição">
+							<h:outputText value="#{p.descricao}" />
+						</p:column>
+						
+						<p:column styleClass="align-center" headerText="Categoria">
+							<h:outputText value="#{p.categoria.descricao}" />
+						</p:column>
+
+						<p:column styleClass="align-center" headerText="Quant.">
+							<h:outputText value="#{p.quant}" />
+						</p:column>
+
+						<p:column styleClass="align-center" headerText="Valor venda">
+							<h:outputText value="#{p.valorSugerido}">
+								<f:convertNumber type="currency" locale="pt_BR" />
+							</h:outputText>
+						</p:column>
+
+						<p:column style="width: 150px;" rendered="#{impressaoEtiquetasMB.temPermissao}">
+							<div class="ui-fluid">
+								<div class="ui-g-3"></div>
+								<div class="ui-g-6" style="padding: 0 2% 0 2%;">
+									<p:commandButton styleClass="btn btn-success"
+										icon="fa fa-edit" title="Alterar percentual de lucro"
+										actionListener="#{impressaoEtiquetasMB.selecionarProduto(p)}"
+										onclick="PF('alterarProduto').show();"
+										update="form-alterar-produto" process="@this" />
+								</div>
+							</div>
+						</p:column>
+
+					</p:dataTable>
+
+					<br />
+
+					<div class="box-footer" style="border-top-width: 0;">
+
+						<p:commandButton value="Relatório" validateClient="true"
+							icon="fa fa-wpforms" action="#{impressaoEtiquetasMB.gerarRelatorio}"
+							ajax="false" immediate="true" styleClass="btn-primary"
+							onclick="this.form.target='_blank'" />
+
+					</div>
+
+				</h:form>
+			</div>
+		</div>
+
+		<!-- ALTERAR VALOR DO PRODUTO -->
+		<p:dialog id="alterar-produto-dialog" header="Definir valor de venda"
+			widgetVar="alterarProduto" responsive="true"
+			styleClass="box-success" modal="true" closeOnEscape="true"
+			position="center center" width="80%" height="40%">
+			
+			<div class="box box-primary">
+				<div class="box-header with-border">
+					<h:form id="form-alterar-produto">
+						<div class="ui-fluid">
+							<p:panelGrid columns="2" layout="grid">
+								
+								<p:column>
+									<p:outputLabel value="Descrição: " for="descricao" />
+									<p:inputText id="descricao"
+										disabled="true"
+										value="#{impressaoEtiquetasMB.model.produto.descricao}" />
+								</p:column>
+
+								<p:column>
+									<p:outputLabel value="Valor pago (R$):" for="valor-pago" />
+									<p:inputNumber id="valor-pago"
+											disabled="true"
+											decimalPlaces="2"
+											thousandSeparator="."
+											decimalSeparator=","
+											onfocus="mascaraNumber(this, apaga)"
+											value="#{impressaoEtiquetasMB.model.produto.valorPago}"
+											style="color: #555"
+											required="true" 
+											validatorMessage="#{beanPadraoMensagensValidacao.retorno('javax.faces.validator.MINIMUM', '0.0')}"
+											requiredMessage="#{beanPadraoMensagensValidacao.retorno('javax.faces.validator.BeanValidator.MESSAGE', 'Valor pago (R$)')}"
+											>
+											<f:validateDoubleRange minimum="0.00" />
+									</p:inputNumber>
+								</p:column>
+								
+								<p:column>
+									<p:outputLabel for="definir-valor" value="Escolha a forma como o valor de venda será definido:" />
+									<p:selectOneRadio id="definir-valor" 
+										value="#{impressaoEtiquetasMB.defineValor}" >
+										<f:selectItem itemLabel="Definir valor" itemValue="true" />
+										<f:selectItem itemLabel="Definir um percentual de lucro" itemValue="false" />
+										<p:ajax update="group-preco-venda01, group-preco-venda02" />
+									</p:selectOneRadio>
+									
+								</p:column>
+								
+								<p:column />
+								
+								<p:column>
+									<h:panelGroup id="group-preco-venda01">
+										<p:outputLabel value="Percentual de lucro (%):" for="percentual-lucro"
+											rendered="#{!impressaoEtiquetasMB.defineValor}" />
+										<p:inputNumber id="percentual-lucro"
+												rendered="#{!impressaoEtiquetasMB.defineValor}"
+												decimalPlaces="2"
+												thousandSeparator="."
+												decimalSeparator=","
+												onfocus="mascaraNumber(this, apaga)"
+												value="#{impressaoEtiquetasMB.model.produto.percentualLucro}"
+												style="color: #555"
+												required="true" 
+												validatorMessage="#{beanPadraoMensagensValidacao.retorno('javax.faces.validator.MINIMUM', '0.0')}"
+												requiredMessage="#{beanPadraoMensagensValidacao.retorno('javax.faces.validator.BeanValidator.MESSAGE', 'Percentual de lucro (%)')}"
+												>
+												<p:ajax event="change" update="valor-sugerido" listener="#{impressaoEtiquetasMB.atualizaValorSugerido}" />
+												<f:validateDoubleRange minimum="0.00" />
+										</p:inputNumber>
+										<p:message id="msg-percentual-lucro" for="percentual-lucro" 
+											rendered="#{!impressaoEtiquetasMB.defineValor}" />
+											
+										<p:outputLabel value="Valor de venda (R$):"
+											for="valor-venda" rendered="#{impressaoEtiquetasMB.defineValor}"/>
+										<p:inputNumber id="valor-venda"
+											rendered="#{impressaoEtiquetasMB.defineValor}"
+											decimalPlaces="2"
+											thousandSeparator="."
+											decimalSeparator=","
+											onfocus="mascaraNumber(this, apaga)"
+											value="#{impressaoEtiquetasMB.model.produto.valorInformado}"
+											style="color: #555"
+											required="true" 
+											validatorMessage="#{beanPadraoMensagensValidacao.retorno('javax.faces.validator.MINIMUM', '0.00')}"
+											requiredMessage="#{beanPadraoMensagensValidacao.retorno('javax.faces.validator.BeanValidator.MESSAGE', 'Valor de venda (R$)')}"
+											>
+											<f:validateDoubleRange minimum="0.00" />
+										</p:inputNumber>
+										<p:message id="msg-valor-venda" for="valor-venda" rendered="#{impressaoEtiquetasMB.defineValor}" />
+										
+									</h:panelGroup>
+								</p:column>
+								
+								<p:column >
+									<h:panelGroup id="group-preco-venda02">
+										<p:outputLabel value="Valor de venda (R$):" for="valor-sugerido" 
+											rendered="#{!impressaoEtiquetasMB.defineValor}"/>
+										<p:inputNumber id="valor-sugerido"
+												rendered="#{!impressaoEtiquetasMB.defineValor}"
+												disabled="true"
+												decimalPlaces="2"
+												thousandSeparator="."
+												decimalSeparator=","
+												onfocus="mascaraNumber(this, apaga)"
+												value="#{impressaoEtiquetasMB.model.produto.valorSugerido}"
+												style="color: #555"
+												required="true" 
+												validatorMessage="#{beanPadraoMensagensValidacao.retorno('javax.faces.validator.MINIMUM', '0.0')}"
+												requiredMessage="#{beanPadraoMensagensValidacao.retorno('javax.faces.validator.BeanValidator.MESSAGE', 'Valor (R$)')}"
+												>
+												<f:validateDoubleRange minimum="0.00" />
+										</p:inputNumber>
+										<p:message id="msg-valor" for="valor-sugerido" rendered="#{!impressaoEtiquetasMB.defineValor}"/>
+									</h:panelGroup>
+								</p:column>
+								
+								<p:column>
+									<p:outputLabel value="Categoria: " for="categoria" />
+									<p:inputText id="categoria"
+										value="#{impressaoEtiquetasMB.model.produto.categoria.descricao}"
+										required="true" readonly="true"
+										disabled="true"
+										/>
+									<p:message for="categoria" />
+								</p:column>
+								
+								<p:column >
+									<h:panelGroup id="group-imei">
+										<p:outputLabel value="IMEI:" for="imei" 
+											rendered="#{impressaoEtiquetasMB.model.produto.categoria.descricao.toLowerCase().contains('celular'.toLowerCase())}"/>
+										<p:inputMask id="imei"
+											value="#{impressaoEtiquetasMB.model.produto.imei}"
+											rendered="#{impressaoEtiquetasMB.model.produto.categoria.descricao.toLowerCase().contains('celular'.toLowerCase())}"
+											required="true" 
+											mask="999999-99-999999-9"
+											disabled="true"
+											>
+										</p:inputMask>
+										<p:message for="imei" 
+											rendered="#{impressaoEtiquetasMB.model.produto.categoria.descricao.toLowerCase().contains('celular'.toLowerCase())}"/>
+									</h:panelGroup>
+								</p:column>
+								
+							</p:panelGrid>
+						</div>
+
+						<div class="box-footer" style="border-top-width: 0;">
+							<p:commandButton value="Salvar"
+								update="form, form-alterar-produto"
+								process="alterar-produto-dialog" validateClient="true"
+								action="#{impressaoEtiquetasMB.salvarAlteraracao()}"
+								icon="fa fa-check" styleClass="btn-primary"
+								oncomplete="if (!args.validationFailed) PF('alterarProduto').hide()" />
+						</div>
+					</h:form>
+				</div>
+			</div>
+		</p:dialog>
+
+	</ui:define>
+
+</ui:composition>
